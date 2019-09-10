@@ -15,7 +15,7 @@ class UserValidationTests extends Specification {
 
     def "password is correct"() {
         given:
-        String password = "Abcd1234"
+        def password = "Abcd1234"
         when:
         RuleResult result = validator.validate(new PasswordData(password))
         then:
@@ -24,90 +24,108 @@ class UserValidationTests extends Specification {
 
     def "password is too short"() {
         given:
-        String password = "Abcd"
+        def password = "Abcd"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
     def "password is too long"() {
         given:
-        String password = "Abcdefghijklmn123456789"
+        def password = "Abcdefghijklmn123456789"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
+        then:
+        !result.isValid()
+    }
+
+    def "password has no 1 lower"() {
+        given:
+        def password = "ABCD1234"
+        when:
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
     def "password has no 1 upper"() {
         given:
-        String password = "abcd1234"
+        def password = "abcd1234"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
     def "password has no 1 digit"() {
         given:
-        String password = "Abcdabcd"
+        def password = "Abcdabcd"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
-    def "password has only smalls"() {
+    def "password has only lowers"() {
         given:
-        String password = "abcdabcd"
+        def password = "abcdabcd"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
     def "password has only uppers"() {
         given:
-        String password = "ABCDABCD"
+        def password = "ABCDABCD"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
     def "password has only digits"() {
         given:
-        String password = "12341234"
+        def password = "12341234"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
-    def "password has upper, small, but 0 digit"() {
+    def "password has upper, lower, but 0 digit"() {
         given:
-        String password = "AAAAaaaa"
+        def password = "ABCDabcd"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
-    def "password has upper, digit, but 0 small"() {
+    def "password has upper, digit, but 0 lower"() {
         given:
-        String password = "AAAA1234"
+        def password = "ABCD1234"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
 
-    def "password has digit, small, but 0 upper"() {
+    def "password has digit, lower, but 0 upper"() {
         given:
-        String password = "aaaa1234"
+        def password = "aaaa1234"
         when:
-        RuleResult result = validator.validate(new PasswordData(password))
+        def result = validator.validate(new PasswordData(password))
+        then:
+        !result.isValid()
+    }
+
+    def "password has 10 whitespaces"() {
+        given:
+        def password = "          "
+        when:
+        def result = validator.validate(new PasswordData(password))
         then:
         !result.isValid()
     }
