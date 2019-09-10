@@ -1,0 +1,72 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                [%d{yyyy-MM-dd' 'HH:mm:ss,SSS' '}] %highlight([ %-5p]) %magenta([%L]) --- %green([%t]) %cyan([%logger{32}]) : %gray(%m%n)
+            </pattern>
+        </layout>
+    </appender>
+
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.FileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                [%d{yyyy-MM-dd' 'HH:mm:ss,SSS' '}] [ %-5p] [%L] --- [%t] [%logger{32}] : %m%n
+            </pattern>
+        </encoder>
+        <file>.logs/current/debug.log</file>
+    </appender>
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>
+                [%d{yyyy-MM-dd' 'HH:mm:ss,SSS' '}] [ %-5p] [%L] --- [%t] [%logger{32}] : %m%n
+            </pattern>
+        </encoder>
+        <file>.logs/current/error.log</file>
+    </appender>
+
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>.logs/last-7-days/debug_%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>
+                [%d{yyyy-MM-dd' 'HH:mm:ss,SSS' '}] [%C] [%t] [%L] [%-5p] %m%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <logger name="pl.com.tt.intern.soccer" level="DEBUG" additivity="false">
+        <appender-ref ref="DEBUG_FILE"/>
+    </logger>
+
+    <logger name="pl.com.tt.intern.soccer" level="ERROR" additivity="false">
+        <appender-ref ref="ERROR_FILE"/>
+    </logger>
+
+    <logger name="pl.com.tt.intern.soccer" level="DEBUG" additivity="false">
+        <appender-ref ref="ROLLING_FILE"/>
+    </logger>
+
+</configuration>
