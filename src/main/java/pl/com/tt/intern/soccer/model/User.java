@@ -12,31 +12,31 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table
+@Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column
+    @Column(name = "id")
     private Long id;
 
     @Username
-    @Column(unique = true)
+    @Column(name = "username", unique = true)
     private String username;
 
     @Email
     @NotBlank
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Password
-    @Column
+    @Column(name = "password")
     private String password;
 
-    @Column
+    @Column(name = "locked")
     private boolean locked;
 
-    @Column
+    @Column(name = "enabled")
     private boolean enabled;
 
 }
