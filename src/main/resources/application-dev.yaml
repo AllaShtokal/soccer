@@ -8,5 +8,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+  h2:
+    console:
+      enabled: false
+  liquibase:
+    change-log: classpath:db/master.xml
+    default-schema: soccer
