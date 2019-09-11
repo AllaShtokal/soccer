@@ -13,12 +13,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf()
+                .disable()
                 .cors()
                 .and()
-                .headers().frameOptions().disable()
+                .headers()
+                .frameOptions()
+                .disable()
                 .and()
-                .sessionManagement().disable();
+                .sessionManagement()
+                .disable();
     }
 
     @Bean
