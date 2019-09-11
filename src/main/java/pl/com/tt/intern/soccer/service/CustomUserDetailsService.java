@@ -1,4 +1,4 @@
-package pl.com.tt.intern.soccer.service.impl;
+package pl.com.tt.intern.soccer.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

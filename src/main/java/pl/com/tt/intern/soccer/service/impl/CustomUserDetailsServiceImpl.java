@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
+import pl.com.tt.intern.soccer.service.CustomUserDetailsService;
 
 import javax.transaction.Transactional;
 
