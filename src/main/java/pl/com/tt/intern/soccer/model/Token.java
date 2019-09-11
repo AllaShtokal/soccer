@@ -1,7 +1,5 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,4 +36,10 @@ public class Token {
 
     @Column(name = "expired_date_time")
     private LocalDateTime expiredDateTime = LocalDateTime.now().plusHours(24);
+
+
+    public Token(User user, @NotNull ProcessType processType) {
+        this.user = user;
+        this.processType = processType;
+    }
 }
