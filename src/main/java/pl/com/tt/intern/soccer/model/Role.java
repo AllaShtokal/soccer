@@ -5,7 +5,6 @@ import pl.com.tt.intern.soccer.model.enums.RoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -24,8 +23,5 @@ public class Role {
     @Enumerated(STRING)
     @Column(name = "type")
     private RoleType type;
-
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
 
 }

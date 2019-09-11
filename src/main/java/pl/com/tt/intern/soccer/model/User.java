@@ -1,28 +1,31 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.com.tt.intern.soccer.annotation.Password;
 import pl.com.tt.intern.soccer.annotation.Username;
+import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "user")
-public class User implements UserDetails {
+@Table(name = "users")
+@NoArgsConstructor
+public class User extends DateAudit implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -65,31 +68,22 @@ public class User implements UserDetails {
     @ManyToMany(fetch = EAGER)
     @JoinTable(
             name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
-
-    @Column(name = "created_at")
-    private LocalDateTime created_At;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updated_At;
-
-    @PrePersist
-    private void prePersist() {
-        this.created_At = now();
-    }
-
-    @PreUpdate
-    private void preUpdate() {
-        this.updated_At = now();
-    }
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getType().toString()))
                 .collect(toList());
+    }
+
+    public User(UserInfo userInfo, String username, String email, String password) {
+        this.userInfo = userInfo;
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     @Override
