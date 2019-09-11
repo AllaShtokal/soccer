@@ -1,15 +1,21 @@
 package pl.com.tt.intern.soccer.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "token")
 public class Token {
 
@@ -22,8 +28,10 @@ public class Token {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @NotNull
+    @Enumerated(STRING)
     @Column(name = "process_type")
-    private String processType;
+    private ProcessType processType;
 
     @Column(name = "uuid")
     private String uuid = UUID.randomUUID().toString();
