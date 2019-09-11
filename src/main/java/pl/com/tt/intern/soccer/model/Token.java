@@ -29,7 +29,7 @@ public class Token {
 
     @NotNull
     @Enumerated(STRING)
-    @Column(name = "process_type")
+    @Column(name = "process_type", nullable = false)
     private ProcessType processType;
 
     @Column(name = "uuid")
