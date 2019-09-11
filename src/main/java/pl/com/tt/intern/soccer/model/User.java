@@ -2,9 +2,6 @@ package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import pl.com.tt.intern.soccer.annotation.Password;
 import pl.com.tt.intern.soccer.annotation.Username;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
@@ -13,11 +10,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -25,9 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User extends DateAudit implements UserDetails {
-
-    private static final long serialVersionUID = 9206311808530580106L;
+public class User extends DateAudit {
     
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -74,32 +67,10 @@ public class User extends DateAudit implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getType().toString()))
-                .collect(toList());
-    }
-
     public User(UserInfo userInfo, String username, String email, String password) {
         this.userInfo = userInfo;
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return !locked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 }
