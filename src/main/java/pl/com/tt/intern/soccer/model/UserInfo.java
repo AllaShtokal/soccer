@@ -1,11 +1,8 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
-import pl.com.tt.intern.soccer.annotation.Password;
-import pl.com.tt.intern.soccer.annotation.Username;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -15,46 +12,39 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "user_info")
+public class UserInfo {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Username
-    @Column(name = "username",
-            unique = true,
+    @Size(min = 3, max = 20)
+    @NotBlank
+    @Column(name = "first_name",
             nullable = false,
             length = 20)
-    private String username;
+    private String firstName;
 
-    @Email
-    @Size(max = 70)
+    @Size(min = 3, max = 20)
     @NotBlank
-    @Column(name = "email",
-            unique = true,
+    @Column(name = "last_name",
             nullable = false,
-            length = 70)
-    private String email;
+            length = 20)
+    private String lastName;
 
-    @Password
-    @Column(name = "password",
-            nullable = false,
-            length = 100)
-    private String password;
+    @Column(name = "phone",
+            length = 12)
+    private String phone;
 
-    @Column(name = "locked",
-            nullable = false)
-    private boolean locked;
+    @Column(name = "skype",
+            length = 30)
+    private String skype;
 
-    @Column(name = "enabled",
-            nullable = false)
-    private boolean enabled;
-
-    @OneToOne(mappedBy = "user")
-    private UserInfo userInfo;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "created_at")
     private LocalDateTime created_At;
