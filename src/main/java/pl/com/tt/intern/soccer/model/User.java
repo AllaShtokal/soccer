@@ -1,22 +1,26 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.com.tt.intern.soccer.annotation.Password;
 import pl.com.tt.intern.soccer.annotation.Username;
+import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-import static java.time.LocalDateTime.now;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
 @Table(name = "user")
-public class User {
+@NoArgsConstructor
+public class User extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -56,6 +60,13 @@ public class User {
     @OneToOne(mappedBy = "user")
     private UserInfo userInfo;
 
+    @ManyToMany(fetch = EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
     @OneToOne(mappedBy = "user")
     private Token token;
 
@@ -70,9 +81,10 @@ public class User {
         this.created_At = now();
     }
 
-    @PreUpdate
-    private void preUpdate() {
-        this.updated_At = now();
+    public User(UserInfo userInfo, String username, String email, String password) {
+        this.userInfo = userInfo;
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
-
 }

@@ -1,19 +1,24 @@
 package pl.com.tt.intern.soccer.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
-import static java.time.LocalDateTime.now;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
+@Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "user_info")
-public class UserInfo {
+public class UserInfo extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -46,20 +51,8 @@ public class UserInfo {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "created_at")
-    private LocalDateTime created_At;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updated_At;
-
-    @PrePersist
-    private void prePersist() {
-        this.created_At = now();
+    public UserInfo(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
-
-    @PreUpdate
-    private void preUpdate() {
-        this.updated_At = now();
-    }
-
 }

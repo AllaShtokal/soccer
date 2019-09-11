@@ -3,11 +3,15 @@ spring:
     active: dev
   jpa:
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: validate
+  jackson:
+    time-zone: UTC
 mail:
   config:
     host: smtp.gmail.com
     port: 587
     address: praktyki2019tt@gmail.com
     password:
+server:
+  default:
+    timezone: UTC
