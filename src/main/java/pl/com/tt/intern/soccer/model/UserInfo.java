@@ -3,6 +3,8 @@ package pl.com.tt.intern.soccer.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -16,9 +18,13 @@ public class UserInfo {
     @Column(name = "id")
     private Long id;
 
+    @Size(min = 3, max = 20)
+    @NotBlank
     @Column(name = "first_name")
     private String firstName;
-
+    
+    @Size(min = 3, max = 20)
+    @NotBlank
     @Column(name = "last_name")
     private String lastName;
 
