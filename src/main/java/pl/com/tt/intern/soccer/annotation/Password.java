@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = PasswordConstraintValidator.class)
 @Target(FIELD)
 @Retention(RUNTIME)
-@Size(min = 8, max = 100)
+@Size(min = 8, max = 20)
 public @interface Password {
 
     String message() default "Invalid password";
