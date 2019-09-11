@@ -5,7 +5,9 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
+import static java.time.LocalDate.now;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -20,22 +22,42 @@ public class UserInfo {
 
     @Size(min = 3, max = 20)
     @NotBlank
-    @Column(name = "first_name")
+    @Column(name = "first_name",
+            length = 20)
     private String firstName;
-    
+
     @Size(min = 3, max = 20)
     @NotBlank
-    @Column(name = "last_name")
+    @Column(name = "last_name",
+            length = 20)
     private String lastName;
 
-    @Column(name = "phone")
+    @Column(name = "phone",
+            length = 12)
     private String phone;
 
-    @Column(name = "skype")
+    @Column(name = "skype",
+            length = 30)
     private String skype;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "created_at")
+    private LocalDate created_At;
+
+    @Column(name = "updated_at")
+    private LocalDate updated_At;
+
+    @PrePersist
+    private void prePersist() {
+        this.created_At = now();
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        this.updated_At = now();
+    }
 
 }

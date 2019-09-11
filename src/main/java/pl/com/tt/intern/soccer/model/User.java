@@ -8,7 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
+import static java.time.LocalDate.now;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -18,30 +20,56 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @Username
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username",
+            unique = true,
+            nullable = false,
+            length = 20)
     private String username;
 
     @Email
-    @Size(max = 60)
+    @Size(max = 70)
     @NotBlank
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email",
+            unique = true,
+            nullable = false,
+            length = 70)
     private String email;
 
     @Password
-    @Column(name = "password", nullable = false)
+    @Column(name = "password",
+            nullable = false,
+            length = 100)
     private String password;
 
-    @Column(name = "locked", nullable = false)
+    @Column(name = "locked",
+            nullable = false)
     private boolean locked;
 
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled",
+            nullable = false)
     private boolean enabled;
 
     @OneToOne(mappedBy = "user")
     private UserInfo userInfo;
+
+    @Column(name = "created_at")
+    private LocalDate created_At;
+
+    @Column(name = "updated_at")
+    private LocalDate updated_At;
+
+    @PrePersist
+    private void prePersist() {
+        this.created_At = now();
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        this.updated_At = now();
+    }
 
 }
