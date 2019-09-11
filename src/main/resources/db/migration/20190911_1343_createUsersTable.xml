@@ -1,13 +1,21 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="wojcikp4" id="1568199301114-2">
-        <createTable tableName="user">
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="dziewulskij" id="1568201920602-4">
+        <createTable tableName="users">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="created_at" type="datetime"/>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
             <column name="email" type="VARCHAR(70)">
                 <constraints nullable="false" unique="true"/>
             </column>
@@ -17,13 +25,13 @@
             <column name="locked" type="BIT(1)">
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="VARCHAR(20)">
+            <column name="password" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="datetime"/>
             <column name="username" type="VARCHAR(20)">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
     </changeSet>
+
 </databaseChangeLog>

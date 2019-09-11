@@ -4,7 +4,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
+  jackson:
+    time-zone: UTC
 mail:
   config:
     host: smtp.gmail.com
