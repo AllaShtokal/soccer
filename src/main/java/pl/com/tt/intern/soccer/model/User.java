@@ -18,27 +18,27 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Username
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Email
     @Size(max = 60)
     @NotBlank
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Password
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "locked")
+    @Column(name = "locked", nullable = false)
     private boolean locked;
 
-    @Column(name = "enabled")
+    @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
     @OneToOne(mappedBy = "user")
