@@ -23,12 +23,14 @@ public class UserInfo {
     @Size(min = 3, max = 20)
     @NotBlank
     @Column(name = "first_name",
+            nullable = false,
             length = 20)
     private String firstName;
 
     @Size(min = 3, max = 20)
     @NotBlank
     @Column(name = "last_name",
+            nullable = false,
             length = 20)
     private String lastName;
 
