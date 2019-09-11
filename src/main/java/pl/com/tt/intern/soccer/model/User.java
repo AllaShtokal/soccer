@@ -10,12 +10,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.time.LocalDateTime.now;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -74,17 +72,6 @@ public class User extends DateAudit {
     @ElementCollection(fetch = LAZY)
     @OneToMany(mappedBy = "user")
     private List<Token> token;
-
-    @Column(name = "created_at")
-    private LocalDateTime created_At;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updated_At;
-
-    @PrePersist
-    private void prePersist() {
-        this.created_At = now();
-    }
 
     public User(UserInfo userInfo, String username, String email, String password) {
         this.userInfo = userInfo;
