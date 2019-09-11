@@ -7,6 +7,7 @@ import pl.com.tt.intern.soccer.annotation.Username;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -25,6 +26,7 @@ public class User {
     private String username;
 
     @Email
+    @Size(max = 60)
     @NotBlank
     @Column(name = "email", unique = true)
     private String email;
