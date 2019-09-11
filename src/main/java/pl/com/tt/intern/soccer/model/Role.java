@@ -6,17 +6,13 @@ import pl.com.tt.intern.soccer.model.enums.RoleType;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import java.io.Serializable;
-
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
 @Table(name = "role")
-public class Role implements Serializable {
-
-    private static final long serialVersionUID = -3556946714598234025L;
+public class Role {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

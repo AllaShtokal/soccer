@@ -10,8 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import java.io.Serializable;
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
