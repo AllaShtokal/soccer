@@ -20,9 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_info")
-public class UserInfo extends DateAudit implements Serializable {
-
-    private static final long serialVersionUID = -9052621552434510770L;
+public class UserInfo extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

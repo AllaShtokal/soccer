@@ -8,7 +8,7 @@
     <include file="db/migration/20190911_1340_createRoleTable.xml"/>
     <include file="db/migration/20190911_1341_createUserInfoTable.xml"/>
     <include file="db/migration/20190911_1342_createUserRoleTable.xml"/>
-    <include file="db/migration/20190911_1343_createUsersTable.xml"/>
+    <include file="db/migration/20190911_1343_createUserTable.xml"/>
     <include file="db/migration/20190911_1344_createIndexToUserRoleTable.xml"/>
     <include file="db/migration/20190911_1345_createIndexToUserInfoTable.xml"/>
 

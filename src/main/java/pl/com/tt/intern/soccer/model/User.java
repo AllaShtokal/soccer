@@ -26,9 +26,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User extends DateAudit implements UserDetails, Serializable {
+public class User extends DateAudit implements UserDetails {
 
-    private static final long serialVersionUID = 4488398741984115106L;
+    private static final long serialVersionUID = 9206311808530580106L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

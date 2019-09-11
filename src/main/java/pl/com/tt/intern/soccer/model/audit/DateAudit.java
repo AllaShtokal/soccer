@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
 import java.time.Instant;
 
 @Data
@@ -19,9 +18,7 @@ import java.time.Instant;
         value = {"createdAt", "updatedAt"},
         allowGetters = true
 )
-public abstract class DateAudit implements Serializable {
-
-    private static final long serialVersionUID = 8432267523974746392L;
+public abstract class DateAudit {
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
