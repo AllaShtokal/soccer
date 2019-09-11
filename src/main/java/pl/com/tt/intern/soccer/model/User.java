@@ -56,6 +56,9 @@ public class User {
     @OneToOne(mappedBy = "user")
     private UserInfo userInfo;
 
+    @OneToOne(mappedBy = "user")
+    private Token token;
+
     @Column(name = "created_at")
     private LocalDateTime created_At;
 
