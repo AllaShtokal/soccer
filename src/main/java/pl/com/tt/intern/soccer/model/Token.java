@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.com.tt.intern.soccer.model.enums.ProcessType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,7 +23,7 @@ public class Token {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -32,14 +33,16 @@ public class Token {
     private ProcessType processType;
 
     @Column(name = "uuid")
-    private String uuid = UUID.randomUUID().toString();
+    private String uuid ;
 
     @Column(name = "expired_date_time")
-    private LocalDateTime expiredDateTime = LocalDateTime.now().plusHours(24);
+    private LocalDateTime expiredDateTime;
 
 
     public Token(User user, @NotNull ProcessType processType) {
         this.user = user;
         this.processType = processType;
+        this.uuid = UUID.randomUUID().toString();
+        this.expiredDateTime = LocalDateTime.now().plusHours(24);
     }
 }
