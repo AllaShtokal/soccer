@@ -12,3 +12,6 @@ mail:
     port: 587
     address: praktyki2019tt@gmail.com
     password:
+server:
+  default:
+    timezone: UTC
