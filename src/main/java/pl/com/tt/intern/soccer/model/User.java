@@ -13,7 +13,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +28,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class User extends DateAudit implements UserDetails {
 
     private static final long serialVersionUID = 9206311808530580106L;
-
+    
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
