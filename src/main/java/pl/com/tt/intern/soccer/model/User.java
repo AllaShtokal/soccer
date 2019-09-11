@@ -8,9 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import static java.time.LocalDate.now;
+import static java.time.LocalDateTime.now;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -57,10 +57,10 @@ public class User {
     private UserInfo userInfo;
 
     @Column(name = "created_at")
-    private LocalDate created_At;
+    private LocalDateTime created_At;
 
     @Column(name = "updated_at")
-    private LocalDate updated_At;
+    private LocalDateTime updated_At;
 
     @PrePersist
     private void prePersist() {
