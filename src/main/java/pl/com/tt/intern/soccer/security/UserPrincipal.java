@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +11,9 @@ import pl.com.tt.intern.soccer.model.UserInfo;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Data
 public class UserPrincipal implements UserDetails {
 
@@ -23,6 +24,7 @@ public class UserPrincipal implements UserDetails {
     private String username;
     private boolean locked;
     private boolean enabled;
+    private Collection<? extends GrantedAuthority> authorities;
 
     @JsonIgnore
     private String email;
@@ -30,45 +32,41 @@ public class UserPrincipal implements UserDetails {
     @JsonIgnore
     private String password;
 
-    private Collection<? extends GrantedAuthority> authorities;
-
-    public UserPrincipal(Long id, UserInfo userInfo, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id,
+                         UserInfo userInfo,
+                         String username,
+                         String email,
+                         String password,
+                         boolean locked,
+                         boolean enabled,
+                         Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.userInfo = userInfo;
         this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.locked = locked;
+        this.enabled = enabled;
     }
 
     public static UserPrincipal create(User user) {
+        log.debug("Start getting user roles and save to simple granted authority..");
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
                 new SimpleGrantedAuthority(role.getType().name())
         ).collect(Collectors.toList());
 
+        log.debug("Creating new UserPrincipal..");
         return new UserPrincipal(
                 user.getId(),
                 user.getUserInfo(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.isLocked(),
+                user.isEnabled(),
                 authorities
         );
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
     }
 
     @Override
@@ -84,23 +82,5 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserPrincipal that = (UserPrincipal) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

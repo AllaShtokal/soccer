@@ -19,14 +19,16 @@ public class JwtTokenProvider {
     private int jwtExpirationInMs;
 
     public String generateToken(Authentication authentication) {
-
+        log.debug("Starting generate jwt token.");
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
+                .claim("user_id", Long.toString(userPrincipal.getId()))
+                .claim("username", userPrincipal.getUsername())
+                .claim("roles", userPrincipal.getAuthorities().toString())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -34,6 +36,7 @@ public class JwtTokenProvider {
     }
 
     public Long getUserIdFromJWT(String token) {
+        log.debug("Getting user id from jwt token.");
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
@@ -43,9 +46,12 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String authToken) {
+        log.debug("Starting validate token.");
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {

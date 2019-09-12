@@ -18,4 +18,4 @@ server:
 jwt:
   app:
     jwtSecret: uCYXW(/H!5pYIX`~.wlKOVh/Y|2gmO
-    jwtExpirationInMs: 1209600‬
+    jwtExpirationInMs: 1209600000
