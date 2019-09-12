@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -39,6 +40,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ExceptionResponse> duplicateEntry(DataIntegrityViolationException e) {
+        return entity(e.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PasswordsMismatchException.class)
+    public ResponseEntity<ExceptionResponse> duplicateEntry(PasswordsMismatchException e) {
         return entity(e.getMessage(), BAD_REQUEST);
     }
 

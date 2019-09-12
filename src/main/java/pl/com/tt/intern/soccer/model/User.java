@@ -1,9 +1,6 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pl.com.tt.intern.soccer.annotation.Username;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
@@ -22,6 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Builder
 @Table(name = "user")
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class User extends DateAudit {
