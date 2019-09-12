@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityViolationException("user already exists");
+            throw new DataIntegrityViolationException("User already exists");
         }
     }
 

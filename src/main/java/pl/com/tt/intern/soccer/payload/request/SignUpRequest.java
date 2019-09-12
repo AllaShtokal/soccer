@@ -2,16 +2,20 @@ package pl.com.tt.intern.soccer.payload.request;
 
 import lombok.Data;
 import pl.com.tt.intern.soccer.annotation.Password;
-import pl.com.tt.intern.soccer.annotation.Username;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import static pl.com.tt.intern.soccer.configuration.Messages.VALID_USERNAME;
 
 @Data
 public class SignUpRequest {
 
-    @Username
+    @NotBlank
+    @Size(min = 5, max = 20)
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = VALID_USERNAME)
     private String username;
 
     @Email
