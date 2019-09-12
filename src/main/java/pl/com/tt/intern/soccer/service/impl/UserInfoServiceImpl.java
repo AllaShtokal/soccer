@@ -7,6 +7,7 @@ import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.repository.UserInfoRepository;
 import pl.com.tt.intern.soccer.service.UserInfoService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -26,11 +27,13 @@ public class UserInfoServiceImpl implements UserInfoService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Transactional
     @Override
     public UserInfo save(UserInfo userInfo) {
         return userInfoRepository.save(userInfo);
     }
 
+    @Transactional
     @Override
     public void deleteById(Long id) {
         userInfoRepository.deleteById(id);

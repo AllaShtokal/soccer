@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    @Override
     @Transactional
+    @Override
     public User save(User user) {
         try {
             String oldPassword = user.getPassword();
@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Transactional
     @Override
     public void deleteById(Long id) {
         userRepository.deleteById(id);
