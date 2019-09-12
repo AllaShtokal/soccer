@@ -16,3 +16,5 @@ mail:
 server:
   default:
     timezone: UTC
+  servlet:
+    context-path: /api
