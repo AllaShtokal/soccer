@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Data
+@Builder
 public class UserPrincipal implements UserDetails {
 
     private static final long serialVersionUID = -3338834619238915184L;
@@ -32,24 +34,6 @@ public class UserPrincipal implements UserDetails {
     @JsonIgnore
     private String password;
 
-    public UserPrincipal(Long id,
-                         UserInfo userInfo,
-                         String username,
-                         String email,
-                         String password,
-                         boolean locked,
-                         boolean enabled,
-                         Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.userInfo = userInfo;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.authorities = authorities;
-        this.locked = locked;
-        this.enabled = enabled;
-    }
-
     public static UserPrincipal create(User user) {
         log.debug("Start getting user roles and save to simple granted authority..");
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
@@ -57,16 +41,16 @@ public class UserPrincipal implements UserDetails {
         ).collect(Collectors.toList());
 
         log.debug("Creating new UserPrincipal..");
-        return new UserPrincipal(
-                user.getId(),
-                user.getUserInfo(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
-                user.isLocked(),
-                user.isEnabled(),
-                authorities
-        );
+        return UserPrincipal.builder()
+                .id(user.getId())
+                .userInfo(user.getUserInfo())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .locked(user.isLocked())
+                .enabled(user.isEnabled())
+                .authorities(authorities)
+                .build();
     }
 
     @Override
