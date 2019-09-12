@@ -1,5 +1,6 @@
 package pl.com.tt.intern.soccer.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.com.tt.intern.soccer.security.JwtAuthenticationEntryPoint;
+import pl.com.tt.intern.soccer.security.JwtAuthenticationFilter;
 import pl.com.tt.intern.soccer.service.impl.CustomUserDetailsServiceImpl;
 
 import static org.springframework.security.config.BeanIds.AUTHENTICATION_MANAGER;
@@ -20,6 +24,14 @@ import static org.springframework.security.config.BeanIds.AUTHENTICATION_MANAGER
         prePostEnabled = true
 )
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
     @Bean
     public CustomUserDetailsServiceImpl customUserDetailsService() {
@@ -57,6 +69,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .disable();
+
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
 
