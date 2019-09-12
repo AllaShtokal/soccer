@@ -19,7 +19,7 @@
             <column name="period" type="BIGINT">
                 <constraints nullable="false" />
             </column>
-            <column name="confirm" type="BOOLEAN">
+            <column name="confirmed" type="BOOLEAN">
                 <constraints nullable="false" />
             </column>
         </createTable>

@@ -34,6 +34,6 @@ public class Reservation {
     private Long period;
 
     @NotNull
-    @Column(name="confirm", nullable = false)
-    private Boolean confirm;
+    @Column(name="confirmed", nullable = false)
+    private Boolean confirmed;
 }
