@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import static pl.com.tt.intern.soccer.configuration.Messages.VALID_USERNAME;
+import static pl.com.tt.intern.soccer.util.Messages.VALID_USERNAME;
 
 @Data
 public class SignUpRequest {
