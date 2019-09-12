@@ -1,14 +1,14 @@
 package pl.com.tt.intern.soccer.exception.service;
 
-import com.wojcik.music.exception.response.ExceptionResponse;
-import com.wojcik.music.exception.response.ValidationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
+import pl.com.tt.intern.soccer.exception.response.ValidationResponse;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
+import static java.time.LocalDateTime.now;
 import static org.springframework.http.ResponseEntity.status;
 
 @Service
@@ -30,7 +30,7 @@ public class EntityFactory {
             return ExceptionResponse.builder()
                     .message(message)
                     .status((short) status.value())
-                    .time(LocalDateTime.now())
+                    .time(now())
                     .build();
         }
 
@@ -38,7 +38,7 @@ public class EntityFactory {
             return ValidationResponse.builder()
                     .validation(validationMap)
                     .status((short) status.value())
-                    .time(LocalDateTime.now())
+                    .time(now())
                     .build();
         }
     }

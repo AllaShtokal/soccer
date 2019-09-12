@@ -35,4 +35,5 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void deleteById(Long id) {
         userInfoRepository.deleteById(id);
     }
+
 }
