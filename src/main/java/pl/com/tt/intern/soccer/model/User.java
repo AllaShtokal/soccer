@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pl.com.tt.intern.soccer.annotation.Password;
 import pl.com.tt.intern.soccer.annotation.Username;
@@ -20,8 +21,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class User extends DateAudit {
-    
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
@@ -74,3 +76,4 @@ public class User extends DateAudit {
         this.password = password;
     }
 }
+
