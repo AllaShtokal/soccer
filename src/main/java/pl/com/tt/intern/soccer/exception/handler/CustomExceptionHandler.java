@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -20,12 +21,12 @@ import static pl.com.tt.intern.soccer.exception.service.ValidationService.valida
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity general(Exception e) {
+    public ResponseEntity<ExceptionResponse> general(Exception e) {
         return entity(e.getMessage(), BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity notFound(NotFoundException e) {
+    public ResponseEntity<ExceptionResponse> notFound(NotFoundException e) {
         return entity(e.getMessage(), NOT_FOUND);
     }
 
@@ -37,7 +38,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity duplicateEntry(DataIntegrityViolationException e) {
+    public ResponseEntity<ExceptionResponse> duplicateEntry(DataIntegrityViolationException e) {
         return entity(e.getMessage(), BAD_REQUEST);
     }
 

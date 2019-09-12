@@ -1,9 +1,9 @@
 package pl.com.tt.intern.soccer.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import pl.com.tt.intern.soccer.annotation.Password;
 import pl.com.tt.intern.soccer.annotation.Username;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
@@ -14,11 +14,13 @@ import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
+@Builder
 @Table(name = "user")
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -45,7 +47,6 @@ public class User extends DateAudit {
             length = 70)
     private String email;
 
-    @Password
     @Column(name = "password",
             nullable = false,
             length = 100)
@@ -59,7 +60,7 @@ public class User extends DateAudit {
             nullable = false)
     private boolean enabled;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = PERSIST)
     private UserInfo userInfo;
 
     @ManyToMany(fetch = EAGER)
@@ -69,11 +70,5 @@ public class User extends DateAudit {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(UserInfo userInfo, String username, String email, String password) {
-        this.userInfo = userInfo;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
 }
 
