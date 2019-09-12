@@ -71,7 +71,6 @@ public class User extends DateAudit {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<Reservation> reservation;
 

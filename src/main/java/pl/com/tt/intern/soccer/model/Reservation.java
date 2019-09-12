@@ -2,11 +2,9 @@ package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.com.tt.intern.soccer.utils.LocalDateTimeAttributeConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -28,7 +26,6 @@ public class Reservation {
     private User user;
 
     @NotNull
-    @Convert(converter = LocalDateTimeAttributeConverter.class)
     @Column(name="date", nullable = false, unique = true)
     private LocalDateTime date;
 
