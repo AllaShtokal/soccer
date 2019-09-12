@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.model.User;
@@ -20,22 +21,17 @@ public class SignUpServiceImpl implements SignUpService {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final ModelMapper mapper;
 
     @Override
     public SuccessfulSignUpResponse signUp(SignUpRequest request) throws Exception {
         if (doPasswordsMatch(request)) {
-            UserInfo userInfo = UserInfo.builder()
-                    .firstName(request.getFirstName())
-                    .lastName(request.getLastName())
-                    .build();
+            UserInfo userInfo = mapper.map(request, UserInfo.class);
+            User user = mapper.map(request, User.class);
 
-            User user = User.builder()
-                    .userInfo(userInfo)
-                    .username(request.getUsername())
-                    .email(request.getEmail())
-                    .password(request.getPassword())
-                    .roles(singleton(roleService.findByType(ROLE_USER)))
-                    .build();
+            userInfo.setUser(user);
+            user.setUserInfo(userInfo);
+            user.setRoles(singleton(roleService.findByType(ROLE_USER)));
 
             return new SuccessfulSignUpResponse("User registered successfully", userService.save(user));
         } else
