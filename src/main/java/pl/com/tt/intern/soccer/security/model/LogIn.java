@@ -1,4 +1,4 @@
-package pl.com.tt.intern.soccer.security;
+package pl.com.tt.intern.soccer.security.model;
 
 import lombok.Data;
 
