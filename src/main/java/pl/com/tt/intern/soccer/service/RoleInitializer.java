@@ -30,7 +30,7 @@ public class RoleInitializer {
     void createRoleIfNotFound(RoleType type) {
         Optional<Role> role = roleRepository.findByType(type);
         Role newRole = new Role();
-        if (role.isEmpty()) {
+        if (!role.isPresent()) {
             newRole.setType(type);
             roleRepository.save(newRole);
         }
