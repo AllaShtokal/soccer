@@ -1,7 +1,6 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name="reservation")
-@NoArgsConstructor
 public class Reservation {
 
     @Id
