@@ -24,7 +24,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<SuccessfulSignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) throws Exception {
         return ok(signUpService.signUp(request));
-
     }
 
 }
