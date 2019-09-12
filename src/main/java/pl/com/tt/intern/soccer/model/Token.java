@@ -27,7 +27,7 @@ public class Token {
     private User user;
 
     @NotNull
-    @Column(name = "uuid")
+    @Column(name = "uuid", unique = true)
     private String uuid ;
 
     @NotNull
