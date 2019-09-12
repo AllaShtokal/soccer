@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.com.tt.intern.soccer.payload.request.LoginRequest;
 import pl.com.tt.intern.soccer.payload.response.JwtAuthenticationResponse;
 import pl.com.tt.intern.soccer.security.JwtTokenProvider;
-import pl.com.tt.intern.soccer.service.AuthenticationService;
+import pl.com.tt.intern.soccer.service.LogInService;
 
 import javax.validation.Valid;
 
@@ -22,11 +22,11 @@ import static org.springframework.http.ResponseEntity.ok;
 public class AuthController {
 
     private final JwtTokenProvider tokenProvider;
-    private final AuthenticationService authenticationService;
+    private final LogInService logInService;
 
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationService.checkAndSetAuthentication(loginRequest);
+        Authentication authentication = logInService.checkAndSetAuthentication(loginRequest);
         String jwt = tokenProvider.generateToken(authentication);
         return ok(new JwtAuthenticationResponse(jwt));
     }
