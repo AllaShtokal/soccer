@@ -69,4 +69,6 @@ public class User extends DateAudit {
     @OneToMany(mappedBy = "user")
     private Set<ConfirmationKey> confirmationKeys;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Reservation> reservations;
 }
