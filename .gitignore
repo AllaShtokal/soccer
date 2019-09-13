@@ -1,6 +1,9 @@
 HELP.md
 !**/src/main/**
 !**/src/test/**
+mvnw
+mvnw.cmd
+.mvn
 
 ##########################
 ## Java
