@@ -26,13 +26,14 @@ public class AuthController {
 
     private final JwtTokenProvider tokenProvider;
     private final LogInService logInService;
+    private final SignUpService signUpService;
 
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = logInService.checkAndSetAuthentication(loginRequest);
         String jwt = tokenProvider.generateToken(authentication);
         return ok(new JwtAuthenticationResponse(jwt));
-    private final SignUpService signUpService;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<SuccessfulSignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) throws Exception {
