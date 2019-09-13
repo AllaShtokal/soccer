@@ -14,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @Table(name = "token")
-public class Token {
+public class ConfirmationKey {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -34,7 +34,7 @@ public class Token {
     @Column(name = "expiration_time")
     private LocalDateTime expirationTime;
 
-    public Token(User user) {
+    public ConfirmationKey(User user) {
         this.user = user;
         this.uuid = randomUUID().toString();
         this.expirationTime = LocalDateTime.now().plusHours(24);

@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "confirmation_key")
 @NoArgsConstructor
 public class User extends DateAudit {
 
@@ -71,7 +71,7 @@ public class User extends DateAudit {
 
     @ElementCollection(fetch = LAZY)
     @OneToMany(mappedBy = "user")
-    private List<Token> token;
+    private List<ConfirmationKey> confirmationKey;
 
     public User(UserInfo userInfo, String username, String email, String password) {
         this.userInfo = userInfo;
