@@ -9,7 +9,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.PERSIST;
@@ -71,5 +70,5 @@ public class User extends DateAudit {
     private Set<ConfirmationKey> confirmationKeys;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Reservation> reservation;
+    private Set<Reservation> reservations;
 }

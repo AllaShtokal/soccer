@@ -29,7 +29,7 @@ public class Reservation {
 
     @NotNull
     @Column(name="period", nullable = false)
-    private Long period;
+    private LocalDateTime period;
 
     @NotNull
     @Column(name="confirmed", nullable = false)
