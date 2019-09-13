@@ -23,5 +23,4 @@ public class AppConfiguration {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
 }

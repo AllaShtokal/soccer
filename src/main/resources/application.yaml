@@ -18,3 +18,7 @@ server:
     timezone: UTC
   servlet:
     context-path: /api
+jwt:
+  app:
+    jwtSecret: uCYXW(/H!5pYIX`~.wlKOVh/Y|2gmO
+    jwtExpirationInMs: 1209600000

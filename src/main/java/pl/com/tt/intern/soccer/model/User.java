@@ -65,4 +65,3 @@ public class User extends DateAudit {
     private Set<Role> roles = new HashSet<>();
 
 }
-
