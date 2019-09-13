@@ -29,7 +29,7 @@ public class JwtTokenProvider {
                 .claim("user_id", Long.toString(userPrincipal.getId()))
                 .claim("username", userPrincipal.getUsername())
                 .claim("roles", userPrincipal.getAuthorities().toString())
-                .setIssuedAt(new Date())
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
