@@ -13,6 +13,7 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -63,5 +64,9 @@ public class User extends DateAudit {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @ElementCollection(fetch = LAZY)
+    @OneToMany(mappedBy = "user")
+    private Set<ConfirmationKey> confirmationKeys;
 
 }
