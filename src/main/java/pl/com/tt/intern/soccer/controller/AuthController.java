@@ -11,6 +11,9 @@ import pl.com.tt.intern.soccer.payload.request.LoginRequest;
 import pl.com.tt.intern.soccer.payload.response.JwtAuthenticationResponse;
 import pl.com.tt.intern.soccer.security.JwtTokenProvider;
 import pl.com.tt.intern.soccer.service.LogInService;
+import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
+import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
+import pl.com.tt.intern.soccer.service.SignUpService;
 
 import javax.validation.Valid;
 
@@ -29,6 +32,11 @@ public class AuthController {
         Authentication authentication = logInService.checkAndSetAuthentication(loginRequest);
         String jwt = tokenProvider.generateToken(authentication);
         return ok(new JwtAuthenticationResponse(jwt));
+    private final SignUpService signUpService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<SuccessfulSignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) throws Exception {
+        return ok(signUpService.signUp(request));
     }
 
 }

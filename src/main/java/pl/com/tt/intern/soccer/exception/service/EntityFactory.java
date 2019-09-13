@@ -14,12 +14,12 @@ import static org.springframework.http.ResponseEntity.status;
 @Service
 public class EntityFactory {
 
-    public static ResponseEntity entity(String message, HttpStatus status) {
+    public static ResponseEntity<ExceptionResponse> entity(String message, HttpStatus status) {
         return status(status)
                 .body(ResponseFactory.response(message, status));
     }
 
-    public static ResponseEntity entity(Map<String, String> validationMap, HttpStatus status) {
+    public static ResponseEntity<ValidationResponse> entity(Map<String, String> validationMap, HttpStatus status) {
         return status(status)
                 .body(ResponseFactory.response(validationMap, status));
     }
@@ -34,7 +34,7 @@ public class EntityFactory {
                     .build();
         }
 
-        public static ValidationResponse response(Map validationMap, HttpStatus status) {
+        public static ValidationResponse response(Map<String, String> validationMap, HttpStatus status) {
             return ValidationResponse.builder()
                     .validation(validationMap)
                     .status((short) status.value())

@@ -1,0 +1,30 @@
+package pl.com.tt.intern.soccer.service;
+
+import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.model.User;
+
+import java.util.List;
+
+public interface UserService {
+
+    List<User> findAll();
+
+    User findById(Long id) throws NotFoundException;
+
+    User save(User user);
+
+    void deleteById(Long id);
+
+    List<User> findByIdIn(List<Long> userIds);
+
+    User findByEmail(String email) throws NotFoundException;
+
+    User findByUsernameOrEmail(String username, String email) throws NotFoundException;
+
+    User findByUsername(String username) throws NotFoundException;
+
+    Boolean existsByEmail(String email);
+
+    Boolean existsByUsername(String username);
+
+}
