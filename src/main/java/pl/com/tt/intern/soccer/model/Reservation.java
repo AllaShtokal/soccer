@@ -24,12 +24,12 @@ public class Reservation {
     private User user;
 
     @NotNull
-    @Column(name="date", nullable = false, unique = true)
-    private LocalDateTime date;
+    @Column(name="date_from", nullable = false, unique = true)
+    private LocalDateTime dateFrom;
 
     @NotNull
-    @Column(name="period", nullable = false)
-    private LocalDateTime period;
+    @Column(name="date_to", nullable = false)
+    private LocalDateTime dateTo;
 
     @NotNull
     @Column(name="confirmed", nullable = false)
