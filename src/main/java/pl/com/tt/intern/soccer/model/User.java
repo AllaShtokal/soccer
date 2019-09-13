@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "confirmation_key")
+@Table(name = "user")
 @NoArgsConstructor
 public class User extends DateAudit {
 

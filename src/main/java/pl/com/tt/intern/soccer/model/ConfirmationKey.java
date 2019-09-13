@@ -13,7 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "token")
+@Table(name = "confirmation_key")
 public class ConfirmationKey {
 
     @Id
