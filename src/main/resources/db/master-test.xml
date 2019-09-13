@@ -11,6 +11,6 @@
     <include file="db/migration/20190911_1343_createUserTable.xml"/>
     <include file="db/migration/20190911_1344_createIndexToUserRoleTable.xml"/>
     <include file="db/migration/20190911_1345_createIndexToUserInfoTable.xml"/>
-    <include file="db/migration/20190912_0930_createTokenTable.xml" />
+    <include file="db/migration/20190913_1310_createConfirmationKeyTable.xml" />
 
 </databaseChangeLog>

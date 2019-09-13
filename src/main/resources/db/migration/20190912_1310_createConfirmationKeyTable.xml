@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet author="grymulskil" id="656820192060321">
-        <createTable tableName="token">
+    <changeSet author="dziewulskij" id="656820192060321">
+        <createTable tableName="confirmation_key">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -21,10 +21,10 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="token"
+                                 baseTableName="confirmation_key"
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
-                                 constraintName="token_user_constraint"
+                                 constraintName="confirmationKey_user_constraint"
                                  referencedColumnNames="id"
                                  referencedTableName="user"/>
     </changeSet>
