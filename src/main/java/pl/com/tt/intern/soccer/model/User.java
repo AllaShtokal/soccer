@@ -9,7 +9,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.PERSIST;
@@ -68,6 +67,6 @@ public class User extends DateAudit {
 
     @ElementCollection(fetch = LAZY)
     @OneToMany(mappedBy = "user")
-    private List<ConfirmationKey> confirmationKey;
+    private Set<ConfirmationKey> confirmationKeys;
 
 }
