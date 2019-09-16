@@ -27,12 +27,11 @@ public class SendMailServiceImpl implements SendMailService {
         try {
             String msg = FileToString.readFileToString(fileName);
             String msgMail = insertLinkWithTokenToMailMsg(confirmationKey, msg, linkToInsert, indexOfByText);
-            System.out.println(confirmationKey.getUuid());
-//            mailSender.sendSimpleMessageHtml(
-//                    user.getEmail(),
-//                    subject,
-//                    msgMail
-//            );
+            mailSender.sendSimpleMessageHtml(
+                    user.getEmail(),
+                    subject,
+                    msgMail
+            );
         } catch (IOException e) {
             log.error("Throwing an IOException while reading the file.. ", e);
         }

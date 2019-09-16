@@ -63,7 +63,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void changePassword(String changePasswordToken, ChangePasswordRequest request) throws Exception {
-
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordToken);
             checkIfExpired(confirmationKey.getExpirationTime());
