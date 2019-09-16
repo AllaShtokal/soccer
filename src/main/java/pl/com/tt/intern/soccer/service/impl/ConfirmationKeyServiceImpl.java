@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
@@ -29,8 +30,9 @@ public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {
     }
 
     @Override
+    @Scheduled(cron = "0 0 0 * * *")
     public void scanAndDeleteExpiredConfirmationKeys() {
-    confirmationKeyRepository.deleteByExpirationTime();
+        confirmationKeyRepository.deleteByExpirationTime();
     }
 
 }
