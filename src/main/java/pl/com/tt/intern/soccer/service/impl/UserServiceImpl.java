@@ -82,4 +82,10 @@ public class UserServiceImpl implements UserService {
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
+
+    @Override
+    public void changeEnabledAccount(User user, Boolean enabled) {
+        user.setEnabled(enabled);
+        userRepository.save(user);
+    }
 }

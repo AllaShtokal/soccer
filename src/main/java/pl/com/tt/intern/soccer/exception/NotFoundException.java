@@ -2,8 +2,10 @@ package pl.com.tt.intern.soccer.exception;
 
 public class NotFoundException extends Exception {
 
+    private static final long serialVersionUID = -5471095360918080692L;
+
     public NotFoundException() {
-        super("resource not found");
+        super("Resource not found");
     }
 
     public NotFoundException(String message) {

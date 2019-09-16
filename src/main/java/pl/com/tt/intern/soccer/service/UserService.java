@@ -27,4 +27,6 @@ public interface UserService {
 
     Boolean existsByUsername(String username);
 
+    void changeEnabledAccount(User user, Boolean enabled);
+
 }
