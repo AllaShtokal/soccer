@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.com.tt.intern.soccer.exception.ActivationAccountException;
+import pl.com.tt.intern.soccer.exception.CorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
@@ -51,8 +51,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return entity(e.getMessage(), BAD_REQUEST);
     }
 
-    @ExceptionHandler(ActivationAccountException.class)
-    public ResponseEntity<ExceptionResponse> accountActivationError(ActivationAccountException ex) {
+    @ExceptionHandler(CorrectTokenException.class)
+    public ResponseEntity<ExceptionResponse> accountActivationError(CorrectTokenException ex) {
         log.error("Throw ActivationAccountException with message: {}", ex.getMessage());
         return entity(ex.getMessage(), BAD_REQUEST);
     }
