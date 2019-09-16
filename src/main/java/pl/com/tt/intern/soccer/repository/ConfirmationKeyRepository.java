@@ -15,8 +15,6 @@ public interface ConfirmationKeyRepository extends JpaRepository<ConfirmationKey
 
     Optional<ConfirmationKey> findByUuid(String uuid);
 
-    List<ConfirmationKey> findAll();
-
     @Transactional
     @Modifying
     @Query(value = "delete from confirmation_key where expiration_time < NOW() ", nativeQuery = true)
