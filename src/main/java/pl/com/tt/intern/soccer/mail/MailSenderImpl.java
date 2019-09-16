@@ -36,7 +36,7 @@ public class MailSenderImpl implements MailSender {
         MimeMessage msg = javaMailSender.createMimeMessage();
 
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+            MimeMessageHelper helper = new MimeMessageHelper(msg, true, "utf-8");
             setBasicMessageValues(helper, to, subject, text, html);
         } catch (MessagingException e) {
             log.error("Sending simple email failed..");

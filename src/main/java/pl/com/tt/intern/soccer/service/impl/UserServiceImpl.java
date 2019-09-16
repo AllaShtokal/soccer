@@ -86,6 +86,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeEnabledAccount(User user, Boolean enabled) {
         user.setEnabled(enabled);
-        save(user);
+        userRepository.save(user);
     }
 }

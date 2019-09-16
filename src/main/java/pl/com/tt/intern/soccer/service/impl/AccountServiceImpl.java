@@ -23,6 +23,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activeToken);
             checkIfExpired(confirmationKey.getExpirationTime());
+            confirmationKey.setExpirationTime(LocalDateTime.now());
             userService.changeEnabledAccount(confirmationKey.getUser(), true);
         } catch (NotFoundException e) {
             throw new ActivationAccountException("The account activation token can't be found in the database.");
