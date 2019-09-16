@@ -84,7 +84,7 @@ public class SignUpServiceImpl implements SignUpService {
         StringBuilder newString = new StringBuilder(msg);
 
         return newString.insert(
-                msg.indexOf(" \">Link aktywacyjny</a>"),
+                msg.indexOf("\">Link aktywacyjny</a>"),
                 activationLink + confirmationKey.getUuid()
         ).toString();
     }
