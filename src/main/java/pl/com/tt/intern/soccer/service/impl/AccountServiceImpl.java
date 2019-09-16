@@ -11,6 +11,8 @@ import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
 
+import static java.time.LocalDateTime.now;
+
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
@@ -23,7 +25,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activeToken);
             checkIfExpired(confirmationKey.getExpirationTime());
-            confirmationKey.setExpirationTime(LocalDateTime.now());
+            confirmationKey.setExpirationTime(now());
             userService.changeEnabledAccount(confirmationKey.getUser(), true);
         } catch (NotFoundException e) {
             throw new ActivationAccountException("The account activation token can't be found in the database.");
@@ -31,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private void checkIfExpired(LocalDateTime expirationTimeToken) throws ActivationAccountException {
-        if (!expirationTimeToken.isAfter(LocalDateTime.now()))
+        if (!expirationTimeToken.isAfter(now()))
             throw new ActivationAccountException("The account activation token has expired.");
     }
 }
