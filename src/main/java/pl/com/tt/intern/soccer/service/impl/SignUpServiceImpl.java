@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import static java.util.Collections.singleton;
 import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SignUpServiceImpl implements SignUpService {
@@ -72,7 +74,7 @@ public class SignUpServiceImpl implements SignUpService {
                     msgMail
             );
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Throwing an IOException while reading the file.. ", e);
         }
     }
 
