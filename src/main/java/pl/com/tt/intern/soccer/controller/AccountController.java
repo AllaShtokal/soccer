@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.com.tt.intern.soccer.exception.ActivationAccountException;
 import pl.com.tt.intern.soccer.service.AccountService;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class AccountController {
     @PatchMapping
     public ResponseEntity<?> activateAccount(@RequestParam(name = "activeToken") String activeToken) throws ActivationAccountException {
         accountService.activateAccountByToken(activeToken);
-        return ResponseEntity.ok().build();
+        return ok().build();
     }
 
 }
