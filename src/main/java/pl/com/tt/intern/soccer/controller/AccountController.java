@@ -3,7 +3,7 @@ package pl.com.tt.intern.soccer.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.com.tt.intern.soccer.exception.CorrectTokenException;
+import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.service.AccountService;
@@ -20,7 +20,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PatchMapping
-    public ResponseEntity<?> activateAccount(@RequestParam(name = "activeToken") String activeToken) throws CorrectTokenException {
+    public ResponseEntity<?> activateAccount(@RequestParam(name = "activeToken") String activeToken) throws IncorrectTokenException {
         accountService.activateAccountByToken(activeToken);
         return ok().build();
     }
