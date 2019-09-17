@@ -19,11 +19,11 @@ public interface ReservationService {
 
     ReservationPersistedResponse save(ReservationPersistRequest reservation) throws NotFoundException;
 
-    boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException;
+    boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException;
 
     void deleteById(Long id);
 
-    void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException;
+    void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException;
 
     boolean isInFuture(ReservationPersistRequest reservationPersistDTO);
 

@@ -43,31 +43,32 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationPersistedResponse save(ReservationPersistRequest reservationPersistDTO) throws NotFoundException {
-        Reservation reservation = mapper.map(reservationPersistDTO, Reservation.class);
+    public ReservationPersistedResponse save(ReservationPersistRequest reservationPersistRequest) throws NotFoundException {
+        Reservation reservation = mapper.map(reservationPersistRequest, Reservation.class);
         reservation.setConfirmed(false);
-        reservation.setUser(userService.findById(reservationPersistDTO.getUserId()));
+        reservation.setUser(userService.findById(reservationPersistRequest.getUserId()));
         Reservation savedEntity = reservationRepository.save(reservation);
         return mapper.map(savedEntity, ReservationPersistedResponse.class);
 
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
     }
 
     @Override
-    public void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException {
-        if (!isInFuture(reservationPersistDTO))
+    public void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException {
+        if (!isInFuture(reservationPersistRequest))
             throw new ReservationFormatException("Date must be in future");
-        if (!isDateOrderOk(reservationPersistDTO))
+        if (!isDateOrderOk(reservationPersistRequest))
             throw new ReservationFormatException("Wrong date order");
-        if (!isDate15MinuteRounded(reservationPersistDTO.getDateFrom()))
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
             throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDate15MinuteRounded(reservationPersistDTO.getDateTo()))
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
             throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDateRangeAvailable(reservationPersistDTO))
+        if (!isDateRangeAvailable(reservationPersistRequest))
             throw new ReservationFormatException("Reservation date range is already booked");
     }
 
