@@ -6,6 +6,7 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationException;
 import pl.com.tt.intern.soccer.model.Reservation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationService {
@@ -23,4 +24,10 @@ public interface ReservationService {
     void deleteById(Long id);
 
     void verifyPersistedObject(ReservationPersistDTO reservationPersistDTO) throws ReservationException;
+
+    boolean isInFuture(ReservationPersistDTO reservationPersistDTO);
+
+    boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO);
+
+    boolean isDate15MinuteRounded(LocalDateTime time);
 }

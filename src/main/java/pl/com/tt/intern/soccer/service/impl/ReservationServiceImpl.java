@@ -71,22 +71,26 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationException("Reservation date range is already booked");
     }
 
-    public boolean isInFuture(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
+    @Override
+    public boolean isInFuture(ReservationPersistDTO reservationPersistDTO)  {
         return reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
     }
 
-    public boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
+    @Override
+    public boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO)  {
         return reservationPersistDTO.getDateFrom().isBefore(reservationPersistDTO.getDateTo());
     }
 
-    public boolean isDate15MinuteRounded(LocalDateTime time) throws ReservationException {
+    @Override
+    public boolean isDate15MinuteRounded(LocalDateTime time) {
         if (time.getNano() != 0) return false;
         if (time.getSecond() != 0) return false;
         if (time.getMinute()%15 !=0) return false;
         return true;
     }
 
-    public boolean isDateRangeAvailable(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
+    @Override
+    public boolean isDateRangeAvailable(ReservationPersistDTO reservationPersistDTO)  {
         LocalDateTime dateFrom = reservationPersistDTO.getDateFrom();
         LocalDateTime dateTo = reservationPersistDTO.getDateTo();
         return !reservationRepository.datesCollide(dateFrom, dateTo);
