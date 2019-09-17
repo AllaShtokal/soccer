@@ -6,7 +6,5 @@ public class ReservationException extends Exception {
         super(message);
     }
 
-    public ReservationException() {
-
-    }
+    public ReservationException() { }
 }

@@ -3,9 +3,9 @@ package pl.com.tt.intern.soccer.service;
 import pl.com.tt.intern.soccer.dto.ReservationPersistDTO;
 import pl.com.tt.intern.soccer.dto.ReservationRetrieveDTO;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.ReservationException;
 import pl.com.tt.intern.soccer.model.Reservation;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationService {
@@ -18,9 +18,9 @@ public interface ReservationService {
 
     ReservationRetrieveDTO save(ReservationPersistDTO reservation) throws NotFoundException;
 
-    boolean isDateRangeAvailable(ReservationPersistDTO reservationPersistDTO);
+    boolean isDateRangeAvailable(ReservationPersistDTO reservationPersistDTO) throws ReservationException;
 
     void deleteById(Long id);
 
-    boolean isPersistedObjectOk(ReservationPersistDTO reservationPersistDTO);
+    void verifyPersistedObject(ReservationPersistDTO reservationPersistDTO) throws ReservationException;
 }
