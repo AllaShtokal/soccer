@@ -44,9 +44,9 @@ public class AccountServiceImpl implements AccountService {
     private final ModelMapper mapper;
 
     @Override
-    public void activateAccountByToken(String activeConfirmKey) throws IncorrectTokenException {
+    public void activateAccountByToken(String activationKey) throws IncorrectTokenException {
         try {
-            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activeConfirmKey);
+            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activationKey);
 
             checkIfExpired(confirmationKey.getExpirationTime());
             confirmationKey.setExpirationTime(now());
@@ -71,10 +71,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePassword(String changePasswordConfirmKey, PasswordChangerRequest request) throws Exception {
+    public void changePassword(String changePasswordKey, PasswordChangerRequest request) throws Exception {
         PasswordChanger cp = mapper.map(request, PasswordChanger.class);
         try {
-            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordConfirmKey);
+            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordKey);
             checkIfExpired(confirmationKey.getExpirationTime());
 
             if (cp.getPassword().equals(cp.getConfirmPassword())) {
