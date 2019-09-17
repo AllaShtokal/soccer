@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
+import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.mail.MailCustomizer;
@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
     private final ModelMapper mapper;
 
     @Override
-    public void activateAccountByToken(String activationKey) throws IncorrectTokenException {
+    public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activationKey);
 
@@ -52,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
             confirmationKey.setExpirationTime(now());
             userService.changeEnabledAccount(confirmationKey.getUser(), true);
         } catch (NotFoundException e) {
-            throw new IncorrectTokenException("The account activation token can't be found in the database.");
+            throw new IncorrectConfirmationKeyException("The account activation token can't be found in the database.");
         }
     }
 
@@ -85,12 +85,12 @@ public class AccountServiceImpl implements AccountService {
             } else
                 throw new PasswordsMismatchException();
         } catch (NotFoundException e) {
-            throw new IncorrectTokenException("The token can't be found in the database.");
+            throw new IncorrectConfirmationKeyException("The token can't be found in the database.");
         }
     }
 
-    private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectTokenException {
+    private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {
         if (!expirationTimeToken.isAfter(now()))
-            throw new IncorrectTokenException("The token has expired.");
+            throw new IncorrectConfirmationKeyException("The token has expired.");
     }
 }
