@@ -19,14 +19,14 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable("id") Long id) throws NotFoundException {
         log.debug("DELETE: /reservations/{}", id);
         if (reservationService.existsById(id)) {
             reservationService.deleteById(id);
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body("Deleted user: " + id);
+                    .noContent()
+                    .build();
         }
         throw new NotFoundException(String.format("Could not find user with id=%d - deletion impossible.", id));
     }
