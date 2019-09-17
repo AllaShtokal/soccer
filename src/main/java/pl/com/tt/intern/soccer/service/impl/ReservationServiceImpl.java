@@ -60,13 +60,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException {
         if (!isInFuture(reservationPersistDTO))
-            throw new ReservationFormatException("Reservation exception: date must be in future");
+            throw new ReservationFormatException("Date must be in future");
         if (!isDateOrderOk(reservationPersistDTO))
-            throw new ReservationFormatException("Reservation exception: wrong date order");
+            throw new ReservationFormatException("Wrong date order");
         if (!isDate15MinuteRounded(reservationPersistDTO.getDateFrom()))
-            throw new ReservationFormatException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDate15MinuteRounded(reservationPersistDTO.getDateTo()))
-            throw new ReservationFormatException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDateRangeAvailable(reservationPersistDTO))
             throw new ReservationFormatException("Reservation date range is already booked");
     }
