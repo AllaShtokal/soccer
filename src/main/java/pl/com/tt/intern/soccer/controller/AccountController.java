@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 @RequiredArgsConstructor
 public class AccountController {
 
