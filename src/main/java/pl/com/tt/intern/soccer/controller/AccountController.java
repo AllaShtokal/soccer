@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.payload.request.PasswordChangerRequest;
+import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
 import javax.validation.Valid;
@@ -40,9 +42,9 @@ public class AccountController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/deactivate/{id}")
-    public ResponseEntity<?> deactivateAccount(@PathVariable Long id) throws NotFoundException {
-        accountService.deactivate(id);
+    @PatchMapping("/deactivate")
+    public ResponseEntity<?> deactivateAccount(@CurrentUser UserPrincipal user) throws NotFoundException {
+        accountService.deactivate(user.getId());
         return ok().build();
     }
 }
