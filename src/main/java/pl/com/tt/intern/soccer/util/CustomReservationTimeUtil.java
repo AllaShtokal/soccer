@@ -14,7 +14,7 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-public final class CustomTimeUtil {
+public final class CustomReservationTimeUtil {
 
     public static LocalDateTime from(ReservationPeriod period) {
         switch (period) {
