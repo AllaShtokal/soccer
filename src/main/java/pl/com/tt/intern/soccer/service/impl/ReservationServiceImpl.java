@@ -7,6 +7,7 @@ import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -26,13 +27,16 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Transactional
     @Override
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 
+    @Transactional
     @Override
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
     }
+
 }
