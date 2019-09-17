@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
-import pl.com.tt.intern.soccer.payload.request.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static pl.com.tt.intern.soccer.payload.request.ReservationPeriod.ALL;
+import static pl.com.tt.intern.soccer.model.enums.ReservationPeriod.ALL;
 import static pl.com.tt.intern.soccer.util.TimeUtil.from;
 import static pl.com.tt.intern.soccer.util.TimeUtil.to;
 

@@ -1,6 +1,6 @@
 package pl.com.tt.intern.soccer.util;
 
-import pl.com.tt.intern.soccer.payload.request.ReservationPeriod;
+import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 
 import java.time.LocalDateTime;
 

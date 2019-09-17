@@ -1,10 +1,8 @@
-package pl.com.tt.intern.soccer.payload.request;
+package pl.com.tt.intern.soccer.model.enums;
 
 public enum ReservationPeriod {
-
     TODAY,
     WEEK,
     MONTH,
     ALL
-
 }
