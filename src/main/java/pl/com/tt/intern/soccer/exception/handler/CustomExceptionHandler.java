@@ -52,7 +52,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IncorrectTokenException.class)
-    public ResponseEntity<ExceptionResponse> incorrectTokenException(IncorrectTokenException ex) {
+    public ResponseEntity<ExceptionResponse> incorrectConfirmationKey(IncorrectTokenException ex) {
         log.error("Throw IncorrectTokenException with message: {}", ex.getMessage());
         return entity(ex.getMessage(), BAD_REQUEST);
     }
