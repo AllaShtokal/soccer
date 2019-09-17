@@ -68,7 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
             throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDateRangeAvailable(reservationPersistRequest))
+        if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
             throw new ReservationFormatException("Reservation date range is already booked");
     }
 
@@ -91,9 +91,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistDTO)  {
-        LocalDateTime dateFrom = reservationPersistDTO.getDateFrom();
-        LocalDateTime dateTo = reservationPersistDTO.getDateTo();
+    public boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo)  {
         return !reservationRepository.datesCollide(dateFrom, dateTo);
 
     }
