@@ -6,14 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
+import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
 import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
-import pl.com.tt.intern.soccer.service.RoleService;
-import pl.com.tt.intern.soccer.service.SendMailService;
-import pl.com.tt.intern.soccer.service.SignUpService;
-import pl.com.tt.intern.soccer.service.UserService;
+import pl.com.tt.intern.soccer.service.*;
 
 import static java.util.Collections.singleton;
 import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
@@ -38,6 +36,7 @@ public class SignUpServiceImpl implements SignUpService {
     private final UserService userService;
     private final RoleService roleService;
     private final SendMailService sendMailService;
+    private final ConfirmationKeyService confirmationKeyService;
     private final ModelMapper mapper;
 
     @Override
@@ -51,15 +50,22 @@ public class SignUpServiceImpl implements SignUpService {
             user.setRoles(singleton(roleService.findByType(ROLE_USER)));
 
             User result = userService.save(user);
-            sendActiveTokenMailMsg(result);
+            setAndSendActivationMailMsg(result);
             return new SuccessfulSignUpResponse("User registered successfully", result);
         } else
             throw new PasswordsMismatchException();
     }
 
-    private void sendActiveTokenMailMsg(User user) {
+    private void setAndSendActivationMailMsg(User user) {
+        ConfirmationKey confirmationKey = new ConfirmationKey(user);
+
+        confirmationKeyService.save(confirmationKey);
         sendMailService.sendEmailWithMessageFromFileAndInsertLinkWithToken(
-                user, fileActiveMailMsg, subjectActivationLink, activationLink, indexOfByTextActive);
+                confirmationKey,
+                fileActiveMailMsg,
+                subjectActivationLink,
+                activationLink,
+                indexOfByTextActive);
     }
 
     private boolean doPasswordsMatch(SignUpRequest request) {

@@ -7,6 +7,8 @@ import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.repository.ConfirmationKeyRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {
@@ -14,6 +16,7 @@ public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {
     private final ConfirmationKeyRepository confirmationKeyRepository;
 
     @Override
+    @Transactional
     public ConfirmationKey save(ConfirmationKey confirmationKey) {
         return confirmationKeyRepository.save(confirmationKey);
     }

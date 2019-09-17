@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.mail.MailSender;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
-import pl.com.tt.intern.soccer.model.User;
-import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.SendMailService;
 import pl.com.tt.intern.soccer.util.files.FileToString;
 
@@ -17,18 +15,18 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SendMailServiceImpl implements SendMailService {
 
-    private final ConfirmationKeyService confirmationKeyService;
     private final MailSender mailSender;
 
-    public void sendEmailWithMessageFromFileAndInsertLinkWithToken(User user, String fileName, String subject, String linkToInsert, String indexOfByText) {
-        ConfirmationKey confirmationKey = new ConfirmationKey(user);
-        confirmationKeyService.save(confirmationKey);
-
+    public void sendEmailWithMessageFromFileAndInsertLinkWithToken(ConfirmationKey confirmationKey,
+                                                                   String fileName,
+                                                                   String subject,
+                                                                   String linkToInsert,
+                                                                   String indexOfByText) {
         try {
             String msg = FileToString.readFileToString(fileName);
             String msgMail = insertLinkWithTokenToMailMsg(confirmationKey, msg, linkToInsert, indexOfByText);
             mailSender.sendSimpleMessageHtml(
-                    user.getEmail(),
+                    confirmationKey.getUser().getEmail(),
                     subject,
                     msgMail
             );

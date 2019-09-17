@@ -10,6 +10,7 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.model.account.ChangePassword;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
@@ -46,6 +47,7 @@ public class AccountServiceImpl implements AccountService {
     public void activateAccountByToken(String activeToken) throws CorrectTokenException {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activeToken);
+
             checkIfExpired(confirmationKey.getExpirationTime());
             confirmationKey.setExpirationTime(now());
             userService.changeEnabledAccount(confirmationKey.getUser(), true);
@@ -57,18 +59,27 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void sendMailToChangePassword(String email) throws NotFoundException {
         User user = userService.findByEmail(email);
+        ConfirmationKey confirmationKey = new ConfirmationKey(user);
+
+        confirmationKeyService.save(confirmationKey);
         sendMailService.sendEmailWithMessageFromFileAndInsertLinkWithToken(
-                user, fileChangePasswordMailMsg, changePasswordSubject, changePasswordLink, indexOfByTextChangePassword);
+                confirmationKey,
+                fileChangePasswordMailMsg,
+                changePasswordSubject,
+                changePasswordLink,
+                indexOfByTextChangePassword);
     }
 
     @Override
     public void changePassword(String changePasswordToken, ChangePasswordRequest request) throws Exception {
+        ChangePassword cp = mapper.map(request, ChangePassword.class);
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordToken);
             checkIfExpired(confirmationKey.getExpirationTime());
-            if (request.getPassword().equals(request.getConfirmPassword())) {
+
+            if (cp.getPassword().equals(cp.getConfirmPassword())) {
                 User user = confirmationKey.getUser();
-                user.setPassword(request.getPassword());
+                user.setPassword(cp.getPassword());
                 confirmationKey.setExpirationTime(now());
                 userService.changePassword(user);
             } else
