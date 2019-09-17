@@ -22,6 +22,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserService userService;
+    private final ModelMapper mapper;
 
     @Override
     public List<Reservation> findAll() {
@@ -43,7 +44,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public ReservationRetrieveDTO save(ReservationPersistDTO reservationPersistDTO) throws NotFoundException {
-        ModelMapper mapper = new ModelMapper();
         Reservation reservation = mapper.map(reservationPersistDTO, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setUser(userService.findById(reservationPersistDTO.getUserId()));
@@ -66,19 +66,19 @@ public class ReservationServiceImpl implements ReservationService {
         isDateRangeAvailable(reservationPersistDTO);
     }
 
-    private boolean isInFuture(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
+    public boolean isInFuture(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
         boolean isInFuture = reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
         if (isInFuture) return true;
         else throw new ReservationException("Reservation exception: date should be in future");
     }
 
-    private boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
+    public boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
         boolean isOrderOk = reservationPersistDTO.getDateFrom().isBefore(reservationPersistDTO.getDateTo());
         if (isOrderOk) return true;
         else throw new ReservationException("Reservation dates order is wrong. DateFrom should be before DateTo");
     }
 
-    private boolean isDate15MinuteRounded(LocalDateTime time) throws ReservationException {
+    public boolean isDate15MinuteRounded(LocalDateTime time) throws ReservationException {
         if (time.getNano() != 0) throw new ReservationException("nanoseconds in reservations should be 0");
         if (time.getSecond() != 0) throw new ReservationException("seconds in reservations should be 0");
         if (time.getMinute()%15 !=0) throw new ReservationException("minutes in reservations should be rounded to 15");;
