@@ -1,7 +1,7 @@
 package pl.com.tt.intern.soccer.controller
 
 import org.springframework.http.HttpStatus
-import pl.com.tt.intern.soccer.dto.ReservationPersistDTO
+import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest
 import pl.com.tt.intern.soccer.service.ReservationServiceTest
 import spock.lang.Specification
 
@@ -16,7 +16,7 @@ class ReservationControllerTest extends Specification {
 
     def "saveNewReservation should invoke ReservationService.save(ReservationPersistDTO)"() {
         given:
-        ReservationPersistDTO reservationPersistDTO = Mock(ReservationPersistDTO)
+        ReservationPersistRequest reservationPersistDTO = Mock(ReservationPersistRequest)
 
         when:
         reservationController.saveNewReservation(reservationPersistDTO)
@@ -29,7 +29,7 @@ class ReservationControllerTest extends Specification {
 
     def "saveNewReservation should return CREATED status"() {
         given:
-        ReservationPersistDTO reservationPersistDTO = Mock(ReservationPersistDTO)
+        ReservationPersistRequest reservationPersistDTO = Mock(ReservationPersistRequest)
         reservationService.verifyPersistedObject() >> {}
 
         expect:

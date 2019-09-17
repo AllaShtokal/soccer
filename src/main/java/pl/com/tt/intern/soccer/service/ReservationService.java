@@ -1,7 +1,7 @@
 package pl.com.tt.intern.soccer.service;
 
-import pl.com.tt.intern.soccer.dto.ReservationPersistDTO;
-import pl.com.tt.intern.soccer.dto.ReservationRetrieveDTO;
+import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.response.ReservationJustPersistedConfirmationResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationException;
 import pl.com.tt.intern.soccer.model.Reservation;
@@ -17,17 +17,17 @@ public interface ReservationService {
 
     Reservation save(Reservation reservation);
 
-    ReservationRetrieveDTO save(ReservationPersistDTO reservation) throws NotFoundException;
+    ReservationJustPersistedConfirmationResponse save(ReservationPersistRequest reservation) throws NotFoundException;
 
-    boolean isDateRangeAvailable(ReservationPersistDTO reservationPersistDTO) throws ReservationException;
+    boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistDTO) throws ReservationException;
 
     void deleteById(Long id);
 
-    void verifyPersistedObject(ReservationPersistDTO reservationPersistDTO) throws ReservationException;
+    void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationException;
 
-    boolean isInFuture(ReservationPersistDTO reservationPersistDTO);
+    boolean isInFuture(ReservationPersistRequest reservationPersistDTO);
 
-    boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO);
+    boolean isDateOrderOk(ReservationPersistRequest reservationPersistDTO);
 
     boolean isDate15MinuteRounded(LocalDateTime time);
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.com.tt.intern.soccer.dto.ReservationPersistDTO;
-import pl.com.tt.intern.soccer.dto.ReservationRetrieveDTO;
+import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.response.ReservationJustPersistedConfirmationResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationException;
 import pl.com.tt.intern.soccer.service.ReservationService;
@@ -25,7 +25,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<ReservationRetrieveDTO> saveNewReservation(@Valid @RequestBody ReservationPersistDTO reservationPersistDTO) throws NotFoundException, ReservationException {
+    public ResponseEntity<ReservationJustPersistedConfirmationResponse> saveNewReservation(@Valid @RequestBody ReservationPersistRequest reservationPersistDTO) throws NotFoundException, ReservationException {
         log.debug("POST: /reservations with body: {}", reservationPersistDTO);
         reservationService.verifyPersistedObject(reservationPersistDTO);
         return ResponseEntity

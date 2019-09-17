@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.com.tt.intern.soccer.dto.ReservationPersistDTO;
-import pl.com.tt.intern.soccer.dto.ReservationRetrieveDTO;
+import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.response.ReservationJustPersistedConfirmationResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationException;
 import pl.com.tt.intern.soccer.model.Reservation;
@@ -43,12 +43,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationRetrieveDTO save(ReservationPersistDTO reservationPersistDTO) throws NotFoundException {
+    public ReservationJustPersistedConfirmationResponse save(ReservationPersistRequest reservationPersistDTO) throws NotFoundException {
         Reservation reservation = mapper.map(reservationPersistDTO, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setUser(userService.findById(reservationPersistDTO.getUserId()));
         Reservation savedEntity = reservationRepository.save(reservation);
-        return mapper.map(savedEntity, ReservationRetrieveDTO.class);
+        return mapper.map(savedEntity, ReservationJustPersistedConfirmationResponse.class);
 
     }
 
@@ -58,7 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void verifyPersistedObject(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
+    public void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationException {
         if (!isInFuture(reservationPersistDTO))
             throw new ReservationException("Reservation exception: date must be in future");
         if (!isDateOrderOk(reservationPersistDTO))
@@ -72,12 +72,12 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean isInFuture(ReservationPersistDTO reservationPersistDTO)  {
+    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO)  {
         return reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
     }
 
     @Override
-    public boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO)  {
+    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistDTO)  {
         return reservationPersistDTO.getDateFrom().isBefore(reservationPersistDTO.getDateTo());
     }
 
@@ -90,7 +90,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean isDateRangeAvailable(ReservationPersistDTO reservationPersistDTO)  {
+    public boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistDTO)  {
         LocalDateTime dateFrom = reservationPersistDTO.getDateFrom();
         LocalDateTime dateTo = reservationPersistDTO.getDateTo();
         return !reservationRepository.datesCollide(dateFrom, dateTo);
