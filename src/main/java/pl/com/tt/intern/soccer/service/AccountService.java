@@ -12,6 +12,6 @@ public interface AccountService {
 
     void changePassword(String changePasswordConfirmKey, ChangePasswordRequest request) throws Exception;
 
-    void deactivate(Long id) throws NotFoundException;
+    void deactivate(Long userId) throws NotFoundException;
 }
 
