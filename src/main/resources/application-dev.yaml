@@ -15,3 +15,7 @@ spring:
   liquibase:
     change-log: classpath:db/master.xml
     default-schema: soccer
+frontend:
+  server:
+    address: localhost
+    port: 4200
