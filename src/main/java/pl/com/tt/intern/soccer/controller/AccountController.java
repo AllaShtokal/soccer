@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.PasswordChangerRequest;
 import pl.com.tt.intern.soccer.service.AccountService;
 
 import javax.validation.Valid;
@@ -33,7 +33,7 @@ public class AccountController {
 
     @PatchMapping("/change/password")
     public ResponseEntity<?> changePassword(@RequestParam(name = "changePasswordConfirmKey") String changePasswordConfirmKey,
-                                            @Valid @RequestBody ChangePasswordRequest request) throws Exception {
+                                            @Valid @RequestBody PasswordChangerRequest request) throws Exception {
         accountService.changePassword(changePasswordConfirmKey, request);
         return ok().build();
     }

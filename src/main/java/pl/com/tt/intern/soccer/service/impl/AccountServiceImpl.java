@@ -11,8 +11,8 @@ import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.mail.MailCustomizer;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
-import pl.com.tt.intern.soccer.model.account.ChangePassword;
-import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.model.account.PasswordChanger;
+import pl.com.tt.intern.soccer.payload.request.PasswordChangerRequest;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.UserService;
@@ -71,8 +71,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePassword(String changePasswordConfirmKey, ChangePasswordRequest request) throws Exception {
-        ChangePassword cp = mapper.map(request, ChangePassword.class);
+    public void changePassword(String changePasswordConfirmKey, PasswordChangerRequest request) throws Exception {
+        PasswordChanger cp = mapper.map(request, PasswordChanger.class);
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordConfirmKey);
             checkIfExpired(confirmationKey.getExpirationTime());

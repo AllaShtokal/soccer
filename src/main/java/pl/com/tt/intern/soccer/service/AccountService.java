@@ -2,7 +2,7 @@ package pl.com.tt.intern.soccer.service;
 
 import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.PasswordChangerRequest;
 
 public interface AccountService {
 
@@ -10,6 +10,6 @@ public interface AccountService {
 
     void sendMailToChangePassword(String email) throws NotFoundException;
 
-    void changePassword(String changePasswordConfirmKey, ChangePasswordRequest request) throws Exception;
+    void changePassword(String changePasswordConfirmKey, PasswordChangerRequest request) throws Exception;
 }
 

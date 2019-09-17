@@ -6,7 +6,7 @@ import pl.com.tt.intern.soccer.annotation.Password;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class ChangePasswordRequest {
+public class PasswordChangerRequest {
 
     @Password
     @NotBlank
