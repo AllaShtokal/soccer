@@ -27,7 +27,7 @@ public class ReservationController {
 
     @GetMapping("/check")
     public ResponseEntity<List<ReservationResponse>> find(@Valid @RequestBody ReservationDateRequest request) {
-        return ok(reservationService.findByDateBetween(request.getFrom(), request.getTo()));
+        return ok(reservationService.findByDateBetween(request));
     }
 
 }

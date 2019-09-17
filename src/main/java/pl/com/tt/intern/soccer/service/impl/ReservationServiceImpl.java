@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -50,15 +50,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponse> findByDateBetween(LocalDateTime from, LocalDateTime to) {
-        return reservationRepository.findAllByDateToAfterAndDateFromBefore(from, to).stream()
+    public List<ReservationResponse> findByDateBetween(ReservationDateRequest request) {
+        return reservationRepository.findAllByDateToAfterAndDateFromBefore(request.getFrom(), request.getTo()).stream()
                 .map(ReservationResponse::new)
                 .collect(toList());
     }
 
     @Override
     public List<ReservationResponse> findByPeriod(ReservationPeriod period) {
-        return period.equals(ALL) ? findAll() : findByDateBetween(from(period), to(period));
+        return period.equals(ALL) ? findAll() : findByDateBetween(new ReservationDateRequest(from(period), to(period)));
     }
 
 }
