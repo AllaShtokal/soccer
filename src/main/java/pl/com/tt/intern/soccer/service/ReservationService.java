@@ -25,9 +25,9 @@ public interface ReservationService {
 
     void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException;
 
-    boolean isInFuture(ReservationPersistRequest reservationPersistDTO);
+    boolean isInFuture(ReservationPersistRequest reservationPersistRequest);
 
-    boolean isDateOrderOk(ReservationPersistRequest reservationPersistDTO);
+    boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest);
 
     boolean isDate15MinuteRounded(LocalDateTime time);
 }

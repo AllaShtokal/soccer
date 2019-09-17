@@ -78,8 +78,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistDTO)  {
-        return reservationPersistDTO.getDateFrom().isBefore(reservationPersistDTO.getDateTo());
+    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest)  {
+        return reservationPersistRequest.getDateFrom().isBefore(reservationPersistRequest.getDateTo());
     }
 
     @Override
