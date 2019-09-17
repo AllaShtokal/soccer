@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.PasswordChangerRequest;
 import pl.com.tt.intern.soccer.service.AccountService;
 
 import javax.validation.Valid;
@@ -14,15 +14,15 @@ import javax.validation.Valid;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/account")
 @RequiredArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
 
     @PatchMapping
-    public ResponseEntity<?> activateAccount(@RequestParam(name = "activeConfirmKey") String activeConfirmKey) throws IncorrectTokenException {
-        accountService.activateAccountByToken(activeConfirmKey);
+    public ResponseEntity<?> activateAccount(@RequestParam(name = "activationKey") String activationKey) throws IncorrectTokenException {
+        accountService.activateAccountByToken(activationKey);
         return ok().build();
     }
 
@@ -33,9 +33,9 @@ public class AccountController {
     }
 
     @PatchMapping("/change/password")
-    public ResponseEntity<?> changePassword(@RequestParam(name = "changePasswordConfirmKey") String changePasswordConfirmKey,
-                                            @Valid @RequestBody ChangePasswordRequest request) throws Exception {
-        accountService.changePassword(changePasswordConfirmKey, request);
+    public ResponseEntity<?> changePassword(@RequestParam(name = "changePasswordKey") String changePasswordKey,
+                                            @Valid @RequestBody PasswordChangerRequest request) throws Exception {
+        accountService.changePassword(changePasswordKey, request);
         return ok().build();
     }
 
