@@ -41,6 +41,7 @@ class ReservationServiceTest extends Specification {
 
         where:
         hour    | min     | sec       | nano      | expected
+        0       | 0       | 0         | 0         | true
         12      | 0       | 0         | 0         | true
         23      | 15      | 0         | 0         | true
         7       | 30      | 0         | 0         | true
@@ -74,5 +75,15 @@ class ReservationServiceTest extends Specification {
         15  | 12    | 30     | 15    | 12    | 45    | true
         15  | 12    | 30     | 15    | 12    | 30    | false
         15  | 12    | 30     | 14    | 12    | 30    | false
+    }
+
+    def "isInFuture should return true if persisted dto has future date" () {
+        given: reservationPersistDTO.getDateFrom() >> LocalDateTime.now().plusDays(1L);
+        expect: reservationService.isInFuture(reservationPersistDTO) == true
+    }
+
+    def "isInFuture should return false if persisted dto has past date" () {
+        given: reservationPersistDTO.getDateFrom() >> LocalDateTime.now().minusDays(1L);
+        expect: reservationService.isInFuture(reservationPersistDTO) == false
     }
 }
