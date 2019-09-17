@@ -10,6 +10,6 @@ public interface AccountService {
 
     void sendMailToChangePassword(String email) throws NotFoundException;
 
-    void changePassword(String changePasswordToken, ChangePasswordRequest request) throws Exception;
+    void changePassword(String changePasswordConfirmKey, ChangePasswordRequest request) throws Exception;
 }
 

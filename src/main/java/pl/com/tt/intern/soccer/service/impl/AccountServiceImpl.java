@@ -71,10 +71,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePassword(String changePasswordToken, ChangePasswordRequest request) throws Exception {
+    public void changePassword(String changePasswordConfirmKey, ChangePasswordRequest request) throws Exception {
         ChangePassword cp = mapper.map(request, ChangePassword.class);
         try {
-            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordToken);
+            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordConfirmKey);
             checkIfExpired(confirmationKey.getExpirationTime());
 
             if (cp.getPassword().equals(cp.getConfirmPassword())) {
