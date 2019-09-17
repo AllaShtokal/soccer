@@ -9,6 +9,7 @@ import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.validation.Valid;
+import java.time.DayOfWeek;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -20,13 +21,18 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @GetMapping
-    public ResponseEntity<List<ReservationResponse>> find(@RequestParam(name = "period") ReservationPeriod period) {
+    @GetMapping(params = "period")
+    public ResponseEntity<List<ReservationResponse>> findByPeriod(@RequestParam(name = "period") ReservationPeriod period) {
         return ok(reservationService.findByPeriod(period));
     }
 
-    @GetMapping("/check")
-    public ResponseEntity<List<ReservationResponse>> find(@Valid @RequestBody ReservationDateRequest request) {
+    @GetMapping(params = "day")
+    public ResponseEntity<List<ReservationResponse>> findByDay(@RequestParam(name = "day") DayOfWeek day) {
+        return ok(reservationService.findByDay(day));
+    }
+
+    @GetMapping("/date")
+    public ResponseEntity<List<ReservationResponse>> findByDate(@Valid @RequestBody ReservationDateRequest request) {
         return ok(reservationService.findByDateBetween(request));
     }
 

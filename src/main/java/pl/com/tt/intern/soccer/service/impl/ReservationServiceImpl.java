@@ -11,6 +11,7 @@ import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.transaction.Transactional;
+import java.time.DayOfWeek;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -59,6 +60,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationResponse> findByPeriod(ReservationPeriod period) {
         return period.equals(ALL) ? findAll() : findByDateBetween(new ReservationDateRequest(from(period), to(period)));
+    }
+
+    @Override
+    public List<ReservationResponse> findByDay(DayOfWeek day) {
+        return findByDateBetween(new ReservationDateRequest(from(day), to(day)));
     }
 
 }

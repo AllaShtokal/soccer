@@ -6,6 +6,7 @@ import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 public interface ReservationService {
@@ -21,5 +22,7 @@ public interface ReservationService {
     List<ReservationResponse> findByDateBetween(ReservationDateRequest request);
 
     List<ReservationResponse> findByPeriod(ReservationPeriod period);
+
+    List<ReservationResponse> findByDay(DayOfWeek day);
 
 }
