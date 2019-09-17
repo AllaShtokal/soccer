@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
+import pl.com.tt.intern.soccer.mail.MailCustomizer;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.account.ChangePassword;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
-import pl.com.tt.intern.soccer.service.SendMailService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
-    private final SendMailService sendMailService;
+    private final MailCustomizer sendMailService;
     private final ModelMapper mapper;
 
     @Override

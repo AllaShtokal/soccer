@@ -6,12 +6,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
+import pl.com.tt.intern.soccer.mail.MailCustomizer;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
 import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
-import pl.com.tt.intern.soccer.service.*;
+import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+import pl.com.tt.intern.soccer.service.RoleService;
+import pl.com.tt.intern.soccer.service.SignUpService;
+import pl.com.tt.intern.soccer.service.UserService;
 
 import static java.util.Collections.singleton;
 import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
@@ -35,7 +39,7 @@ public class SignUpServiceImpl implements SignUpService {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final SendMailService sendMailService;
+    private final MailCustomizer sendMailService;
     private final ConfirmationKeyService confirmationKeyService;
     private final ModelMapper mapper;
 

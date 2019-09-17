@@ -1,11 +1,9 @@
-package pl.com.tt.intern.soccer.service.impl;
+package pl.com.tt.intern.soccer.mail;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.com.tt.intern.soccer.mail.MailSender;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
-import pl.com.tt.intern.soccer.service.SendMailService;
 import pl.com.tt.intern.soccer.util.files.FileToString;
 
 import java.io.IOException;
@@ -13,7 +11,7 @@ import java.io.IOException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SendMailServiceImpl implements SendMailService {
+public class MailCustomizerImpl implements MailCustomizer {
 
     private final MailSender mailSender;
 
