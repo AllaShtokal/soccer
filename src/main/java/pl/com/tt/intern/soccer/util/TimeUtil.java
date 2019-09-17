@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.util;
 
-import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.payload.request.ReservationPeriod;
 
 import java.time.LocalDateTime;
@@ -11,8 +10,7 @@ import static java.time.LocalDateTime.now;
 import static java.time.temporal.TemporalAdjusters.nextOrSame;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
-@Service
-public class TimeUtil {
+public final class TimeUtil {
 
     public static LocalDateTime from(ReservationPeriod period) {
         switch (period) {
