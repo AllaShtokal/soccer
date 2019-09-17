@@ -11,5 +11,7 @@ public interface AccountService {
     void sendMailToChangePassword(String email) throws NotFoundException;
 
     void changePassword(String changePasswordConfirmKey, ChangePasswordRequest request) throws Exception;
+
+    void deactivate(Long id) throws NotFoundException;
 }
 

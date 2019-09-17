@@ -89,6 +89,12 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Override
+    public void deactivate(Long id) throws NotFoundException {
+        User user = userService.findById(id);
+        userService.changeEnabledAccount(user, false);
+    }
+
     private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectTokenException {
         if (!expirationTimeToken.isAfter(now()))
             throw new IncorrectTokenException("The token has expired.");

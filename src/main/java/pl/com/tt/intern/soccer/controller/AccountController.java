@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.exception.IncorrectTokenException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -38,4 +39,10 @@ public class AccountController {
         return ok().build();
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateAccount(@PathVariable Long id) throws NotFoundException {
+        accountService.deactivate(id);
+        return ok().build();
+    }
 }
