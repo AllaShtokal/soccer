@@ -29,7 +29,7 @@ public class ReservationController {
         log.debug("POST: /reservations with body: {}", reservationPersistDTO);
         reservationService.verifyPersistedObject(reservationPersistDTO);
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .body(reservationService.save(reservationPersistDTO));
     }
 }
