@@ -32,9 +32,9 @@ public class AccountController {
     }
 
     @PatchMapping("/change/password")
-    public ResponseEntity<?> changePassword(@RequestParam(name = "changePasswordToken") String changePasswordToken,
+    public ResponseEntity<?> changePassword(@RequestParam(name = "changePasswordConfirmKey") String changePasswordConfirmKey,
                                             @Valid @RequestBody ChangePasswordRequest request) throws Exception {
-        accountService.changePassword(changePasswordToken, request);
+        accountService.changePassword(changePasswordConfirmKey, request);
         return ok().build();
     }
 
