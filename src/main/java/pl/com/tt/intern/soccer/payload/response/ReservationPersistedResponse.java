@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ReservationJustPersistedConfirmationResponse {
+public class ReservationPersistedResponse {
 
     private Long id;
     private Long userId;

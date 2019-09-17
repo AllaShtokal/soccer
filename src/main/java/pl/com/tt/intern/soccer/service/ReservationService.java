@@ -1,7 +1,7 @@
 package pl.com.tt.intern.soccer.service;
 
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
-import pl.com.tt.intern.soccer.payload.response.ReservationJustPersistedConfirmationResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
@@ -17,7 +17,7 @@ public interface ReservationService {
 
     Reservation save(Reservation reservation);
 
-    ReservationJustPersistedConfirmationResponse save(ReservationPersistRequest reservation) throws NotFoundException;
+    ReservationPersistedResponse save(ReservationPersistRequest reservation) throws NotFoundException;
 
     boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException;
 

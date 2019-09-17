@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
-import pl.com.tt.intern.soccer.payload.response.ReservationJustPersistedConfirmationResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
@@ -43,12 +43,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationJustPersistedConfirmationResponse save(ReservationPersistRequest reservationPersistDTO) throws NotFoundException {
+    public ReservationPersistedResponse save(ReservationPersistRequest reservationPersistDTO) throws NotFoundException {
         Reservation reservation = mapper.map(reservationPersistDTO, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setUser(userService.findById(reservationPersistDTO.getUserId()));
         Reservation savedEntity = reservationRepository.save(reservation);
-        return mapper.map(savedEntity, ReservationJustPersistedConfirmationResponse.class);
+        return mapper.map(savedEntity, ReservationPersistedResponse.class);
 
     }
 
