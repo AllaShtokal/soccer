@@ -44,9 +44,9 @@ public class AccountServiceImpl implements AccountService {
     private final ModelMapper mapper;
 
     @Override
-    public void activateAccountByToken(String activeToken) throws IncorrectTokenException {
+    public void activateAccountByToken(String activeConfirmKey) throws IncorrectTokenException {
         try {
-            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activeToken);
+            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activeConfirmKey);
 
             checkIfExpired(confirmationKey.getExpirationTime());
             confirmationKey.setExpirationTime(now());

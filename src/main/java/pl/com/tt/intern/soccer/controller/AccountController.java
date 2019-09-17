@@ -20,8 +20,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @PatchMapping
-    public ResponseEntity<?> activateAccount(@RequestParam(name = "activeToken") String activeToken) throws IncorrectTokenException {
-        accountService.activateAccountByToken(activeToken);
+    public ResponseEntity<?> activateAccount(@RequestParam(name = "activeConfirmKey") String activeConfirmKey) throws IncorrectTokenException {
+        accountService.activateAccountByToken(activeConfirmKey);
         return ok().build();
     }
 

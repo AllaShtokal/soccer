@@ -6,7 +6,7 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 
 public interface AccountService {
 
-    void activateAccountByToken(String activeToken) throws IncorrectTokenException;
+    void activateAccountByToken(String activeConfirmKey) throws IncorrectTokenException;
 
     void sendMailToChangePassword(String email) throws NotFoundException;
 
