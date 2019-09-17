@@ -1,11 +1,16 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.repository.ConfirmationKeyRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,4 +28,11 @@ public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {
         return confirmationKeyRepository.findByUuid(uuid)
                 .orElseThrow(() -> new NotFoundException("Token not found in database."));
     }
+
+    @Override
+    @Scheduled(cron = "0 0 0 * * *")
+    public void scanAndDeleteExpiredConfirmationKeys() {
+        confirmationKeyRepository.deleteByExpirationTime();
+    }
+
 }
