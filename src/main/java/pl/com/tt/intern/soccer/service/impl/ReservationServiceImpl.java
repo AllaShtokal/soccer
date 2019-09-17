@@ -59,37 +59,37 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void verifyPersistedObject(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
-        isInFuture(reservationPersistDTO);
-        isDateOrderOk(reservationPersistDTO);
-        isDate15MinuteRounded(reservationPersistDTO.getDateFrom());
-        isDate15MinuteRounded(reservationPersistDTO.getDateTo());
-        isDateRangeAvailable(reservationPersistDTO);
+        if (!isInFuture(reservationPersistDTO))
+            throw new ReservationException("Reservation exception: date must be in future");
+        if (!isDateOrderOk(reservationPersistDTO))
+            throw new ReservationException("Reservation exception: wrong date order");
+        if (!isDate15MinuteRounded(reservationPersistDTO.getDateFrom()))
+            throw new ReservationException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDate15MinuteRounded(reservationPersistDTO.getDateTo()))
+            throw new ReservationException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDateRangeAvailable(reservationPersistDTO))
+            throw new ReservationException("Reservation date range is already booked");
     }
 
     public boolean isInFuture(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
-        boolean isInFuture = reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
-        if (isInFuture) return true;
-        else throw new ReservationException("Reservation exception: date should be in future");
+        return reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
     }
 
     public boolean isDateOrderOk(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
-        boolean isOrderOk = reservationPersistDTO.getDateFrom().isBefore(reservationPersistDTO.getDateTo());
-        if (isOrderOk) return true;
-        else throw new ReservationException("Reservation dates order is wrong. DateFrom should be before DateTo");
+        return reservationPersistDTO.getDateFrom().isBefore(reservationPersistDTO.getDateTo());
     }
 
     public boolean isDate15MinuteRounded(LocalDateTime time) throws ReservationException {
-        if (time.getNano() != 0) throw new ReservationException("nanoseconds in reservations should be 0");
-        if (time.getSecond() != 0) throw new ReservationException("seconds in reservations should be 0");
-        if (time.getMinute()%15 !=0) throw new ReservationException("minutes in reservations should be rounded to 15");;
+        if (time.getNano() != 0) return false;
+        if (time.getSecond() != 0) return false;
+        if (time.getMinute()%15 !=0) return false;
         return true;
     }
 
     public boolean isDateRangeAvailable(ReservationPersistDTO reservationPersistDTO) throws ReservationException {
         LocalDateTime dateFrom = reservationPersistDTO.getDateFrom();
         LocalDateTime dateTo = reservationPersistDTO.getDateTo();
-        boolean isDateRangeAvailable = !reservationRepository.datesCollide(dateFrom, dateTo);
-        if (isDateRangeAvailable) return true;
-        else throw new ReservationException("Date range collision occured");
+        return !reservationRepository.datesCollide(dateFrom, dateTo);
+
     }
 }

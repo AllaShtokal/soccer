@@ -1,15 +1,14 @@
-package pl.com.tt.intern.soccer
+package pl.com.tt.intern.soccer.controller
 
 import org.springframework.http.HttpStatus
-import pl.com.tt.intern.soccer.controller.ReservationController
 import pl.com.tt.intern.soccer.dto.ReservationPersistDTO
-import pl.com.tt.intern.soccer.service.ReservationService
+import pl.com.tt.intern.soccer.service.ReservationServiceTest
 import spock.lang.Specification
 
 class ReservationControllerTest extends Specification {
 
     ReservationController reservationController
-    ReservationService reservationService = Mock(ReservationService)
+    ReservationServiceTest reservationService = Mock(ReservationServiceTest)
 
     def setup() {
         reservationController = new ReservationController(reservationService)
