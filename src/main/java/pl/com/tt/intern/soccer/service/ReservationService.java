@@ -3,7 +3,7 @@ package pl.com.tt.intern.soccer.service;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationJustPersistedConfirmationResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.ReservationException;
+import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
 
 import java.time.LocalDateTime;
@@ -19,11 +19,11 @@ public interface ReservationService {
 
     ReservationJustPersistedConfirmationResponse save(ReservationPersistRequest reservation) throws NotFoundException;
 
-    boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistDTO) throws ReservationException;
+    boolean isDateRangeAvailable(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException;
 
     void deleteById(Long id);
 
-    void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationException;
+    void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException;
 
     boolean isInFuture(ReservationPersistRequest reservationPersistDTO);
 

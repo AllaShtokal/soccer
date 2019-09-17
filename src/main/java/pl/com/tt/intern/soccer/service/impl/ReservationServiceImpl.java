@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationJustPersistedConfirmationResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.ReservationException;
+import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
@@ -58,17 +58,17 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationException {
+    public void verifyPersistedObject(ReservationPersistRequest reservationPersistDTO) throws ReservationFormatException {
         if (!isInFuture(reservationPersistDTO))
-            throw new ReservationException("Reservation exception: date must be in future");
+            throw new ReservationFormatException("Reservation exception: date must be in future");
         if (!isDateOrderOk(reservationPersistDTO))
-            throw new ReservationException("Reservation exception: wrong date order");
+            throw new ReservationFormatException("Reservation exception: wrong date order");
         if (!isDate15MinuteRounded(reservationPersistDTO.getDateFrom()))
-            throw new ReservationException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
+            throw new ReservationFormatException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDate15MinuteRounded(reservationPersistDTO.getDateTo()))
-            throw new ReservationException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
+            throw new ReservationFormatException("Reservation exception: date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDateRangeAvailable(reservationPersistDTO))
-            throw new ReservationException("Reservation date range is already booked");
+            throw new ReservationFormatException("Reservation date range is already booked");
     }
 
     @Override
