@@ -31,7 +31,7 @@ public class AccountController {
         return ok().build();
     }
 
-    @PostMapping("/change/password")
+    @PatchMapping("/change/password")
     public ResponseEntity<?> changePassword(@RequestParam(name = "changePasswordToken") String changePasswordToken,
                                             @Valid @RequestBody ChangePasswordRequest request) throws Exception {
         accountService.changePassword(changePasswordToken, request);
