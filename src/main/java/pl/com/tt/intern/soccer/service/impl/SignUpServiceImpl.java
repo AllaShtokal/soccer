@@ -37,6 +37,12 @@ public class SignUpServiceImpl implements SignUpService {
     @Value("${account.confirm.indexOfByText}")
     private String indexOfByTextActive;
 
+    @Value("${frontend.server.address}")
+    private String serverAddress;
+
+    @Value("${frontend.server.port}")
+    private String serverPort;
+
     private final UserService userService;
     private final RoleService roleService;
     private final MailCustomizer sendMailService;
@@ -61,6 +67,7 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     private void setAndSendActivationMailMsg(User user) {
+        String url = serverAddress + ":" + serverPort + activationLink;
         ConfirmationKey confirmationKey = new ConfirmationKey(user);
 
         confirmationKeyService.save(confirmationKey);
@@ -68,7 +75,7 @@ public class SignUpServiceImpl implements SignUpService {
                 confirmationKey,
                 fileActiveMailMsg,
                 subjectActivationLink,
-                activationLink,
+                url,
                 indexOfByTextActive);
     }
 

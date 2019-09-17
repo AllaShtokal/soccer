@@ -2,7 +2,6 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
@@ -37,10 +36,15 @@ public class AccountServiceImpl implements AccountService {
     @Value("${account.change.password.indexOfByText}")
     private String indexOfByTextChangePassword;
 
+    @Value("${frontend.server.address}")
+    private String serverAddress;
+
+    @Value("${frontend.server.port}")
+    private String serverPort;
+
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
     private final MailCustomizer sendMailService;
-    private final ModelMapper mapper;
 
     @Override
     public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
@@ -57,6 +61,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void sendMailToChangePassword(String email) throws NotFoundException {
+        String url = serverAddress + ":" + serverPort + changePasswordLink;
         User user = userService.findByEmail(email);
         ConfirmationKey confirmationKey = new ConfirmationKey(user);
 
@@ -65,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
                 confirmationKey,
                 fileChangePasswordMailMsg,
                 changePasswordSubject,
-                changePasswordLink,
+                url,
                 indexOfByTextChangePassword);
     }
 

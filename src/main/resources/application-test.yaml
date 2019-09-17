@@ -12,3 +12,7 @@ spring:
       path: /h2
   liquibase:
     change-log: classpath:db/master-test.xml
+frontend:
+  server:
+    address: localhost
+    port: 4200
