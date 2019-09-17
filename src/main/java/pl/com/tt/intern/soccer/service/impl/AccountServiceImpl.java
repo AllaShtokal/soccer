@@ -90,8 +90,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deactivate(Long userId) throws NotFoundException {
-        User user = userService.findById(userId);
+    public void deactivate(Long id) throws NotFoundException {
+        User user = userService.findById(id);
         userService.changeEnabledAccount(user, false);
     }
 
