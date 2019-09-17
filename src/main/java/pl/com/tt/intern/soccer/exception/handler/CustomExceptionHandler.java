@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.com.tt.intern.soccer.exception.ActivationAccountException;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
-import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -58,8 +55,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return entity(ex.getMessage(), BAD_REQUEST);
     }
 
-    @ExceptionHandler(ReservationFormatException.class)
-    public ResponseEntity<ExceptionResponse> handleReservationException(ReservationFormatException e) {
+    @ExceptionHandler({ReservationFormatException.class, ReservationClashException.class})
+    public ResponseEntity<ExceptionResponse> handleReservationException(Exception e) {
         log.error("Thrown Reservation Exception with message: {}", e.getMessage());
         return entity(e.getMessage(), BAD_REQUEST);
     }

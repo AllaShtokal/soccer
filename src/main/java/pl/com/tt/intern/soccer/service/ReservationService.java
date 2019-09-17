@@ -1,5 +1,6 @@
 package pl.com.tt.intern.soccer.service;
 
+import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -23,7 +24,7 @@ public interface ReservationService {
 
     void deleteById(Long id);
 
-    void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException;
+    void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException, ReservationClashException;
 
     boolean isInFuture(ReservationPersistRequest reservationPersistRequest);
 

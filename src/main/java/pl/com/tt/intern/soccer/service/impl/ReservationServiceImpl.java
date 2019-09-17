@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -59,7 +60,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException {
+    public void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException, ReservationClashException {
         if (!isInFuture(reservationPersistRequest))
             throw new ReservationFormatException("Date must be in future");
         if (!isDateOrderOk(reservationPersistRequest))
@@ -69,7 +70,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
             throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
-            throw new ReservationFormatException("Reservation date range is already booked");
+            throw new ReservationClashException("Reservation date range is already booked");
     }
 
     @Override
