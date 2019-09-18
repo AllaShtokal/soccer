@@ -8,9 +8,7 @@ import spock.lang.Specification
 class ReservationServiceTest extends Specification {
 
     ReservationService reservationService
-    ReservationRepository reservationRepository = Mock(ReservationRepository)
-    UserService userService = Mock(UserService)
-    ModelMapper mapper = Mock(ModelMapper)
+    ReservationRepository reservationRepository = Mock()
     def ID = 1
 
     def setup() {
