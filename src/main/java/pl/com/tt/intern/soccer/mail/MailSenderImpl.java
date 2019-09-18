@@ -35,14 +35,14 @@ public class MailSenderImpl implements MailSender {
         log.debug("Sending email, to: {}. subject: {}, type text: {}", to, subject, html);
         MimeMessage msg = javaMailSender.createMimeMessage();
 
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(msg, true, "utf-8");
-            setBasicMessageValues(helper, to, subject, text, html);
-        } catch (MessagingException e) {
-            log.error("Sending simple email failed.. ", e);
-        }
+//        try {
+//            MimeMessageHelper helper = new MimeMessageHelper(msg, true, "utf-8");
+//            setBasicMessageValues(helper, to, subject, text, html);
+//        } catch (MessagingException e) {
+//            log.error("Sending simple email failed.. ", e);
+//        }
 
-        javaMailSender.send(msg);
+//        javaMailSender.send(msg);
     }
 
     private void setBasicMessageValues(MimeMessageHelper helper, String to, String subject, String text, boolean html) throws MessagingException {

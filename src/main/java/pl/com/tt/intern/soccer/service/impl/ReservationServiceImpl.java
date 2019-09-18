@@ -40,4 +40,9 @@ public class ReservationServiceImpl implements ReservationService {
     public boolean existsById(Long id) {
         return reservationRepository.existsById(id);
     }
+
+    @Override
+    public boolean existsByIdAndByUserId(Long reservationId, Long userId) {
+        return reservationRepository.existsByIdAndUserId(reservationId, userId);
+    }
 }
