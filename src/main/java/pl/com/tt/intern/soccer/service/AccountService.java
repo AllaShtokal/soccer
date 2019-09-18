@@ -17,6 +17,6 @@ public interface AccountService {
 
     void deactivate(Long userId) throws NotFoundException;
 
-    void changePasswordLoggedUser(UserPrincipal user, ChangePasswordRequest request) throws InvalidChangePasswordException, InvalidChangePasswordException;
+    void changePasswordLoggedUser(UserPrincipal user, ChangePasswordRequest request) throws InvalidChangePasswordException;
 }
 
