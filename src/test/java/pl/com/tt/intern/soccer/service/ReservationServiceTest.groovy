@@ -22,13 +22,21 @@ class ReservationServiceTest extends Specification {
     }
 
     def "isDateRangeAvailable should return true if there are no date collisions"() {
-        given: reservationRepository.datesCollide(_ as LocalDateTime, _ as LocalDateTime) >> false
-        expect: reservationService.isDateRangeAvailable(reservationPersistDTO) == true
+        given:
+        LocalDateTime time1 = LocalDateTime.now()
+        LocalDateTime time2 = LocalDateTime.now().plusDays(1)
+        reservationRepository.datesCollide(time1, time2) >> false
+
+        expect: reservationService.isDateRangeAvailable(time1,time2) == true
     }
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
-        given: reservationRepository.datesCollide(_, _) >> true
-        expect: reservationService.isDateRangeAvailable(reservationPersistDTO) == false
+        given:
+        LocalDateTime time1 = LocalDateTime.now()
+        LocalDateTime time2 = LocalDateTime.now().plusDays(1)
+        reservationRepository.datesCollide(time1, time2) >> true
+
+        expect: reservationService.isDateRangeAvailable(time1,time2) == false
     }
 
     def "isDate15MinuteRounded should consider minutes, seconds and nanoseconds"() {
