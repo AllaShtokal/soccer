@@ -34,7 +34,7 @@ public class ReservationController {
                     .noContent()
                     .build();
         }
-        throw new NotFoundException("Reservation does not exist for this user - cannot be deleted");
+        throw new NotFoundException("Reservation either does not exist or does not belong to the requesting user.");
     }
 
 }
