@@ -9,6 +9,7 @@ import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.time.DayOfWeek;
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
 @Slf4j
+@RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
 public class ReservationController {
 
     private final ReservationService reservationService;
