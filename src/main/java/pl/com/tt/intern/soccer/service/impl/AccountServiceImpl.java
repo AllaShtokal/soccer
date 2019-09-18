@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePassword(String changePasswordKey, PasswordChangerRequest request) throws Exception {
+    public void changePasswordNotLoggedUser(String changePasswordKey, PasswordChangerRequest request) throws Exception {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordKey);
             checkIfExpired(confirmationKey.getExpirationTime());

@@ -10,7 +10,7 @@ public interface AccountService {
 
     void sendMailToChangePassword(String email) throws NotFoundException;
 
-    void changePassword(String changePasswordKey, PasswordChangerRequest request) throws Exception;
+    void changePasswordNotLoggedUser(String changePasswordKey, PasswordChangerRequest request) throws Exception;
 
     void deactivate(Long userId) throws NotFoundException;
 }
