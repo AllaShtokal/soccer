@@ -77,7 +77,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationClashException("Reservation date range is already booked");
     }
 
-    private boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest,
+    public boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest,
                                                 Reservation currentReservation) {
         return !reservationRepository.datesCollideExcludingCurrent( reservationPersistRequest.getDateFrom(),
                                                                     reservationPersistRequest.getDateTo(),

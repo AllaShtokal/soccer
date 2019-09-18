@@ -6,7 +6,7 @@ import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import spock.lang.Specification;
 
-public class ReservationControllerTest extends Specification {
+class ReservationControllerTest extends Specification {
 
     ReservationController reservationController
     ReservationService reservationService = Mock(ReservationService)

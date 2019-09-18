@@ -22,4 +22,7 @@ public interface ReservationService {
     boolean existsByIdAndByUserId(Long reservationId, Long userId);
 
     ReservationPersistedResponse update(Long id, ReservationPersistRequest request) throws NotFoundException, ReservationClashException, ReservationFormatException;
+
+    boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest,
+                                                Reservation currentReservation);
 }
