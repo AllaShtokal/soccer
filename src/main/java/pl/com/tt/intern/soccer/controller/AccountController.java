@@ -28,13 +28,13 @@ public class AccountController {
         return ok().build();
     }
 
-    @GetMapping("/change/password")
+    @GetMapping("/change")
     public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email) throws NotFoundException {
         accountService.sendMailToChangePassword(email);
         return ok().build();
     }
 
-    @PatchMapping("/change/password")
+    @PatchMapping("/change")
     public ResponseEntity<?> changePasswordNotLoggedUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
                                                          @Valid @RequestBody PasswordChangerRequest request) throws Exception {
         accountService.changePasswordNotLoggedUser(changePasswordKey, request);
