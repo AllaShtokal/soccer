@@ -19,12 +19,11 @@ class ReservationServiceTest extends Specification {
 
     def "deleteById should invoke ReservationRepository.deleteById"() {
         when:
-        reservationService.deleteById(ID)
-
+            reservationService.deleteById(ID)
         then:
-        with(reservationRepository) {
-            1 * deleteById(ID)
-        }
+            with(reservationRepository) {
+                1 * deleteById(ID)
+            }
     }
 
 }

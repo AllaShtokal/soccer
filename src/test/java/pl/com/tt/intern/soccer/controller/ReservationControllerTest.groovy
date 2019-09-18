@@ -17,17 +17,15 @@ class ReservationControllerTest extends Specification {
 
     def "deleteReservation should invoke ReservationService.deleteById"() {
         given:
-        UserPrincipal user = Mock(UserPrincipal)
-        user.getId() >> userId
-        reservationService.existsByIdAndByUserId(ID, userId) >> true
-
+            UserPrincipal user = Mock(UserPrincipal)
+            user.getId() >> userId
+            reservationService.existsByIdAndByUserId(ID, userId) >> true
         when:
-        reservationController.deleteOwnReservation(user, ID)
-
+            reservationController.deleteOwnReservation(user, ID)
         then:
-        with(reservationService) {
-            1 * deleteById(ID)
-        }
+            with(reservationService) {
+                1 * deleteById(ID)
+            }
     }
 
 
