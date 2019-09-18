@@ -80,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordKey);
             checkIfExpired(confirmationKey.getExpirationTime());
 
-            if (request.getPassword().equals(request.getConfirmPassword())) {
+            if (request.getPassword().equals(request.getPasswordConfirmation())) {
                 User user = confirmationKey.getUser();
                 user.setPassword(request.getPassword());
                 confirmationKey.setExpirationTime(now());
