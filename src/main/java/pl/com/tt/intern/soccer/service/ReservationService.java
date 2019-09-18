@@ -18,7 +18,7 @@ public interface ReservationService {
 
     Reservation save(Reservation reservation);
 
-    ReservationPersistedResponse save(ReservationPersistRequest reservation) throws NotFoundException;
+    ReservationPersistedResponse save(ReservationPersistRequest reservation, Long userId) throws NotFoundException;
 
     boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo) throws ReservationFormatException;
 

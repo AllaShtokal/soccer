@@ -44,11 +44,11 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationPersistedResponse save(ReservationPersistRequest reservationPersistRequest) throws NotFoundException {
+    public ReservationPersistedResponse save(ReservationPersistRequest reservationPersistRequest, Long userId) throws NotFoundException {
         Reservation reservation = mapper.map(reservationPersistRequest, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setId(null);
-        reservation.setUser(userService.findById(reservationPersistRequest.getUserId()));
+        reservation.setUser(userService.findById(userId));
         Reservation savedEntity = reservationRepository.save(reservation);
         return mapper.map(savedEntity, ReservationPersistedResponse.class);
     }

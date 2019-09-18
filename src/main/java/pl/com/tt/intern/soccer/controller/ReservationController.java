@@ -3,15 +3,18 @@ package pl.com.tt.intern.soccer.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.com.tt.intern.soccer.annotation.CurrentUser;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
+import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.validation.Valid;
@@ -26,12 +29,16 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<ReservationPersistedResponse> saveNewReservation(@Valid @RequestBody ReservationPersistRequest reservationPersistDTO) throws NotFoundException, ReservationFormatException, ReservationClashException {
+    public ResponseEntity<ReservationPersistedResponse> saveNewReservationWithOwnId(
+            @CurrentUser UserPrincipal user,
+            @Valid @RequestBody ReservationPersistRequest reservationPersistDTO)
+            throws NotFoundException, ReservationFormatException, ReservationClashException {
         log.debug("POST: /reservations with body: {}", reservationPersistDTO);
         reservationService.verifyPersistedObject(reservationPersistDTO);
         return ResponseEntity
                 .status(CREATED)
-                .body(reservationService.save(reservationPersistDTO));
+                .body(reservationService.save(reservationPersistDTO, user.getId()));
     }
 }
