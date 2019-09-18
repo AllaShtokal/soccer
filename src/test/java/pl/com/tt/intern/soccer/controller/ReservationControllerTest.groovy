@@ -18,30 +18,27 @@ class ReservationControllerTest extends Specification {
 
     def "saveNewReservationWithOwnId should invoke verification and save"() {
         given:
-        ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
-        UserPrincipal user = Mock(UserPrincipal)
-        user.getId() >> userId
-        reservationService.verifyPersistedObject() >> {}
-
+            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+            UserPrincipal user = Mock(UserPrincipal)
+            user.getId() >> userId
+            reservationService.verifyPersistedObject() >> {}
         when:
-        reservationController.saveNewReservationWithOwnId(user, reservationPersistRequest)
-
+            reservationController.saveNewReservationWithOwnId(user, reservationPersistRequest)
         then:
-        with(reservationService) {
-            1 * verifyPersistedObject(reservationPersistRequest)
-            1 * save(reservationPersistRequest, userId)
-        }
+            with(reservationService) {
+                1 * verifyPersistedObject(reservationPersistRequest)
+                1 * save(reservationPersistRequest, userId)
+            }
     }
 
     def "saveNewReservation should return CREATED status"() {
-        when:
-        ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
-        UserPrincipal user = Mock(UserPrincipal)
-        user.getId() >> userId
-        reservationService.verifyPersistedObject() >> {}
-
-        then:
-        reservationController.saveNewReservationWithOwnId(user, reservationPersistRequest).getStatusCode() == HttpStatus.CREATED
+        given:
+            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+            UserPrincipal user = Mock(UserPrincipal)
+            user.getId() >> userId
+            reservationService.verifyPersistedObject() >> {}
+        expect:
+            reservationController.saveNewReservationWithOwnId(user, reservationPersistRequest).getStatusCode() == HttpStatus.CREATED
     }
 
 }
