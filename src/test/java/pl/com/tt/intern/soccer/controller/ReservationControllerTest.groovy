@@ -18,18 +18,23 @@ class ReservationControllerTest extends Specification {
     }
 
     def "update method should be invoked when reservation exists"() {
-        given: reservationService.existsByIdAndByUserId(_,_) >> true
-        when: reservationController.editOwnReservation(Mock(UserPrincipal), ID , reservationPersistRequest)
+        given:
+            reservationService.existsByIdAndByUserId(_,_) >> true
+        when:
+            reservationController.editOwnReservation(Mock(UserPrincipal), ID , reservationPersistRequest)
         then:
-        with(reservationService) {
-            1 * update(ID, reservationPersistRequest)
-        }
+            with(reservationService) {
+                1 * update(ID, reservationPersistRequest)
+            }
     }
 
     def "update method should throw exception when reservation does not exist"() {
-        given: reservationService.existsByIdAndByUserId(_,_) >> false
-        when: reservationController.editOwnReservation(Mock(UserPrincipal), ID , reservationPersistRequest)
-        then: thrown(NotFoundException)
+        given:
+            reservationService.existsByIdAndByUserId(_,_) >> false
+        when:
+            reservationController.editOwnReservation(Mock(UserPrincipal), ID , reservationPersistRequest)
+        then:
+            thrown(NotFoundException)
     }
 
 }
