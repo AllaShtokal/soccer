@@ -15,7 +15,7 @@ public interface ReservationService {
 
     Reservation findById(Long id) throws NotFoundException;
 
-    Reservation save(Reservation reservation);
+    ReservationResponse save(Reservation reservation);
 
     void deleteById(Long id);
 
