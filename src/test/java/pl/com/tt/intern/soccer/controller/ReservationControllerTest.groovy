@@ -9,7 +9,7 @@ import spock.lang.Specification
 class ReservationControllerTest extends Specification {
 
     ReservationController reservationController
-    ReservationService reservationService = Mock(ReservationService)
+    ReservationService reservationService = Mock()
     def userId = 1
 
     def setup() {
@@ -18,7 +18,7 @@ class ReservationControllerTest extends Specification {
 
     def "saveNewReservationWithOwnId should invoke verification and save"() {
         given:
-            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+            ReservationPersistRequest reservationPersistRequest = Mock()
             UserPrincipal user = Mock(UserPrincipal)
             user.getId() >> userId
             reservationService.verifyPersistedObject() >> {}
@@ -33,7 +33,7 @@ class ReservationControllerTest extends Specification {
 
     def "saveNewReservation should return CREATED status"() {
         given:
-            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+            ReservationPersistRequest reservationPersistRequest = Mock()
             UserPrincipal user = Mock(UserPrincipal)
             user.getId() >> userId
             reservationService.verifyPersistedObject() >> {}

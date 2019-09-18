@@ -12,10 +12,10 @@ import java.time.Month
 class ReservationServiceTest extends Specification {
 
     ReservationService reservationService
-    ReservationRepository reservationRepository = Mock(ReservationRepository)
-    UserService userService = Mock(UserService)
-    ModelMapper mapper = Mock(ModelMapper)
-    ReservationPersistRequest reservationPersistDTO = Mock(ReservationPersistRequest)
+    ReservationRepository reservationRepository = Mock()
+    UserService userService = Mock()
+    ModelMapper mapper = Mock()
+    ReservationPersistRequest reservationPersistDTO = Mock()
 
     def setup() {
         reservationService = new ReservationServiceImpl(reservationRepository, userService, mapper)
