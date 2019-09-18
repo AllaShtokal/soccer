@@ -22,19 +22,19 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @PatchMapping
+    @PatchMapping(params = "activationKey")
     public ResponseEntity<?> activateAccount(@RequestParam(name = "activationKey") String activationKey) throws IncorrectConfirmationKeyException {
         accountService.activateAccountByConfirmationKey(activationKey);
         return ok().build();
     }
 
-    @GetMapping("/change")
+    @GetMapping(value = "/change", params = "email")
     public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email) throws NotFoundException {
         accountService.sendMailToChangePassword(email);
         return ok().build();
     }
 
-    @PatchMapping("/change")
+    @PatchMapping(value = "/change", params = "changePasswordKey")
     public ResponseEntity<?> changePasswordNotLoggedUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
                                                          @Valid @RequestBody PasswordChangerRequest request) throws Exception {
         accountService.changePasswordNotLoggedUser(changePasswordKey, request);
