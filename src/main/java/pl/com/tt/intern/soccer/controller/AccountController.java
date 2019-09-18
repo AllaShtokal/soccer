@@ -31,15 +31,15 @@ public class AccountController {
     }
 
     @GetMapping(value = "/change", params = "email")
-    public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email) throws NotFoundException {
+    public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email)  {
         accountService.sendMailToChangePassword(email);
         return ok().build();
     }
 
     @PatchMapping(value = "/change", params = "changePasswordKey")
-    public ResponseEntity<?> changePasswordNotLoggedUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
-                                                         @Valid @RequestBody ForgottenPasswordRequest request) throws Exception {
-        accountService.changePasswordNotLoggedUser(changePasswordKey, request);
+    public ResponseEntity<?> changePasswordNotLoggedInUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
+                                                           @Valid @RequestBody ForgottenPasswordRequest request) throws Exception {
+        accountService.changePasswordNotLoggedInUser(changePasswordKey, request);
         return ok().build();
     }
 
