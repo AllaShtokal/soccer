@@ -8,7 +8,6 @@ import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
-import pl.com.tt.intern.soccer.payload.request.PasswordConfirmationChangerRequest;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 

@@ -1,11 +1,8 @@
 package pl.com.tt.intern.soccer.service;
 
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
-import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
-import pl.com.tt.intern.soccer.payload.request.PasswordConfirmationChangerRequest;
-import pl.com.tt.intern.soccer.security.UserPrincipal;
 
 public interface AccountService {
 

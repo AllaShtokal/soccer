@@ -11,8 +11,6 @@ import pl.com.tt.intern.soccer.mail.MailCustomizer;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
-import pl.com.tt.intern.soccer.payload.request.PasswordConfirmationChangerRequest;
-import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.UserService;
