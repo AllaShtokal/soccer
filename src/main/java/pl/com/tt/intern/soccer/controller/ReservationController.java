@@ -23,7 +23,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteOwnReservation(@CurrentUser UserPrincipal user,
                                                     @PathVariable("id") Long id)
                                                     throws NotFoundException {
