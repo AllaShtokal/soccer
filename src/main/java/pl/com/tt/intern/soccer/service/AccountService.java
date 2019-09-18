@@ -17,6 +17,6 @@ public interface AccountService {
 
     void deactivate(Long userId) throws NotFoundException;
 
-    ChangeDataAccountResponse changeBasicDataAccount(UserPrincipal user, ChangeDataAccountRequest request) throws NotFoundException;
+    ChangeDataAccountResponse changeUserInfoAccount(UserPrincipal user, ChangeDataAccountRequest request) throws NotFoundException;
 }
 

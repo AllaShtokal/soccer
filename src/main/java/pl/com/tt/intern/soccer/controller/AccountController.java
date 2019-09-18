@@ -54,6 +54,6 @@ public class AccountController {
     @PatchMapping("/change")
     public ResponseEntity<ChangeDataAccountResponse> changeBasicDataAccount(@CurrentUser UserPrincipal user,
                                                                             @Valid @RequestBody ChangeDataAccountRequest request) throws NotFoundException {
-        return ok(accountService.changeBasicDataAccount(user, request));
+        return ok(accountService.changeUserInfoAccount(user, request));
     }
 }

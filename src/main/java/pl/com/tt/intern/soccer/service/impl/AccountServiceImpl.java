@@ -107,7 +107,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ChangeDataAccountResponse changeBasicDataAccount(UserPrincipal userPrincipal, ChangeDataAccountRequest request){
+    public ChangeDataAccountResponse changeUserInfoAccount(UserPrincipal userPrincipal, ChangeDataAccountRequest request){
         User user = mapper.map(userPrincipal, User.class);
         UserInfo userInfo = user.getUserInfo();
 
@@ -116,7 +116,7 @@ public class AccountServiceImpl implements AccountService {
         userInfo.setPhone(request.getPhone());
         userInfo.setSkype(request.getSkype());
 
-        return new ChangeDataAccountResponse(userInfoService.save(userInfo).getUser());
+        return new ChangeDataAccountResponse(userInfoService.update(userInfo).getUser());
     }
 
     private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {

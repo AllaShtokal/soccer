@@ -33,6 +33,11 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoRepository.save(userInfo);
     }
 
+    @Override
+    public UserInfo update(UserInfo userInfo) {
+        return userInfoRepository.save(userInfo);
+    }
+
     @Transactional
     @Override
     public void deleteById(Long id) {
