@@ -1,5 +1,6 @@
 package pl.com.tt.intern.soccer.controller
 
+import pl.com.tt.intern.soccer.security.UserPrincipal
 import pl.com.tt.intern.soccer.service.ReservationService
 import spock.lang.Specification
 
@@ -7,7 +8,8 @@ class ReservationControllerTest extends Specification {
 
     ReservationController reservationController
     ReservationService reservationService = Mock(ReservationService)
-    def ID = 1;
+    def ID = 1
+    def userId = 2
 
     def setup() {
         reservationController = new ReservationController(reservationService)
@@ -15,10 +17,12 @@ class ReservationControllerTest extends Specification {
 
     def "deleteReservation should invoke ReservationService.deleteById"() {
         given:
-        reservationService.existsById(ID) >> true
+        UserPrincipal user = Mock(UserPrincipal)
+        user.getId() >> userId
+        reservationService.existsByIdAndByUserId(ID, userId) >> true
 
         when:
-        reservationController.deleteReservation(ID)
+        reservationController.deleteOwnReservation(user, ID)
 
         then:
         with(reservationService) {

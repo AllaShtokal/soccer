@@ -17,5 +17,5 @@ public interface ReservationService {
 
     boolean existsById(Long id);
 
-    boolean existsByIdAndByUserId(Long id, Long id1);
+    boolean existsByIdAndByUserId(Long id, Long userId);
 }
