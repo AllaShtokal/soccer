@@ -8,7 +8,7 @@ public interface AccountService {
 
     void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException;
 
-    void sendMailToChangePassword(String email) throws NotFoundException;
+    void sendMailToChangePassword(String email);
 
     void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception;
 

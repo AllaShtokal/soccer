@@ -60,9 +60,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void sendMailToChangePassword(String email) throws NotFoundException {
+    public void sendMailToChangePassword(String email)  {
         String url = serverAddress + ":" + serverPort + changePasswordLink;
-        User user = userService.findByEmail(email);
+        User user;
+
+        try {
+            user = userService.findByEmail(email);
+        } catch (NotFoundException e) {
+            log.error("Not found email. ", e);
+            return;
+        }
+
         ConfirmationKey confirmationKey = new ConfirmationKey(user);
 
         confirmationKeyService.save(confirmationKey);
