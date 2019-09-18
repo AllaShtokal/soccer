@@ -112,11 +112,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePasswordLoggedUser(UserPrincipal userPrincipal, ChangePasswordRequest request) throws InvalidChangePasswordException {
+    public void changePasswordLoggedInUser(UserPrincipal userPrincipal, ChangePasswordRequest request) throws InvalidChangePasswordException {
         if (passwordChangePossible(request, userPrincipal.getPassword())) {
             User user = mapper.map(userPrincipal, User.class);
-            user.setPassword(request.getNewPassword());
-            userService.changePassword(user);
+            userService.changePassword(user, request.getNewPassword());
         } else throw new InvalidChangePasswordException("Incorrect old password or new passwords do not match.");
     }
 

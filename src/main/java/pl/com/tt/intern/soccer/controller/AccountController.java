@@ -52,9 +52,9 @@ public class AccountController {
 
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/change/password")
-    public ResponseEntity<?> changePasswordLoggedUser(@CurrentUser UserPrincipal user,
-                                                      @Valid @RequestBody ChangePasswordRequest request) throws InvalidChangePasswordException {
-        accountService.changePasswordLoggedUser(user, request);
+    public ResponseEntity<?> changePasswordLoggedInUser(@CurrentUser UserPrincipal user,
+                                                        @Valid @RequestBody ChangePasswordRequest request) throws InvalidChangePasswordException {
+        accountService.changePasswordLoggedInUser(user, request);
         return ok().build();
     }
 }
