@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
@@ -10,9 +11,14 @@ import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.mail.MailCustomizer;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.model.UserInfo;
+import pl.com.tt.intern.soccer.payload.request.ChangeDataAccountRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
+import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+import pl.com.tt.intern.soccer.service.UserInfoService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
@@ -44,7 +50,9 @@ public class AccountServiceImpl implements AccountService {
 
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
+    private final UserInfoService userInfoService;
     private final MailCustomizer sendMailService;
+    private final ModelMapper mapper;
 
     @Override
     public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
@@ -96,6 +104,19 @@ public class AccountServiceImpl implements AccountService {
     public void deactivate(Long userId) throws NotFoundException {
         User user = userService.findById(userId);
         userService.changeEnabledAccount(user, false);
+    }
+
+    @Override
+    public ChangeDataAccountResponse changeBasicDataAccount(UserPrincipal userPrincipal, ChangeDataAccountRequest request){
+        User user = mapper.map(userPrincipal, User.class);
+        UserInfo userInfo = user.getUserInfo();
+
+        userInfo.setFirstName(request.getFirstName());
+        userInfo.setLastName(request.getLastName());
+        userInfo.setPhone(request.getPhone());
+        userInfo.setSkype(request.getSkype());
+
+        return new ChangeDataAccountResponse(userInfoService.save(userInfo).getUser());
     }
 
     private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {
