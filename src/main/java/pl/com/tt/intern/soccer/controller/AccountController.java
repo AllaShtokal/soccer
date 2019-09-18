@@ -37,7 +37,7 @@ public class AccountController {
     @PatchMapping(value = "/change", params = "changePasswordKey")
     public ResponseEntity<?> changePasswordNotLoggedUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
                                                          @Valid @RequestBody ForgottenPasswordRequest request) throws Exception {
-        accountService.changePasswordNotLoggedUser(changePasswordKey, request);
+        accountService.changePasswordNotLoggedInUser(changePasswordKey, request);
         return ok().build();
     }
 

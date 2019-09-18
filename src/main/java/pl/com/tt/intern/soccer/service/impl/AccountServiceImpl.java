@@ -75,16 +75,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePasswordNotLoggedUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception {
+    public void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordKey);
             checkIfExpired(confirmationKey.getExpirationTime());
 
             if (request.getPassword().equals(request.getPasswordConfirmation())) {
-                User user = confirmationKey.getUser();
-                user.setPassword(request.getPassword());
+                userService.changePassword(confirmationKey.getUser(), request.getPassword());
                 confirmationKey.setExpirationTime(now());
-                userService.changePassword(user);
             } else
                 throw new PasswordsMismatchException();
         } catch (NotFoundException e) {

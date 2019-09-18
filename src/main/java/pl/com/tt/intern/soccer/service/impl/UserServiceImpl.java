@@ -12,6 +12,8 @@ import pl.com.tt.intern.soccer.service.UserService;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -90,8 +92,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+    public void changePassword(User user, String password) {
+        user.setPassword(encoder.encode(password));
         userRepository.save(user);
     }
 }
