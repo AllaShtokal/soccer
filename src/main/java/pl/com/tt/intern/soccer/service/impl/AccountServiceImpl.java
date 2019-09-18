@@ -10,7 +10,9 @@ import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.mail.MailCustomizer;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
-import pl.com.tt.intern.soccer.payload.request.PasswordChangerRequest;
+import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.PasswordConfirmationChangerRequest;
+import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.UserService;
@@ -75,7 +77,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePasswordNotLoggedUser(String changePasswordKey, PasswordChangerRequest request) throws Exception {
+    public void changePasswordNotLoggedUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordKey);
             checkIfExpired(confirmationKey.getExpirationTime());

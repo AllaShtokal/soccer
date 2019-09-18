@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.payload.request.PasswordChangerRequest;
+import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.PasswordConfirmationChangerRequest;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
@@ -36,7 +37,7 @@ public class AccountController {
 
     @PatchMapping(value = "/change", params = "changePasswordKey")
     public ResponseEntity<?> changePasswordNotLoggedUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
-                                                         @Valid @RequestBody PasswordChangerRequest request) throws Exception {
+                                                         @Valid @RequestBody ForgottenPasswordRequest request) throws Exception {
         accountService.changePasswordNotLoggedUser(changePasswordKey, request);
         return ok().build();
     }
