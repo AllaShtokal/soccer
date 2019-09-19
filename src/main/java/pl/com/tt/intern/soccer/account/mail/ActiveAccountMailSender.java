@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
-import pl.com.tt.intern.soccer.mail.customizer.CustomizerSender;
+import pl.com.tt.intern.soccer.mail.customizer.CustomizedSender;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +17,7 @@ public class ActiveAccountMailSender implements MailSenderAccount {
     @Value("${account.confirm.mail.subject}")
     private String subject;
 
-    private final CustomizerSender sender;
+    private final CustomizedSender sender;
 
     @Override
     public void send(String email, String url) {

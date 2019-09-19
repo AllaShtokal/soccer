@@ -9,7 +9,7 @@ import pl.com.tt.intern.soccer.mail.MailSender;
 
 @Component
 @RequiredArgsConstructor
-public class CustomizerSenderImpl implements CustomizerSender {
+public class CustomizedSenderImpl implements CustomizedSender {
 
     @Qualifier("springTemplateEngine")
     private final SpringTemplateEngine templateEngine;
