@@ -9,7 +9,7 @@ import pl.com.tt.intern.soccer.mail.customizer.CustomizerSender;
 
 @Service
 @RequiredArgsConstructor
-public class ActiveMailSenderAccount implements MailSenderAccount {
+public class ActiveAccountMailSender implements MailSenderAccount {
 
     @Value("${docs.name.mail.active}")
     private String fileName;
