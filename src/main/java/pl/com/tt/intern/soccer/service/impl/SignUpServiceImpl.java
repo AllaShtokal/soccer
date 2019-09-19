@@ -3,16 +3,14 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccount;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
-import pl.com.tt.intern.soccer.mail.MailCustomizer;
-import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
 import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
-import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.RoleService;
 import pl.com.tt.intern.soccer.service.SignUpService;
 import pl.com.tt.intern.soccer.service.UserService;
@@ -25,29 +23,10 @@ import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
 @RequiredArgsConstructor
 public class SignUpServiceImpl implements SignUpService {
 
-    @Value("${docs.path.mail.active}")
-    private String fileActiveMailMsg;
-
-    @Value("${account.confirm.link}")
-    private String activationLink;
-
-    @Value("${account.confirm.mail.subject}")
-    private String subjectActivationLink;
-
-    @Value("${account.confirm.indexOfByText}")
-    private String indexOfByTextActive;
-
-    @Value("${frontend.server.address}")
-    private String serverAddress;
-
-    @Value("${frontend.server.port}")
-    private String serverPort;
-
     private final UserService userService;
     private final RoleService roleService;
-    private final MailCustomizer sendMailService;
-    private final ConfirmationKeyService confirmationKeyService;
     private final ModelMapper mapper;
+    private final ChangeAccount changeAccountFactory;
 
     @Override
     public SuccessfulSignUpResponse signUp(SignUpRequest request) throws Exception {
@@ -67,16 +46,9 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     private void setAndSendActivationMailMsg(User user) {
-        String url = serverAddress + ":" + serverPort + activationLink;
-        ConfirmationKey confirmationKey = new ConfirmationKey(user);
+        String url = changeAccountFactory.getUrlGenerator(AccountChangeType.valueOf(202)).generate(user.getEmail(), null);
+        changeAccountFactory.getMailSender(AccountChangeType.valueOf(202)).send(user.getEmail(), url);
 
-        confirmationKeyService.save(confirmationKey);
-        sendMailService.sendEmailWithMessageFromFileAndInsertLinkWithToken(
-                confirmationKey,
-                fileActiveMailMsg,
-                subjectActivationLink,
-                url,
-                indexOfByTextActive);
     }
 
     private boolean doPasswordsMatch(SignUpRequest request) {

@@ -6,11 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccount;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
-import pl.com.tt.intern.soccer.mail.MailCustomizer;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
@@ -29,29 +30,12 @@ import static java.time.LocalDateTime.now;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
-    @Value("${docs.path.mail.change.password}")
-    private String fileChangePasswordMailMsg;
-
-    @Value("${account.change.password.link}")
-    private String changePasswordLink;
-
-    @Value("${account.change.password.mail.subject}")
-    private String changePasswordSubject;
-
-    @Value("${account.change.password.indexOfByText}")
-    private String indexOfByTextChangePassword;
-
-    @Value("${frontend.server.address}")
-    private String serverAddress;
-
-    @Value("${frontend.server.port}")
-    private String serverPort;
-
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
     private final MailCustomizer sendMailService;
     private final ModelMapper mapper;
     private final PasswordEncoder encoder;
+    private final ChangeAccount changeAccountFactory;
 
     @Override
     public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
@@ -67,26 +51,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void sendMailToChangePassword(String email)  {
-        String url = serverAddress + ":" + serverPort + changePasswordLink;
-        User user;
-
-        try {
-            user = userService.findByEmail(email);
-        } catch (NotFoundException e) {
-            log.error("Not found email. ", e);
-            return;
-        }
-
-        ConfirmationKey confirmationKey = new ConfirmationKey(user);
-
-        confirmationKeyService.save(confirmationKey);
-        sendMailService.sendEmailWithMessageFromFileAndInsertLinkWithToken(
-                confirmationKey,
-                fileChangePasswordMailMsg,
-                changePasswordSubject,
-                url,
-                indexOfByTextChangePassword);
+    public void setAndSendMailToChangePassword(String email) {
+        String url = changeAccountFactory.getUrlGenerator(AccountChangeType.valueOf(201)).generate(email, null);
+        changeAccountFactory.getMailSender(AccountChangeType.valueOf(201)).send(email, url);
     }
 
     @Override
