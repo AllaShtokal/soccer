@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.model.enums;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 import static java.time.DayOfWeek.MONDAY;
@@ -15,8 +14,8 @@ public enum ReservationPeriod {
     MONTH,
     ALL;
 
-    public static LocalDateTime from(ReservationPeriod period) {
-        switch (period) {
+    public LocalDateTime from() {
+        switch (this) {
             case WEEK:
                 return now().with(previousOrSame(MONDAY))
                         .withHour(0).withMinute(0).withSecond(0).withNano(0);
@@ -29,13 +28,8 @@ public enum ReservationPeriod {
         }
     }
 
-    public static LocalDateTime from(DayOfWeek day) {
-        return now().with(previousOrSame(day))
-                .withHour(0).withMinute(0).withSecond(0).withNano(0);
-    }
-
-    public static LocalDateTime to(ReservationPeriod period) {
-        switch (period) {
+    public LocalDateTime to() {
+        switch (this) {
             case WEEK:
                 return now().with(nextOrSame(SUNDAY))
                         .withHour(23).withMinute(59).withSecond(59).withNano(0);
@@ -47,11 +41,5 @@ public enum ReservationPeriod {
                         .withHour(23).withMinute(59).withSecond(59).withNano(0);
         }
     }
-
-    public static LocalDateTime to(DayOfWeek day) {
-        return now().with(nextOrSame(day))
-                .withHour(23).withMinute(59).withSecond(59).withNano(0);
-    }
-
 
 }
