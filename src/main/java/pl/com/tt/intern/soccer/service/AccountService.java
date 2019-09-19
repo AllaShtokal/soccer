@@ -11,9 +11,9 @@ public interface AccountService {
 
     void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException;
 
-    void sendMailToChangePassword(String email) throws NotFoundException;
+    void setAndSendMailToChangePassword(String email);
 
-    void changePasswordNotLoggedUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception;
+    void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception;
 
     void deactivate(Long userId) throws NotFoundException;
 

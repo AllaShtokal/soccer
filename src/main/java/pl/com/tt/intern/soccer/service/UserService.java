@@ -29,7 +29,7 @@ public interface UserService {
 
     void changeEnabledAccount(User user, Boolean enabled);
 
-    void changePassword(User user);
+    void changePassword(User user, String password);
 
     User update(User user);
 }
