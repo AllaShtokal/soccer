@@ -2,7 +2,7 @@ package pl.com.tt.intern.soccer.account.factory;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.com.tt.intern.soccer.account.mail.MailSenderAccount;
+import pl.com.tt.intern.soccer.account.mail.PerAccountTypeMailSender;
 import pl.com.tt.intern.soccer.account.url.ChangeAccountUrlGenerator;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class ChangeAccountFactory implements ChangeAccount {
 
     private final List<ChangeAccountUrlGenerator> urlGenerators;
-    private final List<MailSenderAccount> mailSendersAccount;
+    private final List<PerAccountTypeMailSender> mailSendersAccount;
 
     @Override
     public ChangeAccountUrlGenerator getUrlGenerator(AccountChangeType type) {
@@ -23,7 +23,7 @@ public class ChangeAccountFactory implements ChangeAccount {
     }
 
     @Override
-    public MailSenderAccount getMailSender(AccountChangeType type) {
+    public PerAccountTypeMailSender getMailSender(AccountChangeType type) {
         return mailSendersAccount.stream()
                 .filter(customizer -> customizer.supports(type))
                 .findFirst()
