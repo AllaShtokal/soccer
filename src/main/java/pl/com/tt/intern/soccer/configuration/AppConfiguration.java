@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.context.event.EventListener;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
@@ -20,6 +21,7 @@ import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
 
 @Configuration
+@EnableScheduling
 @RequiredArgsConstructor
 public class AppConfiguration {
 
