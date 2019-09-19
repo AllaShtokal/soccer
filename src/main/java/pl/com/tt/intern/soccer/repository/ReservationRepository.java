@@ -21,4 +21,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     boolean existsByIdAndUserId(Long id, Long userId);
 
+
+    @Query(value = "SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM Reservation r WHERE r.dateFrom < :dateTo AND r.dateTo > :dateFrom")
+    boolean datesCollide(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
 }

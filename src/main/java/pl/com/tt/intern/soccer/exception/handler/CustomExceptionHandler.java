@@ -60,6 +60,4 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Thrown Reservation Exception with message: {}", e.getMessage());
         return entity(e.getMessage(), BAD_REQUEST);
     }
-
-
 }
