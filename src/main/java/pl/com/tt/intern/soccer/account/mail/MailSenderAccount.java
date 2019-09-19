@@ -1,0 +1,9 @@
+package pl.com.tt.intern.soccer.account.mail;
+
+import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
+
+public interface MailSenderAccount {
+    void send(String email, String url);
+
+    boolean supports(AccountChangeType type);
+}

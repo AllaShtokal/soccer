@@ -30,7 +30,7 @@ public class AccountController {
 
     @GetMapping(value = "/change", params = "email")
     public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email)  {
-        accountService.sendMailToChangePassword(email);
+        accountService.setAndSendMailToChangePassword(email);
         return ok().build();
     }
 
