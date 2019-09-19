@@ -11,29 +11,20 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 public enum ReservationPeriod {
     TODAY(
-            () -> {
-                return now().withHour(0).withMinute(0).withSecond(0).withNano(0);
-            },
-            () -> {
-                return now().withHour(23).withMinute(59).withSecond(59).withNano(0);
-            }),
+            () -> now().withHour(0).withMinute(0).withSecond(0).withNano(0),
+            () -> now().withHour(23).withMinute(59).withSecond(59).withNano(0)
+    ),
     WEEK(
-            () -> {
-                return now().with(previousOrSame(MONDAY)).withHour(0).withMinute(0).withSecond(0).withNano(0);
-            },
-            () -> {
-                return now().with(nextOrSame(SUNDAY)).withHour(23).withMinute(59).withSecond(59).withNano(0);
-            }
+            () -> now().with(previousOrSame(MONDAY)).withHour(0).withMinute(0).withSecond(0).withNano(0),
+            () -> now().with(nextOrSame(SUNDAY)).withHour(23).withMinute(59).withSecond(59).withNano(0)
+
     ),
     MONTH(
-            () -> {
-                return now().withDayOfMonth(1)
-                        .withHour(0).withMinute(0).withSecond(0).withNano(0);
-            },
-            () -> {
-                return now().withDayOfMonth(now().toLocalDate().lengthOfMonth())
-                        .withHour(23).withMinute(59).withSecond(59).withNano(0);
-            }
+            () -> now().withDayOfMonth(1)
+                    .withHour(0).withMinute(0).withSecond(0).withNano(0),
+            () -> now().withDayOfMonth(now().toLocalDate().lengthOfMonth())
+                    .withHour(23).withMinute(59).withSecond(59).withNano(0)
+
     );
 
     private final Supplier<LocalDateTime> from;
