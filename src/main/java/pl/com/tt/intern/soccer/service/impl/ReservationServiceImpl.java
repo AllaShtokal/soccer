@@ -18,7 +18,6 @@ import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
-import static pl.com.tt.intern.soccer.model.enums.ReservationPeriod.ALL;
 
 @Service
 @RequiredArgsConstructor
@@ -64,8 +63,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationResponse> findByPeriod(ReservationPeriod period) {
         log.debug("Finding all reservations in period: {}", period);
-        if (period == ALL)
-            return mapToResponse(reservationRepository.findAll());
         return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()));
     }
 

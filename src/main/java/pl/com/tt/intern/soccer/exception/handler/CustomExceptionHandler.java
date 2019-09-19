@@ -59,7 +59,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ExceptionResponse> nullPointer(NullPointerException e) {
-        log.error("Throw ActivationAccountException with message: {}", e.getMessage());
+        log.error("Throw NullPointerException with message: {}", e.getMessage());
         return entity("Wrong input", BAD_REQUEST);
     }
 

@@ -25,6 +25,12 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> findAll() {
+        log.debug("GET /reservations");
+        return ok(reservationService.findAll());
+    }
+
     @GetMapping(params = "period")
     public ResponseEntity<List<ReservationResponse>> findByPeriod(@RequestParam ReservationPeriod period) {
         log.debug("GET /reservations?period={}", period);
