@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,6 @@ import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.validation.Valid;
-
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -41,4 +41,19 @@ public class ReservationController {
                 .status(CREATED)
                 .body(reservationService.save(reservationPersistDTO, user.getId()));
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/{id}")
+    public ResponseEntity<ReservationPersistedResponse> editOwnReservation(
+            @CurrentUser UserPrincipal user,
+            @PathVariable("id") Long id,
+            @Valid @RequestBody ReservationPersistRequest reservationPersistRequest
+    ) throws NotFoundException, ReservationClashException, ReservationFormatException {
+        if (reservationService.existsByIdAndByUserId(id, user.getId())) {
+            return ResponseEntity
+                    .ok(reservationService.update(id, reservationPersistRequest));
+        }
+        throw new NotFoundException("Reservation either does not exist or does not belong to the requesting user.");
+    }
+
 }

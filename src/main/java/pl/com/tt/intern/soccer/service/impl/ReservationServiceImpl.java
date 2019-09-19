@@ -8,15 +8,20 @@ import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +68,24 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public boolean existsByIdAndByUserId(Long reservationId, Long userId) {
+        return reservationRepository.existsByIdAndUserId(reservationId, userId);
+    }
+
+    @Override
+    public ReservationPersistedResponse update(Long reservationId, ReservationPersistRequest requestObject) throws NotFoundException, ReservationClashException, ReservationFormatException {
+        Optional<Reservation> reservationById = reservationRepository.findById(reservationId);
+        Reservation reservation = reservationById.orElseThrow(NotFoundException::new);
+        verifyEditedReservation(requestObject, reservation);
+        reservation.setDateFrom(requestObject.getDateFrom());
+        reservation.setDateTo(requestObject.getDateTo());
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return mapper.map(savedReservation, ReservationPersistedResponse.class);
+    }
+
+    public void verifyEditedReservation(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation)
+            throws ReservationFormatException, ReservationClashException {
+
     public void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException, ReservationClashException {
         if (!isInFuture(reservationPersistRequest))
             throw new ReservationFormatException("Date must be in future");
@@ -72,8 +95,15 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
             throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
+        if (!isDateRangeAvailableForEdit(reservationPersistRequest, currentReservation))
             throw new ReservationClashException("Reservation date range is already booked");
+    }
+
+    public boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest,
+                                                Reservation currentReservation) {
+        return !reservationRepository.datesCollideExcludingCurrent( reservationPersistRequest.getDateFrom(),
+                                                                    reservationPersistRequest.getDateTo(),
+                                                                    currentReservation.getId());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.service
 
 import org.modelmapper.ModelMapper
+import pl.com.tt.intern.soccer.model.Reservation
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest
 import pl.com.tt.intern.soccer.repository.ReservationRepository
 import pl.com.tt.intern.soccer.service.impl.ReservationServiceImpl
@@ -11,11 +12,14 @@ import java.time.Month
 
 class ReservationServiceTest extends Specification {
 
-    ReservationService reservationService
     ReservationRepository reservationRepository = Mock()
     UserService userService = Mock()
     ModelMapper mapper = Mock()
     ReservationPersistRequest reservationPersistDTO = Mock()
+    ReservationService reservationService
+    ReservationRepository reservationRepository = Mock(ReservationRepository)
+
+    def ID = 1
 
     def setup() {
         reservationService = new ReservationServiceImpl(reservationRepository, userService, mapper)
@@ -23,6 +27,35 @@ class ReservationServiceTest extends Specification {
 
     def "isDateRangeAvailable should return true if there are no date collisions"() {
         given:
+            LocalDateTime timeFrom = LocalDateTime.now()
+            LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
+            Reservation reservation = Mock(Reservation)
+            reservation.getId() >> ID
+            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+            reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
+
+        expect:
+            reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation) == true
+    }
+
+    def "isDateRangeAvailable should return false if there are date collisions"() {
+        given:
+            LocalDateTime timeFrom = LocalDateTime.now()
+            LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
+            Reservation reservation = Mock(Reservation)
+            reservation.getId() >> ID
+            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+            reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
+
+        expect:
+            reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation) == false
+    }
+
+
             LocalDateTime time1 = LocalDateTime.now()
             LocalDateTime time2 = LocalDateTime.now().plusDays(1)
             reservationRepository.datesCollide(time1, time2) >> false
