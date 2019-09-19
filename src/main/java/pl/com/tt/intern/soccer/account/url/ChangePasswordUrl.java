@@ -16,7 +16,7 @@ import pl.com.tt.intern.soccer.service.UserService;
 @RequiredArgsConstructor
 public class ChangePasswordUrl implements ChangeAccountUrlGenerator {
 
-    @Value("${account.change.password.link}")
+    @Value("${properties.account.change.password.link}")
     private String link;
 
     @Value("${frontend.server.address}")

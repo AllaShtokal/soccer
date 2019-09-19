@@ -10,10 +10,10 @@ import pl.com.tt.intern.soccer.mail.customizer.CustomizedSenderImpl;
 @RequiredArgsConstructor
 public class ChangeAccountPasswordMailSender implements PerAccountTypeMailSender {
 
-    @Value("${docs.name.mail.change.password}")
+    @Value("${properties.account.change.password.file-name}")
     private String fileName;
 
-    @Value("${account.change.password.mail.subject}")
+    @Value("${properties.account.change.password.mail.subject}")
     private String subject;
 
     private final CustomizedSenderImpl sender;

@@ -16,7 +16,7 @@ import pl.com.tt.intern.soccer.service.UserService;
 @RequiredArgsConstructor
 public class ActiveAccountUrl implements ChangeAccountUrlGenerator {
 
-    @Value("${account.confirm.link}")
+    @Value("${properties.account.active.link}")
     private String link;
 
     @Value("${frontend.server.address}")

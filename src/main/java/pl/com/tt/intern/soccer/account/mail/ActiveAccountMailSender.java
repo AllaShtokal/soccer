@@ -11,10 +11,10 @@ import pl.com.tt.intern.soccer.mail.customizer.CustomizedSender;
 @RequiredArgsConstructor
 public class ActiveAccountMailSender implements PerAccountTypeMailSender {
 
-    @Value("${docs.name.mail.active}")
+    @Value("${properties.account.active.file-name}")
     private String fileName;
 
-    @Value("${account.confirm.mail.subject}")
+    @Value("${properties.account.active.mail.subject}")
     private String subject;
 
     private final CustomizedSender sender;
