@@ -27,6 +27,8 @@ public interface ReservationService {
 
     void deleteById(Long id);
 
+    boolean existsById(Long id);
+
     boolean existsByIdAndByUserId(Long reservationId, Long userId);
 
     ReservationPersistedResponse update(Long id, ReservationPersistRequest request) throws NotFoundException, ReservationClashException, ReservationFormatException;

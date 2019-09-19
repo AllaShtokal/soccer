@@ -7,6 +7,25 @@ import pl.com.tt.intern.soccer.repository.ReservationRepository
 import pl.com.tt.intern.soccer.service.impl.ReservationServiceImpl
 import spock.lang.Specification
 
+class ReservationServiceTest extends Specification {
+
+    ReservationService reservationService
+    ReservationRepository reservationRepository = Mock()
+    def ID = 1
+
+    def setup() {
+        reservationService = new ReservationServiceImpl(reservationRepository)
+    }
+
+    def "deleteById should invoke ReservationRepository.deleteById"() {
+        when:
+            reservationService.deleteById(ID)
+        then:
+            with(reservationRepository) {
+                1 * deleteById(ID)
+            }
+    }
+
 import java.time.LocalDateTime
 import java.time.Month
 

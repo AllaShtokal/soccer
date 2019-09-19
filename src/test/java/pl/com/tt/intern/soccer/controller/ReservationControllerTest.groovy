@@ -15,6 +15,9 @@ class ReservationControllerTest extends Specification {
 
     ReservationController reservationController
     ReservationService reservationService = Mock(ReservationService)
+    def ID = 1
+    def userId = 2
+
     ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
     def ID = 1
     ReservationService reservationService = Mock()
@@ -22,6 +25,19 @@ class ReservationControllerTest extends Specification {
     
     def setup() {
         reservationController = new ReservationController(reservationService)
+    }
+
+    def "deleteReservation should invoke ReservationService.deleteById"() {
+        given:
+            UserPrincipal user = Mock(UserPrincipal)
+            user.getId() >> userId
+            reservationService.existsByIdAndByUserId(ID, userId) >> true
+        when:
+            reservationController.deleteOwnReservation(user, ID)
+        then:
+            with(reservationService) {
+                1 * deleteById(ID)
+            }
     }
 
     def "update method should be invoked when reservation exists"() {
@@ -67,5 +83,4 @@ class ReservationControllerTest extends Specification {
         expect:
             reservationController.saveNewReservationWithOwnId(user, reservationPersistRequest).getStatusCode() == HttpStatus.CREATED
     }
-
 }
