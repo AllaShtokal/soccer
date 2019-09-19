@@ -54,7 +54,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setId(null);
         reservation.setUser(userService.findById(userId));
         Reservation savedEntity = reservationRepository.save(reservation);
-        confirmationReservationService.save(new ConfirmationReservation(reservation));
+        confirmationReservationService.saveAndAddConfirmationReservationToTaskTimer(new ConfirmationReservation(reservation));
         return mapper.map(savedEntity, ReservationPersistedResponse.class);
     }
 

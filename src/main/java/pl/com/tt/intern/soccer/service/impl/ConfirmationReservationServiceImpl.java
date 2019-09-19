@@ -21,7 +21,6 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     @Override
     public void save(ConfirmationReservation confirmationReservation) {
         repository.save(confirmationReservation);
-        timer.schedule(getTimerTask(), DateUtil.toDate(confirmationReservation.getTimeToSend()));
     }
 
     @Override
@@ -32,6 +31,16 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     @Override
     public List<ConfirmationReservation> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public void saveAndAddConfirmationReservationToTaskTimer(ConfirmationReservation confirmationReservation){
+        save(confirmationReservation);
+        addTaskToMailSender(confirmationReservation);
+    }
+
+    private void addTaskToMailSender(ConfirmationReservation confirmationReservation){
+        timer.schedule(getTimerTask(), DateUtil.toDate(confirmationReservation.getTimeToSend()));
     }
 
     private TimerTask getTimerTask() {
