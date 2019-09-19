@@ -13,6 +13,9 @@ public class ReservationResponse {
     private LocalDateTime dateTo;
     private Boolean confirmed;
 
+    public ReservationResponse() {
+    }
+
     public ReservationResponse(Reservation reservation) {
         this.userId = reservation.getUser().getId();
         this.dateFrom = reservation.getDateFrom();

@@ -13,7 +13,7 @@ public interface ReservationService {
 
     List<ReservationResponse> findAll();
 
-    Reservation findById(Long id) throws NotFoundException;
+    ReservationResponse findById(Long id) throws NotFoundException;
 
     ReservationResponse save(Reservation reservation);
 

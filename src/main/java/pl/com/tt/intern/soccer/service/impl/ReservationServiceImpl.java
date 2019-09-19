@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Reservation;
@@ -16,8 +17,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
-import static java.time.temporal.TemporalAdjusters.nextOrSame;
-import static java.time.temporal.TemporalAdjusters.previousOrSame;
 import static java.util.stream.Collectors.toList;
 import static pl.com.tt.intern.soccer.model.enums.ReservationPeriod.ALL;
 
@@ -27,26 +26,24 @@ import static pl.com.tt.intern.soccer.model.enums.ReservationPeriod.ALL;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ModelMapper mapper;
 
     @Override
     public List<ReservationResponse> findAll() {
         log.debug("Finding all reservations...");
-        return reservationRepository.findAll().stream()
-                .map(ReservationResponse::new)
-                .collect(toList());
+        return mapToResponse(reservationRepository.findAll());
     }
 
     @Override
-    public Reservation findById(Long id) throws NotFoundException {
+    public ReservationResponse findById(Long id) throws NotFoundException {
         log.debug("Finding reservation by id: {}", id);
-        return reservationRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
+        return mapToResponse(reservationRepository.findById(id)
+                .orElseThrow(NotFoundException::new));
     }
 
     @Override
     public ReservationResponse save(Reservation reservation) {
-        ReservationResponse response =
-                new ReservationResponse(reservationRepository.save(reservation));
+        ReservationResponse response = mapToResponse(reservationRepository.save(reservation));
         log.debug("Saving a new reservation: {}", response);
         return response;
     }
@@ -60,31 +57,42 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationResponse> findByDateBetween(ReservationDateRequest request) {
         log.debug("Finding a reservation by date between {} and {}", request.getFrom(), request.getTo());
-        return reservationRepository.findAllByDateToAfterAndDateFromBefore(request.getFrom(), request.getTo()).stream()
-                .map(ReservationResponse::new)
-                .collect(toList());
+        return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(
+                request.getFrom(), request.getTo()));
     }
 
     @Override
     public List<ReservationResponse> findByPeriod(ReservationPeriod period) {
         log.debug("Finding all reservations in period: {}", period);
-        return period.equals(ALL) ? findAll() : findByDateBetween(new ReservationDateRequest(period.from(), period.to()));
+        if (period == ALL)
+            return mapToResponse(reservationRepository.findAll());
+        return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()));
     }
 
     @Override
     public List<ReservationResponse> findByDay(DayOfWeek day) {
         log.debug("Finding a reservations by day: {}", day);
-        return findByDateBetween(new ReservationDateRequest(from(day), to(day)));
+        return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(from(day), to(day)));
     }
 
     private LocalDateTime from(DayOfWeek day) {
-        return now().with(previousOrSame(day))
+        return now().with(day)
                 .withHour(0).withMinute(0).withSecond(0).withNano(0);
     }
 
     private LocalDateTime to(DayOfWeek day) {
-        return now().with(nextOrSame(day))
+        return now().with(day)
                 .withHour(23).withMinute(59).withSecond(59).withNano(0);
+    }
+
+    private List<ReservationResponse> mapToResponse(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(this::mapToResponse)
+                .collect(toList());
+    }
+
+    private ReservationResponse mapToResponse(Reservation reservation) {
+        return mapper.map(reservation, ReservationResponse.class);
     }
 
 }
