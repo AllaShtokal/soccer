@@ -13,19 +13,13 @@ public enum AccountChangeType {
     NOT_LOGGED_IN_USER_PASSWORD(201),
     ACTIVE_ACCOUNT(202);
 
-    private int value;
+    private final int value;
     private static Map map = new HashMap<>();
 
-    AccountChangeType(int value) {
-        this.value = value;
-    }
-
-    static {
-        Arrays.stream(AccountChangeType.values())
-                .forEach(type -> map.put(type.value, type));
-    }
-
-    public static AccountChangeType valueOf(int accountChangeType) {
-        return (AccountChangeType) map.get(accountChangeType);
+    public static AccountChangeType valueOf(int type) {
+        return Arrays.stream(values()).
+                filter(v -> v.value == type)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Type not exist.."));
     }
 }

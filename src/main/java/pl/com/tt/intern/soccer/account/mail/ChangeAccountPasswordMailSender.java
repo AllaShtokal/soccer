@@ -8,7 +8,7 @@ import pl.com.tt.intern.soccer.mail.customizer.CustomizedSenderImpl;
 
 @Service
 @RequiredArgsConstructor
-public class ChangeAccountPasswordMailSender implements MailSenderAccount {
+public class ChangeAccountPasswordMailSender implements PerAccountTypeMailSender {
 
     @Value("${docs.name.mail.change.password}")
     private String fileName;
