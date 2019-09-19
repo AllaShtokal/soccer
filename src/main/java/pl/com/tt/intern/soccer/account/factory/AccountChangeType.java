@@ -10,7 +10,7 @@ import java.util.Map;
 @Getter
 @RequiredArgsConstructor
 public enum AccountChangeType {
-    PASSWORD_NOT_LOGGED_IN_USER(201),
+    NOT_LOGGED_IN_USER_PASSWORD(201),
     ACTIVE_ACCOUNT(202);
 
     private int value;
