@@ -1,12 +1,20 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.com.tt.intern.soccer.exception.ReservationClashException;
+import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
+import pl.com.tt.intern.soccer.service.UserService;
 
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -15,6 +23,8 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final UserService userService;
+    private final ModelMapper mapper;
 
     @Override
     public List<Reservation> findAll() {
@@ -29,14 +39,64 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
+    @Transactional
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 
     @Transactional
     @Override
+    @Transactional
+    public ReservationPersistedResponse save(ReservationPersistRequest reservationPersistRequest, Long userId) throws NotFoundException {
+        Reservation reservation = mapper.map(reservationPersistRequest, Reservation.class);
+        reservation.setConfirmed(false);
+        reservation.setId(null);
+        reservation.setUser(userService.findById(userId));
+        Reservation savedEntity = reservationRepository.save(reservation);
+        return mapper.map(savedEntity, ReservationPersistedResponse.class);
+    }
+
+    @Override
+    @Transactional
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
     }
 
+    @Override
+    public void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException, ReservationClashException {
+        if (!isInFuture(reservationPersistRequest))
+            throw new ReservationFormatException("Date must be in future");
+        if (!isDateOrderOk(reservationPersistRequest))
+            throw new ReservationFormatException("Wrong date order");
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
+            throw new ReservationClashException("Reservation date range is already booked");
+    }
+
+    @Override
+    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO)  {
+        return reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
+    }
+
+    @Override
+    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest)  {
+        return reservationPersistRequest.getDateFrom().isBefore(reservationPersistRequest.getDateTo());
+    }
+
+    @Override
+    public boolean isDate15MinuteRounded(LocalDateTime time) {
+        if (time.getNano() != 0) return false;
+        if (time.getSecond() != 0) return false;
+        if (time.getMinute()%15 !=0) return false;
+        return true;
+    }
+
+    @Override
+    public boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo)  {
+        return !reservationRepository.datesCollide(dateFrom, dateTo);
+
+    }
 }
