@@ -5,22 +5,23 @@ import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.repository.ConfirmationReservationRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
+import pl.com.tt.intern.soccer.util.DateUtil;
 
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 @RequiredArgsConstructor
 public class ConfirmationReservationServiceImpl implements ConfirmationReservationService {
 
     private final ConfirmationReservationRepository repository;
-   // private final Timer timer;
-
+    private final Timer timer;
 
     @Override
-    public ConfirmationReservation save(ConfirmationReservation confirmationReservation) {
-       // timer.schedule(sendMail(), confirmationReservation.getTimeToSend());
-        return repository.save(confirmationReservation);
+    public void save(ConfirmationReservation confirmationReservation) {
+        repository.save(confirmationReservation);
+        timer.schedule(getTimerTask(), DateUtil.toDate(confirmationReservation.getTimeToSend()));
     }
 
     @Override
@@ -31,5 +32,14 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     @Override
     public List<ConfirmationReservation> findAll() {
         return repository.findAll();
+    }
+
+    private TimerTask getTimerTask() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("mail został wysłany");
+            }
+        };
     }
 }

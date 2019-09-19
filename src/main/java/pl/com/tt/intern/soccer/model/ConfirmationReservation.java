@@ -1,10 +1,10 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
-
 import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -12,6 +12,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Data
 @Table(name = "confirmation_reservation")
+@NoArgsConstructor
+@ToString
 public class ConfirmationReservation {
 
     @Id
@@ -29,9 +31,9 @@ public class ConfirmationReservation {
     @Column(name = "time_to_send")
     private LocalDateTime timeToSend;
 
-    @PrePersist
-    @Transactional
-    public void prePersist() {
-        this.timeToSend = reservation.getDateFrom().plusHours(1);
+    public ConfirmationReservation(Reservation reservation) {
+        this.reservation = reservation;
+        this.emailSent = false;
+        this.timeToSend = reservation.getDateFrom().minusMinutes(1);
     }
 }

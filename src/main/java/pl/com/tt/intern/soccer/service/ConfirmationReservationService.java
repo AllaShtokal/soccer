@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ConfirmationReservationService {
 
-    ConfirmationReservation save(ConfirmationReservation confirmationReservation);
+    void save(ConfirmationReservation confirmationReservation);
 
     List<ConfirmationReservation> findAllByEmailSent(Boolean mailSent);
 
