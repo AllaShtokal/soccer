@@ -68,11 +68,11 @@ public class SignUpServiceImpl implements SignUpService {
             String msg = FileToString.readFileToString(fileActiveMailMsg);
             String msgMail = insertActivationLinkToMailMsg(msg, confirmationKey);
 
-            mailSender.sendSimpleMessageHtml(
+           /* mailSender.sendSimpleMessageHtml(
                     user.getEmail(),
                     subjectActivationLink,
                     msgMail
-            );
+            );*/
         } catch (IOException e) {
             log.error("Throwing an IOException while reading the file.. ", e);
         }
