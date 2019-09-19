@@ -15,9 +15,7 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static pl.com.tt.intern.soccer.model.enums.ReservationPeriod.ALL;
-import static pl.com.tt.intern.soccer.util.CustomReservationTimeUtil.from;
-import static pl.com.tt.intern.soccer.util.CustomReservationTimeUtil.to;
+import static pl.com.tt.intern.soccer.model.enums.ReservationPeriod.*;
 
 @Service
 @RequiredArgsConstructor
