@@ -3,7 +3,6 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccount;
@@ -34,7 +33,6 @@ public class AccountServiceImpl implements AccountService {
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
     private final UserInfoService userInfoService;
-    private final MailCustomizer sendMailService;
     private final ModelMapper mapper;
     private final ChangeAccount changeAccountFactory;
 
@@ -80,15 +78,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ChangeDataAccountResponse changeUserInfoAccount(UserPrincipal userPrincipal, ChangeDataAccountRequest request){
-        User user = mapper.map(userPrincipal, User.class);
-        UserInfo userInfo = user.getUserInfo();
-
+    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeDataAccountRequest request) {
+        UserInfo userInfo = mapper.map(userPrincipal, User.class).getUserInfo();
         userInfo.setFirstName(request.getFirstName());
         userInfo.setLastName(request.getLastName());
         userInfo.setPhone(request.getPhone());
         userInfo.setSkype(request.getSkype());
-
         return new ChangeDataAccountResponse(userInfoService.update(userInfo).getUser());
     }
 
