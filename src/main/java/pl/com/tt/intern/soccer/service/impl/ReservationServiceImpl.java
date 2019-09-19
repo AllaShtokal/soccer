@@ -15,6 +15,7 @@ import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -36,12 +37,14 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @Transactional
     @Override
     @Transactional
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 
+    @Transactional
     @Override
     @Transactional
     public ReservationPersistedResponse save(ReservationPersistRequest reservationPersistRequest, Long userId) throws NotFoundException {
