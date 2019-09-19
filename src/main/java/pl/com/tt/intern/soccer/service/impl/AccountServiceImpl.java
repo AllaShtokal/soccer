@@ -3,7 +3,6 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
@@ -32,7 +31,6 @@ public class AccountServiceImpl implements AccountService {
 
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
-    private final MailCustomizer sendMailService;
     private final ModelMapper mapper;
     private final PasswordEncoder encoder;
     private final ChangeAccount changeAccountFactory;
@@ -80,9 +78,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void changePasswordLoggedInUser(UserPrincipal userPrincipal, ChangePasswordRequest request) throws InvalidChangePasswordException {
-        if (passwordChangePossible(request, userPrincipal.getPassword())) {
-            User user = mapper.map(userPrincipal, User.class);
-            userService.changePassword(user, request.getNewPassword());
+        if (isPossibleChangePassword(request, userPrincipal.getPassword())) {
+            userService.changePassword(
+                    mapper.map(userPrincipal, User.class),
+                    request.getNewPassword());
         } else throw new InvalidChangePasswordException("Incorrect old password or new passwords do not match.");
     }
 
@@ -91,7 +90,7 @@ public class AccountServiceImpl implements AccountService {
             throw new IncorrectConfirmationKeyException("The token has expired.");
     }
 
-    private boolean passwordChangePossible(ChangePasswordRequest request, String oldPassword) {
+    private boolean isPossibleChangePassword(ChangePasswordRequest request, String oldPassword) {
         boolean matchesNewPassword = request.getNewPassword().equals(request.getNewPasswordConfirmation());
         boolean matchesOldPassword = encoder.matches(request.getOldPassword(), oldPassword);
         return matchesOldPassword && matchesNewPassword;
