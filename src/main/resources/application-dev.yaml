@@ -15,4 +15,3 @@ spring:
   liquibase:
     change-log: classpath:db/master.xml
     default-schema: soccer
-    enabled: false

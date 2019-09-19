@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="wawerk" id="1568905807">
+        <createTable tableName="confirmation_reservation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="reservation" type="BIGINT"/>
+            <column name="time_to_send" type="DATETIME">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="email_sent" type="Boolean">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="reservation"
+                                 baseTableName="confirmation_reservation"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="reservation_confirmation_reservation_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="reservation"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -15,5 +15,7 @@
     <include file="db/insert/20190912_1301_insertAdminRole.xml"/>
     <include file="db/insert/20190912_1309_insertUserRole.xml"/>
     <include file="db/migration/20190913_1341_createReservationTable.xml"/>
+    <include file="db/migration/20190919_1710_createConfirmationReservationTable.xml"/>
+
 
 </databaseChangeLog>
