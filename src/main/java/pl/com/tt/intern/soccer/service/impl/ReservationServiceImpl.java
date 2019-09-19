@@ -68,8 +68,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public boolean existsByIdAndByUserId(Long reservationId, Long userId) {
         return reservationRepository.existsByIdAndUserId(reservationId, userId);
-    public boolean existsByIdAndByUserId(Long reservationId, Long userId) {
-        return reservationRepository.existsByIdAndUserId(reservationId, userId);
     }
 
     @Override

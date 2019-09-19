@@ -1,11 +1,7 @@
 package pl.com.tt.intern.soccer.controller
 
-import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest
-import pl.com.tt.intern.soccer.security.UserPrincipal;
-import pl.com.tt.intern.soccer.service.ReservationService;
-import spock.lang.Specification;
 import org.springframework.http.HttpStatus
+import pl.com.tt.intern.soccer.exception.NotFoundException
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest
 import pl.com.tt.intern.soccer.security.UserPrincipal
 import pl.com.tt.intern.soccer.service.ReservationService
@@ -14,14 +10,10 @@ import spock.lang.Specification
 class ReservationControllerTest extends Specification {
 
     ReservationController reservationController
-    ReservationService reservationService = Mock(ReservationService)
+    ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+    ReservationService reservationService = Mock()
     def ID = 1
     def userId = 2
-
-    ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
-    def ID = 1
-    ReservationService reservationService = Mock()
-    def userId = 1
     
     def setup() {
         reservationController = new ReservationController(reservationService)
@@ -53,11 +45,12 @@ class ReservationControllerTest extends Specification {
 
     def "update method should throw exception when reservation does not exist"() {
         given:
-            reservationService.existsByIdAndByUserId(_,_) >> false
+            reservationService.existsByIdAndByUserId(_, _) >> false
         when:
-            reservationController.editOwnReservation(Mock(UserPrincipal), ID , reservationPersistRequest)
+            reservationController.editOwnReservation(Mock(UserPrincipal), ID, reservationPersistRequest)
         then:
             thrown(NotFoundException)
+    }
 
     def "saveNewReservationWithOwnId should invoke verification and save"() {
         given:

@@ -7,25 +7,6 @@ import pl.com.tt.intern.soccer.repository.ReservationRepository
 import pl.com.tt.intern.soccer.service.impl.ReservationServiceImpl
 import spock.lang.Specification
 
-class ReservationServiceTest extends Specification {
-
-    ReservationService reservationService
-    ReservationRepository reservationRepository = Mock()
-    def ID = 1
-
-    def setup() {
-        reservationService = new ReservationServiceImpl(reservationRepository)
-    }
-
-    def "deleteById should invoke ReservationRepository.deleteById"() {
-        when:
-            reservationService.deleteById(ID)
-        then:
-            with(reservationRepository) {
-                1 * deleteById(ID)
-            }
-    }
-
 import java.time.LocalDateTime
 import java.time.Month
 
@@ -36,13 +17,21 @@ class ReservationServiceTest extends Specification {
     ModelMapper mapper = Mock()
     ReservationPersistRequest reservationPersistDTO = Mock()
     ReservationService reservationService
-    ReservationRepository reservationRepository = Mock(ReservationRepository)
-
     def ID = 1
 
     def setup() {
         reservationService = new ReservationServiceImpl(reservationRepository, userService, mapper)
     }
+
+    def "deleteById should invoke ReservationRepository.deleteById"() {
+        when:
+        reservationService.deleteById(ID)
+        then:
+        with(reservationRepository) {
+            1 * deleteById(ID)
+        }
+    }
+
 
     def "isDateRangeAvailable should return true if there are no date collisions"() {
         given:
@@ -72,14 +61,6 @@ class ReservationServiceTest extends Specification {
 
         expect:
             reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation) == false
-    }
-
-
-            LocalDateTime time1 = LocalDateTime.now()
-            LocalDateTime time2 = LocalDateTime.now().plusDays(1)
-            reservationRepository.datesCollide(time1, time2) >> false
-        expect:
-            reservationService.isDateRangeAvailable(time1,time2) == true
     }
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
