@@ -45,7 +45,7 @@ class ReservationServiceTest extends Specification {
             reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
 
         expect:
-            reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation) == true
+            reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there are date collisions"() {
@@ -60,7 +60,7 @@ class ReservationServiceTest extends Specification {
             reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
 
         expect:
-            reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation) == false
+            !reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
@@ -69,7 +69,7 @@ class ReservationServiceTest extends Specification {
             LocalDateTime time2 = LocalDateTime.now().plusDays(1)
             reservationRepository.datesCollide(time1, time2) >> true
         expect:
-            reservationService.isDateRangeAvailable(time1,time2) == false
+            !reservationService.isDateRangeAvailable(time1, time2)
     }
 
     def "isDate15MinuteRounded should consider minutes, seconds and nanoseconds"() {
@@ -115,15 +115,15 @@ class ReservationServiceTest extends Specification {
 
     def "isInFuture should return true if persisted dto has future date" () {
         given:
-            reservationPersistDTO.getDateFrom() >> LocalDateTime.now().plusDays(1L);
+            reservationPersistDTO.getDateFrom() >> LocalDateTime.now().plusDays(1L)
         expect:
-            reservationService.isInFuture(reservationPersistDTO) == true
+            reservationService.isInFuture(reservationPersistDTO)
     }
 
     def "isInFuture should return false if persisted dto has past date" () {
         given:
-            reservationPersistDTO.getDateFrom() >> LocalDateTime.now().minusDays(1L);
+            reservationPersistDTO.getDateFrom() >> LocalDateTime.now().minusDays(1L)
         expect:
-            reservationService.isInFuture(reservationPersistDTO) == false
+            !reservationService.isInFuture(reservationPersistDTO)
     }
 }
