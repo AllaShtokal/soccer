@@ -19,7 +19,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PatchMapping
-    public ResponseEntity<?> activateAccount(@RequestParam(name = "activeToken") String activeToken) throws ActivationAccountException {
+    public ResponseEntity<String> activateAccount(@RequestParam(name = "activeToken") String activeToken) throws ActivationAccountException {
         accountService.activateAccountByToken(activeToken);
         return ok().build();
     }

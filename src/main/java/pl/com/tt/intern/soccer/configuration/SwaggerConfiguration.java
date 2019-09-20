@@ -13,13 +13,13 @@ import static springfox.documentation.spi.DocumentationType.SWAGGER_2;
 @EnableSwagger2
 public class SwaggerConfiguration {
 
-    private static final String basePackage = "pl.com.tt.intern.soccer";
+    private static final String BASE_PACKAGE = "pl.com.tt.intern.soccer";
 
     @Bean
     public Docket docket() {
         return new Docket(SWAGGER_2)
                 .select()
-                .apis(basePackage(basePackage))
+                .apis(basePackage(BASE_PACKAGE))
                 .paths(any())
                 .build();
     }

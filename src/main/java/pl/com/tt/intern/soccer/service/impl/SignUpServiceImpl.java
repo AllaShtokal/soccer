@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.mail.MailSender;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
@@ -44,7 +45,7 @@ public class SignUpServiceImpl implements SignUpService {
     private final ModelMapper mapper;
 
     @Override
-    public SuccessfulSignUpResponse signUp(SignUpRequest request) throws Exception {
+    public SuccessfulSignUpResponse signUp(SignUpRequest request) throws PasswordsMismatchException, NotFoundException {
         if (doPasswordsMatch(request)) {
             UserInfo userInfo = mapper.map(request, UserInfo.class);
             User user = mapper.map(request, User.class);
@@ -68,11 +69,11 @@ public class SignUpServiceImpl implements SignUpService {
             String msg = FileToString.readFileToString(fileActiveMailMsg);
             String msgMail = insertActivationLinkToMailMsg(msg, confirmationKey);
 
-//            mailSender.sendSimpleMessageHtml(
-//                    user.getEmail(),
-//                    subjectActivationLink,
-//                    msgMail
-//            );
+            mailSender.sendSimpleMessageHtml(
+                    user.getEmail(),
+                    subjectActivationLink,
+                    msgMail
+            );
         } catch (IOException e) {
             log.error("Throwing an IOException while reading the file.. ", e);
         }

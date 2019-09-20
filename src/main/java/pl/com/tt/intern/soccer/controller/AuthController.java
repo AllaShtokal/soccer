@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.payload.request.LoginRequest;
 import pl.com.tt.intern.soccer.payload.response.JwtAuthenticationResponse;
 import pl.com.tt.intern.soccer.security.JwtTokenProvider;
@@ -36,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SuccessfulSignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) throws Exception {
+    public ResponseEntity<SuccessfulSignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) throws PasswordsMismatchException, NotFoundException {
         return ok(signUpService.signUp(request));
     }
 

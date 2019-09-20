@@ -1,8 +1,5 @@
 package pl.com.tt.intern.soccer.service;
 
-import pl.com.tt.intern.soccer.exception.ReservationClashException;
-import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
-import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;

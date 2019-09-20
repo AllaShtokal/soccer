@@ -8,10 +8,6 @@ import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.repository.ConfirmationKeyRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {
