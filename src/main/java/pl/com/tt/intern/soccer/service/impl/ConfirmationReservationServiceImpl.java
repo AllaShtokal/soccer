@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.mail.MailSender;
-import pl.com.tt.intern.soccer.model.ConfirmationKey;
+import pl.com.tt.intern.soccer.model.ConfirmationKeyForSignUp;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.repository.ConfirmationReservationRepository;
-import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+import pl.com.tt.intern.soccer.service.ConfirmationKeyForSignUpService;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.util.DateUtil;
 import pl.com.tt.intern.soccer.util.files.FileToString;
@@ -26,7 +26,7 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
 
     private final ConfirmationReservationRepository repository;
     private final Timer timer;
-    private final ConfirmationKeyService confirmationKeyService;
+    private final ConfirmationKeyForSignUpService confirmationKeyForSignUpService;
     private final MailSender mailSender;
 
 
@@ -75,33 +75,36 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
 
     private void sendActiveTokenMailMsg(ConfirmationReservation confirmationReservation) {
         User user = confirmationReservation.getReservation().getUser();
-        ConfirmationKey confirmationKey = new ConfirmationKey(user);
-        confirmationKeyService.save(confirmationKey);
+        ConfirmationKeyForSignUp confirmationKeyForSignUp = new ConfirmationKeyForSignUp(user);
+        confirmationKeyForSignUpService.save(confirmationKeyForSignUp);
 
         try {
             String msg = FileToString.readFileToString(fileActiveMailMsg);
-            String msgMail = insertActivationLinkToMailMsg(msg, confirmationKey);
+            String msgMail = insertActivationLinkToMailMsg(msg, confirmationKeyForSignUp);
 
             mailSender.sendSimpleMessageHtml(
                     user.getEmail(),
                     subjectActivationLink,
-                    msgMail
-            );
+                    msgMail);
 
-            confirmationReservation.setEmailSent(true);
-            save(confirmationReservation);
+            setEmailSent(confirmationReservation);
 
         } catch (IOException e) {
             log.error("Throwing an IOException while reading the file.. ", e);
         }
     }
 
-    private String insertActivationLinkToMailMsg(String msg, ConfirmationKey confirmationKey) {
+    private String insertActivationLinkToMailMsg(String msg, ConfirmationKeyForSignUp confirmationKeyForSignUp) {
         StringBuilder newString = new StringBuilder(msg);
 
         return newString.insert(
                 msg.indexOf("\">Potwierdź rezerwację</a>"),
-                activationLink + confirmationKey.getUuid()
+                activationLink + confirmationKeyForSignUp.getUuid()
         ).toString();
+    }
+
+    private void setEmailSent(ConfirmationReservation confirmationReservation) {
+        confirmationReservation.setEmailSent(true);
+        save(confirmationReservation);
     }
 }

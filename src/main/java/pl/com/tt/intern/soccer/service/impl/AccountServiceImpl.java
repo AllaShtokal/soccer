@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.ActivationAccountException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.model.ConfirmationKey;
+import pl.com.tt.intern.soccer.model.ConfirmationKeyForSignUp;
 import pl.com.tt.intern.soccer.service.AccountService;
-import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+import pl.com.tt.intern.soccer.service.ConfirmationKeyForSignUpService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
@@ -17,16 +17,16 @@ import static java.time.LocalDateTime.now;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
-    private final ConfirmationKeyService confirmationKeyService;
+    private final ConfirmationKeyForSignUpService confirmationKeyForSignUpService;
     private final UserService userService;
 
     @Override
     public void activateAccountByToken(String activeToken) throws ActivationAccountException {
         try {
-            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activeToken);
-            checkIfExpired(confirmationKey.getExpirationTime());
-            confirmationKey.setExpirationTime(now());
-            userService.changeEnabledAccount(confirmationKey.getUser(), true);
+            ConfirmationKeyForSignUp confirmationKeyForSignUp = confirmationKeyForSignUpService.findConfirmationKeyByUuid(activeToken);
+            checkIfExpired(confirmationKeyForSignUp.getExpirationTime());
+            confirmationKeyForSignUp.setExpirationTime(now());
+            userService.changeEnabledAccount(confirmationKeyForSignUp.getUser(), true);
         } catch (NotFoundException e) {
             throw new ActivationAccountException("The account activation token can't be found in the database.");
         }

@@ -5,14 +5,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import pl.com.tt.intern.soccer.model.ConfirmationKey;
+import pl.com.tt.intern.soccer.model.ConfirmationKeyForConfirmationReservation;
+import pl.com.tt.intern.soccer.model.ConfirmationKeyForSignUp;
+import pl.com.tt.intern.soccer.model.Reservation;
 
 import java.util.Optional;
 
 @Repository
-public interface ConfirmationKeyRepository extends JpaRepository<ConfirmationKey, Long> {
+public interface ConfirmationKeyForConfirmationReservationRepository extends JpaRepository<ConfirmationKeyForConfirmationReservation, Long> {
 
-    Optional<ConfirmationKey> findByUuid(String uuid);
+    Optional<ConfirmationKeyForConfirmationReservation> findByUuid(String uuid);
 
     @Transactional
     @Modifying

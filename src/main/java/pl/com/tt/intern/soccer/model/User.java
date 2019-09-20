@@ -67,7 +67,7 @@ public class User extends DateAudit {
 
     @ElementCollection(fetch = LAZY)
     @OneToMany(mappedBy = "user")
-    private Set<ConfirmationKey> confirmationKeys;
+    private Set<ConfirmationKeyForSignUp> confirmationKeyForSignUps;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Reservation> reservations;

@@ -16,6 +16,7 @@
     <include file="db/insert/20190912_1309_insertUserRole.xml"/>
     <include file="db/migration/20190913_1341_createReservationTable.xml"/>
     <include file="db/migration/20190919_1710_createConfirmationReservationTable.xml"/>
-
+    <include file="db/migration/20190920_1640_changeConfirmationKeyTableForConfirmationKeyForSignUp.xml"/>
+    <include file="db/migration/20190920_1644_createConfirmationKeyForConfirmationReservationTable.xml"/>
 
 </databaseChangeLog>

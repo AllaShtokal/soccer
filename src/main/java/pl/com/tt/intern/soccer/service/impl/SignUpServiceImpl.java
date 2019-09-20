@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.mail.MailSender;
-import pl.com.tt.intern.soccer.model.ConfirmationKey;
+import pl.com.tt.intern.soccer.model.ConfirmationKeyForSignUp;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
 import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
-import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+import pl.com.tt.intern.soccer.service.ConfirmationKeyForSignUpService;
 import pl.com.tt.intern.soccer.service.RoleService;
 import pl.com.tt.intern.soccer.service.SignUpService;
 import pl.com.tt.intern.soccer.service.UserService;
@@ -39,7 +39,7 @@ public class SignUpServiceImpl implements SignUpService {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final ConfirmationKeyService confirmationKeyService;
+    private final ConfirmationKeyForSignUpService confirmationKeyForSignUpService;
     private final MailSender mailSender;
     private final ModelMapper mapper;
 
@@ -61,12 +61,12 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     private void sendActiveTokenMailMsg(User user) {
-        ConfirmationKey confirmationKey = new ConfirmationKey(user);
-        confirmationKeyService.save(confirmationKey);
+        ConfirmationKeyForSignUp confirmationKeyForSignUp = new ConfirmationKeyForSignUp(user);
+        confirmationKeyForSignUpService.save(confirmationKeyForSignUp);
 
         try {
             String msg = FileToString.readFileToString(fileActiveMailMsg);
-            String msgMail = insertActivationLinkToMailMsg(msg, confirmationKey);
+            String msgMail = insertActivationLinkToMailMsg(msg, confirmationKeyForSignUp);
 
             mailSender.sendSimpleMessageHtml(
                     user.getEmail(),
@@ -82,12 +82,12 @@ public class SignUpServiceImpl implements SignUpService {
         return request.getPassword().equals(request.getConfirmPassword());
     }
 
-    private String insertActivationLinkToMailMsg(String msg, ConfirmationKey confirmationKey) {
+    private String insertActivationLinkToMailMsg(String msg, ConfirmationKeyForSignUp confirmationKeyForSignUp) {
         StringBuilder newString = new StringBuilder(msg);
 
         return newString.insert(
                 msg.indexOf("\">Link aktywacyjny</a>"),
-                activationLink + confirmationKey.getUuid()
+                activationLink + confirmationKeyForSignUp.getUuid()
         ).toString();
     }
 }
