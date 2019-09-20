@@ -34,6 +34,6 @@ public class ConfirmationReservation {
     public ConfirmationReservation(Reservation reservation) {
         this.reservation = reservation;
         this.emailSent = false;
-        this.timeToSend = reservation.getDateFrom().minusMinutes(1);
+        this.timeToSend = reservation.getDateFrom().minusMinutes(2);
     }
 }

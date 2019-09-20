@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationKeyForSignUp;
 
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ConfirmationKeyForSignUpRepository extends JpaRepository<ConfirmationKeyForSignUp, Long> {
 
-    Optional<ConfirmationKeyForSignUp> findByUuid(String uuid);
+    Optional<ConfirmationKeyForSignUp> findByUuid(String uuid) throws NotFoundException;
 
     @Transactional
     @Modifying

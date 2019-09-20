@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
+import pl.com.tt.intern.soccer.exception.ConfirmationReservationException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
@@ -17,6 +18,7 @@ import pl.com.tt.intern.soccer.service.ReservationService;
 import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,6 +66,12 @@ public class ReservationController {
                     .ok(reservationService.update(id, reservationPersistRequest));
         }
         throw new NotFoundException("Reservation either does not exist or does not belong to the requesting user.");
+    }
+
+    @PatchMapping
+    public ResponseEntity<?> confirmReservation (@RequestParam(name = "activeToken") String activeToken) throws ConfirmationReservationException {
+        reservationService.confirmReservationByToken(activeToken);
+        return ok().build();
     }
 
 }

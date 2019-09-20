@@ -39,6 +39,6 @@ public class ConfirmationKeyForConfirmationReservation {
     public ConfirmationKeyForConfirmationReservation(Reservation reservation) {
         this.reservation = reservation;
         this.uuid = UUID.randomUUID().toString();
-        this.expirationTime = reservation.getDateFrom().minusMinutes(15);
+        this.expirationTime = reservation.getDateFrom().minusMinutes(1);
     }
 }

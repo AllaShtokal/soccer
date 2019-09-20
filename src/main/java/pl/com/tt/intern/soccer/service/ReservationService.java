@@ -1,11 +1,9 @@
 package pl.com.tt.intern.soccer.service;
 
-import pl.com.tt.intern.soccer.exception.ReservationClashException;
+import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
-import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
@@ -43,4 +41,8 @@ public interface ReservationService {
     boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest);
 
     boolean isDate15MinuteRounded(LocalDateTime time);
+
+    void confirmReservationByToken(String uuid) throws ConfirmationReservationException;
+
+    void changeConfirmationOfReservation(Reservation reservation, Boolean confirmed);
 }
