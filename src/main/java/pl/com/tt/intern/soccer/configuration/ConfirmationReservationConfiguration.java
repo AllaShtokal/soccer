@@ -26,7 +26,7 @@ public class ConfirmationReservationConfiguration {
     @EventListener(ApplicationReadyEvent.class)
     public void initializeListToConfirmationMail(){
         List<ConfirmationReservation> confirmationReservationList = service.findAllByEmailSent(false).stream()
-                .filter(cr -> now().isBefore(cr.getReservation().getDateFrom()))
+                .filter(cr -> cr.getReservation().getDateFrom().isAfter(now()))
                 .collect(toList());
 
         List<LocalDateTime> dateTimeToMailSentList = confirmationReservationList.stream()

@@ -28,8 +28,15 @@ docs:
   path:
     mail:
       active: src/main/resources/docs/mail/active.html
+      confirm: src/main/resources/docs/mail/confirmationOfReservation.html
 account:
   confirm:
     link: http://localhost:4200/login?activeToken=
     mail:
-      subject: Confirm your register in soccker.
+      subject: Confirm your register in soccer.
+
+reservation:
+  confirm:
+    link: http://localhost:4200/confirmation?activeToken=
+    mail:
+      subject: Confirm your reservation in soccer
