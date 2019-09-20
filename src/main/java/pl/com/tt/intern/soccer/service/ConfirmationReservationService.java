@@ -8,7 +8,7 @@ public interface ConfirmationReservationService {
 
     void saveAndAddConfirmationReservationToTaskTimer(ConfirmationReservation confirmationReservation);
 
-    void save(ConfirmationReservation confirmationReservation);
+    ConfirmationReservation save(ConfirmationReservation confirmationReservation);
 
     List<ConfirmationReservation> findAllByEmailSent(Boolean mailSent);
 

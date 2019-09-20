@@ -16,6 +16,7 @@ import pl.com.tt.intern.soccer.util.files.FileToString;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,8 +41,8 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     private String subjectActivationLink;
 
     @Override
-    public void save(ConfirmationReservation confirmationReservation) {
-        repository.save(confirmationReservation);
+    public ConfirmationReservation save(ConfirmationReservation confirmationReservation) {
+        return repository.save(confirmationReservation);
     }
 
     @Override
@@ -56,8 +57,9 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
 
     @Override
     public void saveAndAddConfirmationReservationToTaskTimer(ConfirmationReservation confirmationReservation) {
-        save(confirmationReservation);
-        addTaskToMailSender(confirmationReservation);
+        ConfirmationReservation cr = save(confirmationReservation);
+        addTaskToMailSender(cr);
+        changeIsSendParameterInConformationReservation(confirmationReservation);
     }
 
     private void addTaskToMailSender(ConfirmationReservation confirmationReservation) {
@@ -100,5 +102,10 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
                 msg.indexOf("\">Potwierdź rezerwację</a>"),
                 activationLink + confirmationKey.getUuid()
         ).toString();
+    }
+
+    private void changeIsSendParameterInConformationReservation(ConfirmationReservation confirmationReservation){
+        confirmationReservation.setEmailSent(true);
+        save(confirmationReservation);
     }
 }
