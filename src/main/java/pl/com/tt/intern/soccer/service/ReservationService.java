@@ -20,7 +20,7 @@ public interface ReservationService {
 
     ReservationPersistedResponse save(ReservationPersistRequest reservation, Long userId) throws NotFoundException;
 
-    boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo) throws ReservationFormatException;
+    boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo) throws ReservationFormatException;
 
     void deleteById(Long id);
 
@@ -30,8 +30,8 @@ public interface ReservationService {
 
     ReservationPersistedResponse update(Long id, ReservationPersistRequest request) throws NotFoundException, ReservationClashException, ReservationFormatException;
 
-    boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest,
-                                                Reservation currentReservation);
+    boolean datesCollideWithExistingReservationsExcludingEditedOne(ReservationPersistRequest reservationPersistRequest,
+                                                                   Reservation currentReservation);
 
     void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException, ReservationClashException;
 

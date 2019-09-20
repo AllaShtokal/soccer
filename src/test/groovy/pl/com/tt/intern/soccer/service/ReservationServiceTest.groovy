@@ -45,7 +45,7 @@ class ReservationServiceTest extends Specification {
             reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
 
         expect:
-            reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation)
+            !reservationService.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there are date collisions"() {
@@ -60,7 +60,7 @@ class ReservationServiceTest extends Specification {
             reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
 
         expect:
-            !reservationService.isDateRangeAvailableForEdit(reservationPersistRequest, reservation)
+            reservationService.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
@@ -69,7 +69,7 @@ class ReservationServiceTest extends Specification {
             LocalDateTime time2 = LocalDateTime.now().plusDays(1)
             reservationRepository.datesCollide(time1, time2) >> true
         expect:
-            !reservationService.isDateRangeAvailable(time1, time2)
+            reservationService.datesCollideWithExistingReservations(time1, time2)
     }
 
     def "isDate15MinuteRounded should consider minutes, seconds and nanoseconds"() {

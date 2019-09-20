@@ -15,7 +15,7 @@ public class ValidationService {
     public static Map<String, String> validate(BindingResult result) {
         Map<String, String> validationMap = new HashMap<>();
 
-        result.getFieldErrors().stream()
+        result.getFieldErrors()
                 .forEach(error -> validationMap.put(error.getField(), error.getDefaultMessage()));
 
         return validationMap;

@@ -22,11 +22,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
-    static final Integer TIME_ROUNDING_IN_MINUTES = 15;
-    static final String NOT_ROUNDED_MESSAGE = String.format("Date must be rounded to %s minutes 0 s 0 ns", TIME_ROUNDING_IN_MINUTES);
-    static final String RESERVATION_ALREADY_BOOKED_MESSAGE = "Reservation date range is already booked";
-    static final String WRONG_DATE_ORDER_MESSAGE = "Wrong date order";
-    static final String DATE_MUST_BE_FUTURE_MESSAGE = "Date must be in future";
+    private static final Integer TIME_ROUNDING_IN_MINUTES = 15;
+    private static final String NOT_ROUNDED_MESSAGE = String.format("Date must be rounded to %s minutes 0 s 0 ns", TIME_ROUNDING_IN_MINUTES);
+    private static final String RESERVATION_ALREADY_BOOKED_MESSAGE = "Reservation date range is already booked";
+    private static final String WRONG_DATE_ORDER_MESSAGE = "Wrong date order";
+    private static final String DATE_MUST_BE_FUTURE_MESSAGE = "Date must be in future";
 
 
     private final ReservationRepository reservationRepository;
@@ -97,7 +97,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
             throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
-        if (!isDateRangeAvailableForEdit(reservationPersistRequest, currentReservation))
+        if (datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, currentReservation))
             throw new ReservationClashException(RESERVATION_ALREADY_BOOKED_MESSAGE);
     }
 
@@ -110,12 +110,12 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
             throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
-        if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
+        if (datesCollideWithExistingReservations(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
             throw new ReservationClashException(RESERVATION_ALREADY_BOOKED_MESSAGE);
     }
 
-    public boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) {
-        return !reservationRepository.datesCollideExcludingCurrent( reservationPersistRequest.getDateFrom(),
+    public boolean datesCollideWithExistingReservationsExcludingEditedOne(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) {
+        return reservationRepository.datesCollideExcludingCurrent( reservationPersistRequest.getDateFrom(),
                                                                     reservationPersistRequest.getDateTo(),
                                                                     currentReservation.getId());
     }
@@ -138,7 +138,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo)  {
-        return !reservationRepository.datesCollide(dateFrom, dateTo);
+    public boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo)  {
+        return reservationRepository.datesCollide(dateFrom, dateTo);
     }
 }

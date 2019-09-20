@@ -19,8 +19,6 @@ import pl.com.tt.intern.soccer.service.SignUpService;
 import pl.com.tt.intern.soccer.service.UserService;
 import pl.com.tt.intern.soccer.util.files.FileToString;
 
-import java.io.IOException;
-
 import static java.util.Collections.singleton;
 import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
 
@@ -65,18 +63,14 @@ public class SignUpServiceImpl implements SignUpService {
         ConfirmationKey confirmationKey = new ConfirmationKey(user);
         confirmationKeyService.save(confirmationKey);
 
-        try {
-            String msg = FileToString.readFileToString(fileActiveMailMsg);
-            String msgMail = insertActivationLinkToMailMsg(msg, confirmationKey);
+        String msg = FileToString.readFileToString(fileActiveMailMsg);
+        String msgMail = insertActivationLinkToMailMsg(msg, confirmationKey);
 
-            mailSender.sendSimpleMessageHtml(
-                    user.getEmail(),
-                    subjectActivationLink,
-                    msgMail
-            );
-        } catch (IOException e) {
-            log.error("Throwing an IOException while reading the file.. ", e);
-        }
+        mailSender.sendSimpleMessageHtml(
+                user.getEmail(),
+                subjectActivationLink,
+                msgMail
+        );
     }
 
     private boolean doPasswordsMatch(SignUpRequest request) {

@@ -34,7 +34,7 @@ class ReservationControllerTest extends Specification {
 
     def "update method should be invoked when reservation exists"() {
         given:
-            reservationService.existsByIdAndByUserId(_ as Long,_ as Long) >> true
+            reservationService.existsByIdAndByUserId(_,_) >> true
         when:
             reservationController.editOwnReservation(Mock(UserPrincipal), ID , reservationPersistRequest)
         then:

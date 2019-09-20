@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public final class FileToString {
 
-    public static String readFileToString(String path) throws IOException {
+    public static String readFileToString(String path) {
         StringBuilder content = new StringBuilder();
         try(Stream<String> lines = Files.lines(Paths.get(path), StandardCharsets.UTF_8)) {
             lines.forEach(content::append);

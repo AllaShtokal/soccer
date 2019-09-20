@@ -7,7 +7,6 @@ import pl.com.tt.intern.soccer.annotation.Password;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -36,7 +35,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
 
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(
-                validator.getMessages(result).stream().collect(Collectors.joining(" ")))
+                String.join(" ", validator.getMessages(result)))
                 .addConstraintViolation();
 
         return false;
