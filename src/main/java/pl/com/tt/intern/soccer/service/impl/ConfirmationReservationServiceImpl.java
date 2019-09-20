@@ -5,9 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.mail.MailSender;
-import pl.com.tt.intern.soccer.model.ConfirmationKeyForSignUp;
-import pl.com.tt.intern.soccer.model.ConfirmationReservation;
-import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.model.*;
+import pl.com.tt.intern.soccer.repository.ConfirmationKeyForConfirmationReservationRepository;
 import pl.com.tt.intern.soccer.repository.ConfirmationReservationRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyForSignUpService;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
@@ -26,7 +25,7 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
 
     private final ConfirmationReservationRepository repository;
     private final Timer timer;
-    private final ConfirmationKeyForSignUpService confirmationKeyForSignUpService;
+    private final ConfirmationKeyForConfirmationReservationRepository confirmationKeyForConfirmationReservationRepository;
     private final MailSender mailSender;
 
 
@@ -74,13 +73,13 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     private void sendActiveTokenMailMsg(ConfirmationReservation confirmationReservation) {
-        User user = confirmationReservation.getReservation().getUser();
-        ConfirmationKeyForSignUp confirmationKeyForSignUp = new ConfirmationKeyForSignUp(user);
-        confirmationKeyForSignUpService.save(confirmationKeyForSignUp);
-
+        Reservation reservation = confirmationReservation.getReservation();
+        ConfirmationKeyForConfirmationReservation confirmationKeyForConfirmationReservation = new ConfirmationKeyForConfirmationReservation(reservation);
+        confirmationKeyForConfirmationReservationRepository.save(confirmationKeyForConfirmationReservation);
+        User user = confirmationKeyForConfirmationReservation.getReservation().getUser();
         try {
             String msg = FileToString.readFileToString(fileActiveMailMsg);
-            String msgMail = insertActivationLinkToMailMsg(msg, confirmationKeyForSignUp);
+            String msgMail = insertActivationLinkToMailMsg(msg, confirmationKeyForConfirmationReservation);
 
             mailSender.sendSimpleMessageHtml(
                     user.getEmail(),
@@ -94,12 +93,12 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
         }
     }
 
-    private String insertActivationLinkToMailMsg(String msg, ConfirmationKeyForSignUp confirmationKeyForSignUp) {
+    private String insertActivationLinkToMailMsg(String msg, ConfirmationKeyForConfirmationReservation confirmationKeyForConfirmationReservation) {
         StringBuilder newString = new StringBuilder(msg);
 
         return newString.insert(
                 msg.indexOf("\">Potwierdź rezerwację</a>"),
-                activationLink + confirmationKeyForSignUp.getUuid()
+                activationLink + confirmationKeyForConfirmationReservation.getUuid()
         ).toString();
     }
 
