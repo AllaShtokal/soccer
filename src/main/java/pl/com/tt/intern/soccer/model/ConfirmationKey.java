@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @Table(name = "confirmation_key")
+@EqualsAndHashCode(exclude = "user")
 public class ConfirmationKey {
 
     @Id
