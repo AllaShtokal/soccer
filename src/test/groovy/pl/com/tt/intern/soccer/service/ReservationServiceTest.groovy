@@ -42,10 +42,10 @@ class ReservationServiceTest extends Specification {
             ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
-            reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
+            reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
 
         expect:
-            !reservationService.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+            reservationService.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there are date collisions"() {
@@ -57,10 +57,10 @@ class ReservationServiceTest extends Specification {
             ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
-            reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
+            reservationRepository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
 
         expect:
-            reservationService.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+            !reservationService.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
