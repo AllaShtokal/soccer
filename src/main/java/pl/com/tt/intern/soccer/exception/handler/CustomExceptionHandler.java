@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
+import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -47,9 +48,20 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PasswordsMismatchException.class)
-    public ResponseEntity<ExceptionResponse> duplicateEntry(PasswordsMismatchException e) {
+    public ResponseEntity<ExceptionResponse> passwordMismatch(PasswordsMismatchException e) {
         return entity(e.getMessage(), BAD_REQUEST);
     }
+
+    @ExceptionHandler(ActivationAccountException.class)
+    public ResponseEntity<ExceptionResponse> accountActivationError(ActivationAccountException e) {
+        log.error("Throw ActivationAccountException with message: {}", e.getMessage());
+        return entity(e.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ExceptionResponse> nullPointer(NullPointerException e) {
+        log.error("Throw NullPointerException with message: {}", e.getMessage());
+        return entity("Wrong input", BAD_REQUEST);
 
     @ExceptionHandler(IncorrectConfirmationKeyException.class)
     public ResponseEntity<ExceptionResponse> incorrectConfirmationKey(IncorrectConfirmationKeyException ex) {
@@ -57,4 +69,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return entity(ex.getMessage(), BAD_REQUEST);
     }
 
+    @ExceptionHandler({ReservationFormatException.class, ReservationClashException.class})
+    public ResponseEntity<ExceptionResponse> handleReservationException(Exception e) {
+        log.error("Thrown Reservation Exception with message: {}", e.getMessage());
+        return entity(e.getMessage(), BAD_REQUEST);
+    }
 }
