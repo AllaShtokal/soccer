@@ -9,4 +9,6 @@ public interface ConfirmationKeyService {
 
     ConfirmationKey findConfirmationKeyByUuid(String uuid) throws NotFoundException;
 
+    void scanAndDeleteExpiredConfirmationKeys();
+
 }
