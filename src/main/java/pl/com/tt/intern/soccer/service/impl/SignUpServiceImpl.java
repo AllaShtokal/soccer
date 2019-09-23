@@ -41,7 +41,7 @@ public class SignUpServiceImpl implements SignUpService {
             user.setRoles(singleton(roleService.findByType(ROLE_USER)));
 
             User result = userService.save(user);
-            setAndSendActivationMailMsg(result);
+           // setAndSendActivationMailMsg(result);
             return new SuccessfulSignUpResponse("User registered successfully", result);
         } else
             throw new PasswordsMismatchException();

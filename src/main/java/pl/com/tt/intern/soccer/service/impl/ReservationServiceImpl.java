@@ -3,7 +3,6 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -16,11 +15,11 @@ import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
+import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +35,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
     private final ModelMapper mapper;
+    private final ConfirmationReservationService confirmationService;
 
     @Override
     public List<ReservationResponse> findAll() {
@@ -66,6 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setId(null);
         reservation.setUser(userService.findById(userId));
         Reservation savedEntity = reservationRepository.save(reservation);
+        confirmationService.createAndSaveConfirmationReservation(savedEntity);
         return mapper.map(savedEntity, ReservationPersistedResponse.class);
     }
 
@@ -142,10 +143,10 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException("Date must be in future");
         if (!isDateOrderOk(reservationPersistRequest))
             throw new ReservationFormatException("Wrong date order");
-        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
+//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
+//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDateRangeAvailableForEdit(reservationPersistRequest, currentReservation))
             throw new ReservationClashException("Reservation date range is already booked");
     }
@@ -155,10 +156,10 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException("Date must be in future");
         if (!isDateOrderOk(reservationPersistRequest))
             throw new ReservationFormatException("Wrong date order");
-        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
+//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
+//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
             throw new ReservationClashException("Reservation date range is already booked");
     }
