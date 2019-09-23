@@ -7,6 +7,7 @@ import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse
 import pl.com.tt.intern.soccer.repository.ReservationRepository
 import pl.com.tt.intern.soccer.service.ReservationService
+import pl.com.tt.intern.soccer.service.UserService
 import pl.com.tt.intern.soccer.service.impl.ReservationServiceImpl
 import spock.lang.Specification
 
@@ -20,15 +21,17 @@ class ReservationServiceTests extends Specification {
     private final static Long id = 1
 
     ReservationRepository repository
+    UserService userService;
     ModelMapper mapper
     ReservationService service
     ReservationResponse response
     Reservation reservation
 
     def setup() {
-        repository = Mock(ReservationRepository)
+        repository = Mock()
+        userService = Mock()
         mapper = Mock()
-        service = new ReservationServiceImpl(repository, mapper)
+        service = new ReservationServiceImpl(repository, userService, mapper)
         response = Mock()
         reservation = Mock()
     }
