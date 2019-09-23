@@ -15,7 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_info")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "user")
 public class UserInfo extends DateAudit {
 
     @Id

@@ -49,8 +49,14 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
         return new TimerTask() {
             @Override
             public void run() {
-                //wysyłka maila
+                simulateMailSend(confirmationReservation);
             }
         };
+    }
+
+    private void simulateMailSend(ConfirmationReservation confirmationReservation){
+        System.out.println("Email został wysłany");
+        confirmationReservation.setEmailSent(true);
+        repository.save(confirmationReservation);
     }
 }

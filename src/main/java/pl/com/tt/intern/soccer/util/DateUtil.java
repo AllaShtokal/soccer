@@ -12,6 +12,6 @@ import static lombok.AccessLevel.PRIVATE;
 public final class DateUtil {
 
     public static Date toDate(LocalDateTime localDateTime){
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant().minusSeconds(7200));
     }
 }
