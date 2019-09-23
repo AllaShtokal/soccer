@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 
@@ -59,6 +62,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> nullPointer(NullPointerException e) {
         log.error("Throw NullPointerException with message: {}", e.getMessage());
         return entity("Wrong input", BAD_REQUEST);
+
+    @ExceptionHandler(IncorrectConfirmationKeyException.class)
+    public ResponseEntity<ExceptionResponse> incorrectConfirmationKey(IncorrectConfirmationKeyException ex) {
+        log.error("Throw IncorrectConfirmationKeyException with message: {}", ex.getMessage());
+        return entity(ex.getMessage(), BAD_REQUEST);
     }
 
     @ExceptionHandler({ReservationFormatException.class, ReservationClashException.class})
