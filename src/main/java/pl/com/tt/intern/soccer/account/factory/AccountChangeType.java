@@ -14,7 +14,6 @@ public enum AccountChangeType {
     ACTIVE_ACCOUNT(202);
 
     private final int value;
-    private static Map map = new HashMap<>();
 
     public static AccountChangeType valueOf(int type) {
         return Arrays.stream(values()).

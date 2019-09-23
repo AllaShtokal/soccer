@@ -14,6 +14,7 @@ import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
+import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -48,8 +49,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PasswordsMismatchException.class)
-    public ResponseEntity<ExceptionResponse> duplicateEntry(PasswordsMismatchException e) {
+    public ResponseEntity<ExceptionResponse> passwordMismatch(PasswordsMismatchException e) {
         return entity(e.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ExceptionResponse> nullPointer(NullPointerException e) {
+        log.error("Throw NullPointerException with message: {}", e.getMessage());
+        return entity("Wrong input", BAD_REQUEST);
     }
 
     @ExceptionHandler(IncorrectConfirmationKeyException.class)
@@ -62,5 +69,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> invalidChangePassword(InvalidChangePasswordException ex) {
         log.error("Throw InvalidChangePasswordException with message: {}", ex.getMessage(), ex);
         return entity(ex.getMessage(), BAD_REQUEST);
+    }
+    @ExceptionHandler({ReservationFormatException.class, ReservationClashException.class})
+    public ResponseEntity<ExceptionResponse> handleReservationException(Exception e) {
+        log.error("Thrown Reservation Exception with message: {}", e.getMessage());
+        return entity(e.getMessage(), BAD_REQUEST);
     }
 }
