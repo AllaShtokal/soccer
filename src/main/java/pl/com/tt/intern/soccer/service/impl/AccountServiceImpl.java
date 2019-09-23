@@ -13,7 +13,7 @@ import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
-import pl.com.tt.intern.soccer.payload.request.ChangeDataAccountRequest;
+import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
@@ -81,7 +81,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeDataAccountRequest request) {
+    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) {
         UserInfo userInfo = mapper.map(userPrincipal, User.class).getUserInfo();
         userInfo.setFirstName(request.getFirstName());
         userInfo.setLastName(request.getLastName());

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.payload.request.ChangeDataAccountRequest;
+import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
@@ -52,8 +52,8 @@ public class AccountController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/change")
-    public ResponseEntity<ChangeDataAccountResponse> changeBasicDataAccount(@CurrentUser UserPrincipal user,
-                                                                            @Valid @RequestBody ChangeDataAccountRequest request) throws NotFoundException {
+    public ResponseEntity<ChangeDataAccountResponse> changeBasicAccountData(@CurrentUser UserPrincipal user,
+                                                                            @Valid @RequestBody ChangeAccountDataRequest request) throws NotFoundException {
         return ok(accountService.changeUserInfo(user, request));
     }
 }
