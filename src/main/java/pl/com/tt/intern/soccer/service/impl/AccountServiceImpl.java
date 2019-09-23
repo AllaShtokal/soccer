@@ -36,7 +36,6 @@ public class AccountServiceImpl implements AccountService {
     private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
     private final ModelMapper mapper;
     private final PasswordEncoder encoder;
-    private final ChangeAccount changeAccountFactory;
 
     @Override
     public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
