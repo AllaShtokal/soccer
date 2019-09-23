@@ -10,5 +10,7 @@ public interface ConfirmationReservationService {
 
     List<ConfirmationReservation> findAllByEmailSend(Boolean isSend);
 
+    ConfirmationReservation findConfirmationReservationByUUID(String uuid);
+
     void createAndSaveConfirmationReservation(Reservation reservation);
 }

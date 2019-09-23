@@ -30,6 +30,11 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     @Override
+    public ConfirmationReservation findConfirmationReservationByUUID(String uuid){
+        return repository.findByUuid(uuid);
+    }
+
+    @Override
     public void createAndSaveConfirmationReservation(Reservation reservation) {
         ConfirmationReservation confirmationReservation = generateConfirmationReservation(reservation);
         repository.save(confirmationReservation);
@@ -55,7 +60,11 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     private void simulateMailSend(ConfirmationReservation confirmationReservation){
-        System.out.println("Email został wysłany");
+        System.out.println("Email został wysłany"); //implementacja maila
+        confirmEmailSent(confirmationReservation);
+    }
+
+    private void confirmEmailSent (ConfirmationReservation confirmationReservation){
         confirmationReservation.setEmailSent(true);
         repository.save(confirmationReservation);
     }

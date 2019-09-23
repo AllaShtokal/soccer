@@ -11,4 +11,6 @@ public interface ConfirmationReservationRepository extends JpaRepository<Confirm
 
     List<ConfirmationReservation> findAllByEmailSent(Boolean isSend);
 
+    ConfirmationReservation findByUuid(String uuid);
+
 }

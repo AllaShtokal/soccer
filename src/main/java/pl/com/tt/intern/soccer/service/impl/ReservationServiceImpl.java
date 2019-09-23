@@ -5,10 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.model.ConfirmationKey;
+import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
@@ -116,6 +120,25 @@ public class ReservationServiceImpl implements ReservationService {
         return mapper.map(reservation, ReservationResponse.class);
     }
 
+    @Override
+    public void confirmReservationByConfirmationKey(String confirmationKey) throws IncorrectConfirmationKeyException {
+        ConfirmationReservation confirmationReservation = confirmationService.findConfirmationReservationByUUID(confirmationKey);
+
+        checkIfExpired(confirmationReservation.getExpirationTime());
+        confirmationReservation.setExpirationTime(now());
+        changeConfirmationReservationStatus(confirmationReservation.getReservation(), true);
+    }
+
+    private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {
+        if (!expirationTimeToken.isAfter(now()))
+            throw new IncorrectConfirmationKeyException("The token has expired.");
+    }
+
+    @Override
+    public void changeConfirmationReservationStatus(Reservation reservation, Boolean confirmed) {
+        reservation.setConfirmed(confirmed);
+        reservationRepository.save(reservation);
+    }
 
     @Override
     public boolean existsById(Long id) {
@@ -139,7 +162,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public void verifyEditedReservation(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) throws ReservationFormatException, ReservationClashException {
-         if (!isInFuture(reservationPersistRequest))
+        if (!isInFuture(reservationPersistRequest))
             throw new ReservationFormatException("Date must be in future");
         if (!isDateOrderOk(reservationPersistRequest))
             throw new ReservationFormatException("Wrong date order");
@@ -165,18 +188,18 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) {
-        return !reservationRepository.datesCollideExcludingCurrent( reservationPersistRequest.getDateFrom(),
-                                                                    reservationPersistRequest.getDateTo(),
-                                                                    currentReservation.getId());
+        return !reservationRepository.datesCollideExcludingCurrent(reservationPersistRequest.getDateFrom(),
+                reservationPersistRequest.getDateTo(),
+                currentReservation.getId());
     }
 
     @Override
-    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO)  {
+    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO) {
         return reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
     }
 
     @Override
-    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest)  {
+    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest) {
         return reservationPersistRequest.getDateFrom().isBefore(reservationPersistRequest.getDateTo());
     }
 
@@ -184,12 +207,12 @@ public class ReservationServiceImpl implements ReservationService {
     public boolean isDate15MinuteRounded(LocalDateTime time) {
         if (time.getNano() != 0) return false;
         if (time.getSecond() != 0) return false;
-        if (time.getMinute()%15 !=0) return false;
+        if (time.getMinute() % 15 != 0) return false;
         return true;
     }
 
     @Override
-    public boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo)  {
+    public boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo) {
         return !reservationRepository.datesCollide(dateFrom, dateTo);
     }
 }
