@@ -70,6 +70,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Throw InvalidChangePasswordException with message: {}", ex.getMessage(), ex);
         return entity(ex.getMessage(), BAD_REQUEST);
     }
+
     @ExceptionHandler({ReservationFormatException.class, ReservationClashException.class})
     public ResponseEntity<ExceptionResponse> handleReservationException(Exception e) {
         log.error("Thrown Reservation Exception with message: {}", e.getMessage());
