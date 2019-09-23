@@ -52,16 +52,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return entity(e.getMessage(), BAD_REQUEST);
     }
 
-    @ExceptionHandler(ActivationAccountException.class)
-    public ResponseEntity<ExceptionResponse> accountActivationError(ActivationAccountException e) {
-        log.error("Throw ActivationAccountException with message: {}", e.getMessage());
-        return entity(e.getMessage(), BAD_REQUEST);
-    }
-
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ExceptionResponse> nullPointer(NullPointerException e) {
         log.error("Throw NullPointerException with message: {}", e.getMessage());
         return entity("Wrong input", BAD_REQUEST);
+    }
 
     @ExceptionHandler(IncorrectConfirmationKeyException.class)
     public ResponseEntity<ExceptionResponse> incorrectConfirmationKey(IncorrectConfirmationKeyException ex) {
