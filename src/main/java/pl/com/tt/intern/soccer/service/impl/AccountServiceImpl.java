@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
-import pl.com.tt.intern.soccer.account.factory.ChangeAccount;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
@@ -32,6 +33,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
+    private final ChangeAccountMailFactory accountMailFactory;
+    private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
     private final UserInfoService userInfoService;
     private final ModelMapper mapper;
     private final ChangeAccount changeAccountFactory;
@@ -51,8 +54,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void setAndSendMailToChangePassword(String email) {
-        String url = changeAccountFactory.getUrlGenerator(AccountChangeType.valueOf(201)).generate(email, null);
-        changeAccountFactory.getMailSender(AccountChangeType.valueOf(201)).send(email, url);
+        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(201)).generate(email, null);
+        accountMailFactory.getMailSender(AccountChangeType.valueOf(201)).send(email, url);
     }
 
     @Override

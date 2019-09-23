@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
-import pl.com.tt.intern.soccer.account.factory.ChangeAccount;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
@@ -26,7 +27,8 @@ public class SignUpServiceImpl implements SignUpService {
     private final UserService userService;
     private final RoleService roleService;
     private final ModelMapper mapper;
-    private final ChangeAccount changeAccountFactory;
+    private final ChangeAccountMailFactory accountMailFactory;
+    private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
 
     @Override
     public SuccessfulSignUpResponse signUp(SignUpRequest request) throws Exception {
@@ -46,8 +48,8 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     private void setAndSendActivationMailMsg(User user) {
-        String url = changeAccountFactory.getUrlGenerator(AccountChangeType.valueOf(202)).generate(user.getEmail(), null);
-        changeAccountFactory.getMailSender(AccountChangeType.valueOf(202)).send(user.getEmail(), url);
+        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(202)).generate(user.getEmail(), null);
+        accountMailFactory.getMailSender(AccountChangeType.valueOf(202)).send(user.getEmail(), url);
 
     }
 
