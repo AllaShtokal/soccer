@@ -11,6 +11,8 @@ import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.UserService;
 
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_ACCOUNT;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class ActiveAccountUrl implements ChangeAccountUrlGenerator {
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return type.equals(AccountChangeType.valueOf(202));
+        return ACTIVE_ACCOUNT.equals(type);
     }
 
 }

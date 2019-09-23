@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.mail.customizer.CustomizedSenderImpl;
 
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGGED_IN_USER_PASSWORD;
+
 @Service
 @RequiredArgsConstructor
 public class ChangeAccountPasswordMailSender implements PerAccountTypeMailSender {
@@ -25,6 +27,6 @@ public class ChangeAccountPasswordMailSender implements PerAccountTypeMailSender
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return type.equals(AccountChangeType.valueOf(201));
+        return NOT_LOGGED_IN_USER_PASSWORD.equals(type);
     }
 }

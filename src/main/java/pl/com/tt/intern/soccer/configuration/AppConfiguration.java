@@ -20,6 +20,9 @@ public class AppConfiguration {
     @Value("${server.default.timezone}")
     private String defaultTimeZone;
 
+    private final String resolverPrefix = "classpath:/docs/mail/";
+    private final String resolverSuffix = ".html";
+
     @PostConstruct
     void init() {
         TimeZone.setDefault(TimeZone.getTimeZone(defaultTimeZone));
@@ -44,8 +47,8 @@ public class AppConfiguration {
     @Bean
     public SpringResourceTemplateResolver htmlTemplateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix("classpath:/docs/mail/");
-        templateResolver.setSuffix(".html");
+        templateResolver.setPrefix(resolverPrefix);
+        templateResolver.setSuffix(resolverSuffix);
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         templateResolver.setApplicationContext(applicationContext);
