@@ -45,14 +45,20 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PasswordsMismatchException.class)
-    public ResponseEntity<ExceptionResponse> duplicateEntry(PasswordsMismatchException e) {
+    public ResponseEntity<ExceptionResponse> passwordMismatch(PasswordsMismatchException e) {
         return entity(e.getMessage(), BAD_REQUEST);
     }
 
     @ExceptionHandler(ActivationAccountException.class)
-    public ResponseEntity<ExceptionResponse> accountActivationError(ActivationAccountException ex) {
-        log.error("Throw ActivationAccountException with message: {}", ex.getMessage());
-        return entity(ex.getMessage(), BAD_REQUEST);
+    public ResponseEntity<ExceptionResponse> accountActivationError(ActivationAccountException e) {
+        log.error("Throw ActivationAccountException with message: {}", e.getMessage());
+        return entity(e.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ExceptionResponse> nullPointer(NullPointerException e) {
+        log.error("Throw NullPointerException with message: {}", e.getMessage());
+        return entity("Wrong input", BAD_REQUEST);
     }
 
     @ExceptionHandler({ReservationFormatException.class, ReservationClashException.class})

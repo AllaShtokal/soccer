@@ -7,25 +7,35 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
+import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
+import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationService {
 
-    List<Reservation> findAll();
+    List<ReservationResponse> findAll();
 
-    Reservation findById(Long id) throws NotFoundException;
+    ReservationResponse findById(Long id) throws NotFoundException;
 
-    Reservation save(Reservation reservation);
+    ReservationResponse save(Reservation reservation);
 
     ReservationPersistedResponse save(ReservationPersistRequest reservation, Long userId) throws NotFoundException;
 
     boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo) throws ReservationFormatException;
 
     void deleteById(Long id);
+
+    List<ReservationResponse> findByDateBetween(ReservationDateRequest request);
+
+    List<ReservationResponse> findByPeriod(ReservationPeriod period);
+
+    List<ReservationResponse> findByDay(DayOfWeek day);
 
     boolean existsById(Long id);
 

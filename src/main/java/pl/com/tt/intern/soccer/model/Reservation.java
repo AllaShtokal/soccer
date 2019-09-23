@@ -20,7 +20,7 @@ public class Reservation {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @NotNull
@@ -34,4 +34,5 @@ public class Reservation {
     @NotNull
     @Column(name="confirmed", nullable = false)
     private Boolean confirmed;
+
 }
