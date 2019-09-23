@@ -51,7 +51,7 @@ public class AccountController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/change")
+    @PutMapping("/change")
     public ResponseEntity<ChangeDataAccountResponse> changeBasicDataAccount(@CurrentUser UserPrincipal user,
                                                                             @Valid @RequestBody ChangeDataAccountRequest request) throws NotFoundException {
         return ok(accountService.changeUserInfo(user, request));
