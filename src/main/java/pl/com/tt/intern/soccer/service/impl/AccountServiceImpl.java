@@ -2,16 +2,21 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
+import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.UserService;
@@ -29,6 +34,8 @@ public class AccountServiceImpl implements AccountService {
     private final UserService userService;
     private final ChangeAccountMailFactory accountMailFactory;
     private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
+    private final ModelMapper mapper;
+    private final PasswordEncoder encoder;
 
     @Override
     public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
@@ -71,8 +78,23 @@ public class AccountServiceImpl implements AccountService {
         userService.changeEnabledAccount(user, false);
     }
 
+    @Override
+    public void changePasswordLoggedInUser(UserPrincipal userPrincipal, ChangePasswordRequest request) throws InvalidChangePasswordException {
+        if (isPossibleChangePassword(request, userPrincipal.getPassword())) {
+            userService.changePassword(
+                    mapper.map(userPrincipal, User.class),
+                    request.getNewPassword());
+        } else throw new InvalidChangePasswordException("Incorrect old password or new passwords do not match.");
+    }
+
     private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {
         if (!expirationTimeToken.isAfter(now()))
             throw new IncorrectConfirmationKeyException("The token has expired.");
+    }
+
+    private boolean isPossibleChangePassword(ChangePasswordRequest request, String oldPassword) {
+        boolean matchesNewPassword = request.getNewPassword().equals(request.getNewPasswordConfirmation());
+        boolean matchesOldPassword = encoder.matches(request.getOldPassword(), oldPassword);
+        return matchesOldPassword && matchesNewPassword;
     }
 }
