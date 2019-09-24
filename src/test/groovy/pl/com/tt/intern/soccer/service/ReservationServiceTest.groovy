@@ -1,7 +1,9 @@
 package pl.com.tt.intern.soccer.service
 
+
 import org.modelmapper.ModelMapper
 import pl.com.tt.intern.soccer.exception.NotFoundException
+import pl.com.tt.intern.soccer.exception.ReservationFormatException
 import pl.com.tt.intern.soccer.model.Reservation
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest
@@ -23,7 +25,7 @@ class ReservationServiceTest extends Specification {
     ReservationRepository repository = Mock()
     UserService userService = Mock()
     ModelMapper mapper = Mock()
-    ReservationPersistRequest reservationPersistDTO = Mock()
+    ReservationPersistRequest reservationPersistRequest = Mock()
     ReservationService service
     ReservationResponse response
     Reservation reservation
@@ -114,10 +116,10 @@ class ReservationServiceTest extends Specification {
         given:
         LocalDateTime timeFrom = LocalDateTime.of(2019, Month.JULY, day1, hour1, min1, 0, 0)
         LocalDateTime timeTo = LocalDateTime.of(2019, Month.JULY, day2, hour2, min2, 0, 0)
-        reservationPersistDTO.getDateFrom() >> timeFrom
-        reservationPersistDTO.getDateTo() >> timeTo
+        reservationPersistRequest.getDateFrom() >> timeFrom
+        reservationPersistRequest.getDateTo() >> timeTo
         expect:
-        service.isDateOrderOk(reservationPersistDTO) == expected
+        service.isDateOrderOk(reservationPersistRequest) == expected
         where:
         day1 | hour1 | min1 | day2 | hour2 | min2 | expected
         15   | 12    | 30   | 15   | 12    | 45   | true
@@ -127,16 +129,16 @@ class ReservationServiceTest extends Specification {
 
     def "isInFuture should return true if persisted dto has future date"() {
         given:
-        reservationPersistDTO.getDateFrom() >> LocalDateTime.now().plusDays(1L)
+        reservationPersistRequest.getDateFrom() >> LocalDateTime.now().plusDays(1L)
         expect:
-        service.isInFuture(reservationPersistDTO)
+        service.isInFuture(reservationPersistRequest)
     }
 
     def "isInFuture should return false if persisted dto has past date"() {
         given:
-        reservationPersistDTO.getDateFrom() >> LocalDateTime.now().minusDays(1L)
+        reservationPersistRequest.getDateFrom() >> LocalDateTime.now().minusDays(1L)
         expect:
-        !service.isInFuture(reservationPersistDTO)
+        !service.isInFuture(reservationPersistRequest)
     }
 
     def "'findAll' method should return list of ReservationResponse"() {
@@ -229,5 +231,52 @@ class ReservationServiceTest extends Specification {
         1 * repository.findAllByDateToAfterAndDateFromBefore(from, to) >> list
         mapper.map(reservation, ReservationResponse) >> response
         result == responses
+    }
+
+    def "update should throw NotFoundException if reservation was not found"() {
+        given:
+            repository.findById(ID) >> Optional.empty()
+        when:
+            service.update(ID, reservationPersistRequest)
+        then:
+            thrown(NotFoundException)
+    }
+
+    def "update should throw ReservationFormatException if contains invalid date format"() {
+        given:
+            LocalDateTime timeFrom = LocalDateTime.of(2019, Month.JULY, day1, hour1, min1, 0, 0)
+            LocalDateTime timeTo = LocalDateTime.of(2019, Month.JULY, day2, hour2, min2, 0, 0)
+            repository.findById(ID) >> Optional.of(reservation)
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+        when:
+            service.update(ID, reservationPersistRequest)
+        then:
+            thrown(ReservationFormatException)
+        where:
+            day1 | hour1 | min1 | day2 | hour2 | min2
+            15   | 12    | 30   | 15   | 12    | 15
+            15   | 12    | 31   | 15   | 12    | 30
+            14   | 00    | 30   | 14   | 12    | 31
+    }
+
+    def "existsById should invoke repository->existsById"() {
+        when:
+            service.existsById(ID)
+        then:
+            with(repository){
+                1 * existsById(ID)
+            }
+    }
+
+    def "existsByIdAndByUserId should invoke repository->existsByIdAndByUserId"() {
+        given:
+            def userID = 95133151
+        when:
+            service.existsByIdAndByUserId(ID, userID)
+        then:
+            with(repository){
+                1 * existsByIdAndUserId(ID, userID)
+            }
     }
 }
