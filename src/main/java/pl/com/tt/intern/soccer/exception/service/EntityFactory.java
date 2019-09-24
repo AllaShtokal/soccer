@@ -10,7 +10,7 @@ import pl.com.tt.intern.soccer.exception.response.ValidationResponse;
 import java.util.Map;
 
 import static java.time.LocalDateTime.now;
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.http.ResponseEntity.status;
 
 @Service

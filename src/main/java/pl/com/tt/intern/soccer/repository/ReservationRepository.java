@@ -9,8 +9,6 @@ import pl.com.tt.intern.soccer.model.Reservation;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import java.time.LocalDateTime;
-
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 

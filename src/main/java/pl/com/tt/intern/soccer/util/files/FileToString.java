@@ -17,7 +17,7 @@ public final class FileToString {
 
     public static String readFileToString(String path) {
         StringBuilder content = new StringBuilder();
-        try(Stream<String> lines = Files.lines(Paths.get(path), UTF_8)) {
+        try (Stream<String> lines = Files.lines(Paths.get(path), UTF_8)) {
             lines.forEach(content::append);
         } catch (IOException e) {
             log.error(FileToString.class.getName() + ": readFileToString caught exception while trying to read lines from file");
