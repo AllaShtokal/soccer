@@ -3,15 +3,18 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
+import pl.com.tt.intern.soccer.mail.MailSender;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
 import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
+import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.RoleService;
 import pl.com.tt.intern.soccer.service.SignUpService;
 import pl.com.tt.intern.soccer.service.UserService;
@@ -24,8 +27,19 @@ import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
 @RequiredArgsConstructor
 public class SignUpServiceImpl implements SignUpService {
 
+    @Value("${docs.path.mail.active}")
+    private String fileActiveMailMsg;
+
+    @Value("${account.confirm.link}")
+    private String activationLink;
+
+    @Value("${account.confirm.mail.subject}")
+    private String subjectActivationLink;
+
     private final UserService userService;
     private final RoleService roleService;
+    private final ConfirmationKeyService confirmationKeyService;
+    private final MailSender mailSender;
     private final ModelMapper mapper;
     private final ChangeAccountMailFactory accountMailFactory;
     private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
@@ -56,4 +70,5 @@ public class SignUpServiceImpl implements SignUpService {
     private boolean doPasswordsMatch(SignUpRequest request) {
         return request.getPassword().equals(request.getConfirmPassword());
     }
+
 }

@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import java.io.Serializable;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -16,7 +18,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @Table(name = "user_info")
 @EqualsAndHashCode(callSuper = true)
-public class UserInfo extends DateAudit {
+public class UserInfo extends DateAudit implements Serializable {
+
+    private static final long serialVersionUID = -4256607112910571292L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

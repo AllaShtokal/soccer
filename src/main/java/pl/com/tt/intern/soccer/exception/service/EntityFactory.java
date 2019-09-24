@@ -1,5 +1,6 @@
 package pl.com.tt.intern.soccer.exception.service;
 
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,9 +10,11 @@ import pl.com.tt.intern.soccer.exception.response.ValidationResponse;
 import java.util.Map;
 
 import static java.time.LocalDateTime.now;
+import static lombok.AccessLevel.*;
 import static org.springframework.http.ResponseEntity.status;
 
 @Service
+@NoArgsConstructor(access = PRIVATE)
 public class EntityFactory {
 
     public static ResponseEntity<ExceptionResponse> entity(String message, HttpStatus status) {
