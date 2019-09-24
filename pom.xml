@@ -19,11 +19,27 @@
 
         <sonar.jdbc.username>admin</sonar.jdbc.username>
         <sonar.jdbc.password>admin</sonar.jdbc.password>
+
         <sonar.exclusions>
-
+            **/SoccerApplication.java,
+            **/account/factory/*.java,
+            **/account/mail/PerAccountTypeMailSender.java,
+            **/account/url/ChangeAccountUrlGenerator.java,
+            **/annotation/**,
+            **/configuration/**,
+            **/exception/**,
+            **/mail/MailSender.java,
+            **/mail/customizer/CustomizedSender.java,
+            **/mail/customizer/MailCustomizerTemplate.java,
+            **/model/**,
+            **/payload/**,
+            **/repository/**,
+            **/security/**,
+            **/service/*.java,
+            **/util/Messages.java
         </sonar.exclusions>
-        <sonar.dynamic>reuseReports</sonar.dynamic>
 
+        <sonar.dynamic>reuseReports</sonar.dynamic>
         <swagger.version>2.9.2</swagger.version>
         <passay.version>1.0</passay.version>
         <spock-core-version>1.3-groovy-2.5</spock-core-version>
