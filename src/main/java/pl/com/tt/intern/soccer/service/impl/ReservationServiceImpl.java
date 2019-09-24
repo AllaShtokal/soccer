@@ -41,7 +41,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserService userService;
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
-    private final Timer timer;
 
     @Override
     public List<ReservationResponse> findAll() {
@@ -168,10 +167,10 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException("Date must be in future");
         if (!isDateOrderOk(reservationPersistRequest))
             throw new ReservationFormatException("Wrong date order");
-//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
-//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
-//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDateRangeAvailableForEdit(reservationPersistRequest, currentReservation))
             throw new ReservationClashException("Reservation date range is already booked");
     }
@@ -181,10 +180,10 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationFormatException("Date must be in future");
         if (!isDateOrderOk(reservationPersistRequest))
             throw new ReservationFormatException("Wrong date order");
-//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
-//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-//        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
-//            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+        if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
+            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
         if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
             throw new ReservationClashException("Reservation date range is already booked");
     }

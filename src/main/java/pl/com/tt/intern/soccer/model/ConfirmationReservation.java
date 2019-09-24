@@ -46,8 +46,8 @@ public class ConfirmationReservation {
     public ConfirmationReservation(Reservation reservation) {
         this.reservation = reservation;
         this.uuid = UUID.randomUUID().toString();
-        this.expirationTime = reservation.getDateFrom().minusMinutes(1);
-        this.timeToMailSend = reservation.getDateFrom().minusMinutes(2);
+        this.expirationTime = reservation.getDateFrom().minusMinutes(15);
+        this.timeToMailSend = reservation.getDateFrom().minusHours(1);
         this.emailSent = false;
     }
 }
