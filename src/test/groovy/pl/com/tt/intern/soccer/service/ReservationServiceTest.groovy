@@ -178,61 +178,61 @@ class ReservationServiceTest extends Specification {
 
     def "'save' method should return ReservationResponse after save"() {
         when:
-        def result = service.save(reservation)
+            def result = service.save(reservation)
 
         then:
-        1 * repository.save(reservation) >> reservation
-        1 * mapper.map(reservation, ReservationResponse) >> response
-        result == response
+            1 * repository.save(reservation) >> reservation
+            1 * mapper.map(reservation, ReservationResponse) >> response
+            result == response
     }
 
     def "'findByDateBetween' method should return a list of ReservationResponse"() {
         given:
-        ReservationDateRequest request = Mock()
-        def list = asList(reservation)
-        def responses = asList(response)
+            ReservationDateRequest request = Mock()
+            def list = asList(reservation)
+            def responses = asList(response)
 
         when:
-        def result = service.findByDateBetween(request)
+            def result = service.findByDateBetween(request)
 
         then:
-        1 * repository.findAllByDateToAfterAndDateFromBefore(request.getFrom(), request.getTo()) >> list
-        mapper.map(reservation, ReservationResponse) >> response
-        result == responses
+            1 * repository.findAllByDateToAfterAndDateFromBefore(request.getFrom(), request.getTo()) >> list
+            mapper.map(reservation, ReservationResponse) >> response
+            result == responses
     }
 
     def "'findByPeriod' method should return a list of ReservationResponse"() {
         given:
-        def period = TODAY
-        def list = asList(reservation)
-        def responses = asList(response)
+            def period = TODAY
+            def list = asList(reservation)
+            def responses = asList(response)
 
         when:
-        def result = service.findByPeriod(period)
+            def result = service.findByPeriod(period)
 
         then:
-        1 * repository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()) >> list
-        mapper.map(reservation, ReservationResponse) >> response
-        result == responses
+            1 * repository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()) >> list
+            mapper.map(reservation, ReservationResponse) >> response
+            result == responses
     }
 
     def "'findByDay' method should return a list of ReservationResponse"() {
         given:
-        def day = MONDAY
-        def list = asList(reservation)
-        def responses = asList(response)
-        def from = now().with(day)
-                .withHour(0).withMinute(0).withSecond(0).withNano(0)
-        def to = now().with(day)
-                .withHour(23).withMinute(59).withSecond(59).withNano(0)
+            def day = MONDAY
+            def list = asList(reservation)
+            def responses = asList(response)
+            def from = now().with(day)
+                    .withHour(0).withMinute(0).withSecond(0).withNano(0)
+            def to = now().with(day)
+                    .withHour(23).withMinute(59).withSecond(59).withNano(0)
 
         when:
-        def result = service.findByDay(day)
+            def result = service.findByDay(day)
 
         then:
-        1 * repository.findAllByDateToAfterAndDateFromBefore(from, to) >> list
-        mapper.map(reservation, ReservationResponse) >> response
-        result == responses
+            1 * repository.findAllByDateToAfterAndDateFromBefore(from, to) >> list
+            mapper.map(reservation, ReservationResponse) >> response
+            result == responses
     }
 
     def "update should throw NotFoundException if reservation was not found"() {
@@ -246,7 +246,7 @@ class ReservationServiceTest extends Specification {
 
     def "update should throw ReservationFormatException if contains invalid date format"() {
         given:
-        LocalDateTime timeFrom = LocalDateTime.of(year1, Month.MAY, day1, hour1, min1, 0, 0)
+            LocalDateTime timeFrom = LocalDateTime.of(year1, Month.MAY, day1, hour1, min1, 0, 0)
             LocalDateTime timeTo = LocalDateTime.of(year2, Month.MAY, day2, hour2, min2, 0, 0)
             repository.findById(ID) >> Optional.of(reservation)
             reservationPersistRequest.getDateFrom() >> timeFrom
@@ -313,5 +313,60 @@ class ReservationServiceTest extends Specification {
             with(repository){
                 1 * existsByIdAndUserId(ID, userID)
             }
+    }
+
+    def "save(ReservationPersistRequest, userID) should invoke repository->save(Reservation)"() {
+        given:
+            def userID = 1212121
+            mapper.map(reservationPersistRequest, Reservation) >> reservation
+        when:
+            service.save(reservationPersistRequest, userID)
+        then:
+            1 * repository.save(reservation)
+
+    }
+
+    def "verifyPersistedObject should throw ReservationFormatException"() {
+        given:
+            LocalDateTime timeFrom = LocalDateTime.of(year1, Month.MAY, day1, hour1, min1, 0, 0)
+            LocalDateTime timeTo = LocalDateTime.of(year2, Month.MAY, day2, hour2, min2, 0, 0)
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+        when:
+            service.verifyPersistedObject(reservationPersistRequest)
+        then:
+            thrown(ReservationFormatException)
+        where:
+            year1            | day1 | hour1 | min1 | year2              |  day2 | hour2 | min2
+            timeNow.year - 1 | 15   | 12    | 30   | timeNow.year - 1   |  15   | 12    | 15 // no future
+            timeNow.year + 1 | 15   | 12    | 30   | timeNow.year + 1   |  15   | 12    | 44 //no round 15 min
+            timeNow.year + 1 | 15   | 12    | 31   | timeNow.year + 1   |  15   | 12    | 45 //no round 15 min
+            timeNow.year + 1 | 15   | 12    | 30   | timeNow.year + 1   |  15   | 12    | 15 //wrong order
+    }
+
+    def "verifyPersistedObject should throw ReservationClashException"() {
+        given:
+            LocalDateTime timeFrom = LocalDateTime.of(timeNow.year+1, Month.MAY, 12, 3, 15, 0, 0)
+            LocalDateTime timeTo = LocalDateTime.of(timeNow.year+2, Month.MAY, 12, 4, 30, 0, 0)
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+            repository.datesCollide(timeFrom, timeTo) >> true
+        when:
+            service.verifyPersistedObject(reservationPersistRequest)
+        then:
+            thrown(ReservationClashException)
+    }
+
+    def "verifyPersistedObject should not throw any exception"() {
+        given:
+            LocalDateTime timeFrom = LocalDateTime.of(timeNow.year+1, Month.MAY, 12, 3, 15, 0, 0)
+            LocalDateTime timeTo = LocalDateTime.of(timeNow.year+2, Month.MAY, 12, 4, 30, 0, 0)
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+            repository.datesCollide(timeFrom, timeTo) >> false
+        when:
+            service.verifyPersistedObject(reservationPersistRequest)
+        then:
+            noExceptionThrown()
     }
 }
