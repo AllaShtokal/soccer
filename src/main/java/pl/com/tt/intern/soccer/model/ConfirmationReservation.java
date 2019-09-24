@@ -3,11 +3,9 @@ package pl.com.tt.intern.soccer.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -49,7 +47,7 @@ public class ConfirmationReservation {
         this.reservation = reservation;
         this.uuid = UUID.randomUUID().toString();
         this.expirationTime = reservation.getDateFrom().minusMinutes(1);
-        this.timeToMailSend = reservation.getDateFrom().minusMinutes(3);
+        this.timeToMailSend = reservation.getDateFrom().minusMinutes(2);
         this.emailSent = false;
     }
 }

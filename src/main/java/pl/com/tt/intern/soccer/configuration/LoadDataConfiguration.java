@@ -4,8 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
+import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
+import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.util.DateUtil;
 
 import java.time.LocalDateTime;
@@ -18,12 +23,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class LoadDataConfiguration {
 
-    private final ConfirmationReservationService service;
+    private final ConfirmationReservationService confirmationReservationService;
     private final Timer timer;
+    private final ReservationService reservationService;
+    private final ChangeAccountMailFactory mailFactory;
+    private final ChangeAccountUrlGeneratorFactory urlFactory;
 
     @EventListener(ApplicationReadyEvent.class)
     public void addConfirmationsToList(){
-        List<ConfirmationReservation> listOfAllConfirmationFromBase = service.findAllByEmailSend(false);
+        List<ConfirmationReservation> listOfAllConfirmationFromBase = confirmationReservationService.findAllByEmailSend(false);
         List<ConfirmationReservation> filteredListOfConfirmationFromDatabase = listOfAllConfirmationFromBase.stream()
                 .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
@@ -37,7 +45,14 @@ public class LoadDataConfiguration {
         return new TimerTask() {
             @Override
             public void run() {
-                System.out.println("Wyślij maila");
+
+                String email = cr.getReservation().getUser().getEmail();
+
+                String url = urlFactory.getUrlGenerator(AccountChangeType.CONFIRM_RESERVATION)
+                        .generate(email, cr.getUuid());
+
+                mailFactory.getMailSender(AccountChangeType.CONFIRM_RESERVATION)
+                        .send(email, url);
                 setMailSent(cr);
             }
         };
@@ -45,7 +60,32 @@ public class LoadDataConfiguration {
 
     private void setMailSent(ConfirmationReservation cr){
         cr.setEmailSent(true);
-        service.save(cr);
+        confirmationReservationService.save(cr);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void removeFromDataBaseExpiredConfirmationReservations(){
+        List<ConfirmationReservation> listOfAllConfirmationFromBase = confirmationReservationService.findAll();
+        List<ConfirmationReservation> filteredListOfConfirmationFromDatabase = listOfAllConfirmationFromBase.stream()
+                .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
+                .collect(Collectors.toList());
+
+        filteredListOfConfirmationFromDatabase
+                .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()),
+                        DateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
+    }
+
+    private TimerTask getNewTimerTaskForRemoveExpiredConfirmationKeys(Reservation reservation){
+        return new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Podjeto sie zadania usuniecia rezerwacji");
+                if(!reservation.getConfirmed()) {
+                    reservationService.deleteById(reservation.getId());
+                    System.out.println("Usunięto rezerwacje");
+                }
+            }
+        };
     }
 
 }

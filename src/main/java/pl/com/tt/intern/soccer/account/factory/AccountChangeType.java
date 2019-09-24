@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
 public enum AccountChangeType {
     NOT_LOGGED_IN_USER_PASSWORD(201),
-    ACTIVE_ACCOUNT(202);
+    ACTIVE_ACCOUNT(202),
+    CONFIRM_RESERVATION(204);
 
     private final int value;
 

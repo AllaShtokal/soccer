@@ -2,6 +2,9 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
+import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.repository.ConfirmationReservationRepository;
@@ -18,6 +21,13 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
 
     private final ConfirmationReservationRepository repository;
     private final Timer timer;
+    private final ChangeAccountMailFactory mailFactory;
+    private final ChangeAccountUrlGeneratorFactory urlFactory;
+
+    @Override
+    public List<ConfirmationReservation> findAll(){
+        return repository.findAll();
+    }
 
     @Override
     public ConfirmationReservation save(ConfirmationReservation confirmationReservation) {
@@ -60,7 +70,10 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     private void simulateMailSend(ConfirmationReservation confirmationReservation){
-        System.out.println("Email został wysłany"); //implementacja maila
+        String url = urlFactory.getUrlGenerator(AccountChangeType.CONFIRM_RESERVATION)
+                .generate(confirmationReservation.getReservation().getUser().getEmail(), confirmationReservation.getUuid());
+        mailFactory.getMailSender(AccountChangeType.CONFIRM_RESERVATION)
+                .send(confirmationReservation.getReservation().getUser().getEmail(), url);
         confirmEmailSent(confirmationReservation);
     }
 
