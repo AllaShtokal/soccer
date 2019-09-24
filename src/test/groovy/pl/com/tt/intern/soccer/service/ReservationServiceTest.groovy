@@ -3,6 +3,7 @@ package pl.com.tt.intern.soccer.service
 
 import org.modelmapper.ModelMapper
 import pl.com.tt.intern.soccer.exception.NotFoundException
+import pl.com.tt.intern.soccer.exception.ReservationClashException
 import pl.com.tt.intern.soccer.exception.ReservationFormatException
 import pl.com.tt.intern.soccer.model.Reservation
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest
@@ -30,6 +31,7 @@ class ReservationServiceTest extends Specification {
     ReservationResponse response
     Reservation reservation
     def ID = 1
+    static LocalDateTime timeNow = LocalDateTime.now()
 
     def setup() {
         service = new ReservationServiceImpl(repository, userService, mapper)
@@ -244,8 +246,8 @@ class ReservationServiceTest extends Specification {
 
     def "update should throw ReservationFormatException if contains invalid date format"() {
         given:
-            LocalDateTime timeFrom = LocalDateTime.of(2019, Month.JULY, day1, hour1, min1, 0, 0)
-            LocalDateTime timeTo = LocalDateTime.of(2019, Month.JULY, day2, hour2, min2, 0, 0)
+        LocalDateTime timeFrom = LocalDateTime.of(year1, Month.MAY, day1, hour1, min1, 0, 0)
+            LocalDateTime timeTo = LocalDateTime.of(year2, Month.MAY, day2, hour2, min2, 0, 0)
             repository.findById(ID) >> Optional.of(reservation)
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
@@ -254,10 +256,43 @@ class ReservationServiceTest extends Specification {
         then:
             thrown(ReservationFormatException)
         where:
-            day1 | hour1 | min1 | day2 | hour2 | min2
-            15   | 12    | 30   | 15   | 12    | 15
-            15   | 12    | 31   | 15   | 12    | 30
-            14   | 00    | 30   | 14   | 12    | 31
+            year1            | day1 | hour1 | min1 | year2              |  day2 | hour2 | min2
+            timeNow.year - 1 | 15   | 12    | 30   | timeNow.year - 1   |  15   | 12    | 15 // no future
+            timeNow.year + 1 | 15   | 12    | 30   | timeNow.year + 1   |  15   | 12    | 44 //no round 15 min
+            timeNow.year + 1 | 15   | 12    | 31   | timeNow.year + 1   |  15   | 12    | 45 //no round 15 min
+            timeNow.year + 1 | 15   | 12    | 30   | timeNow.year + 1   |  15   | 12    | 15 //wrong order
+    }
+
+    def "update should throw ReservationClashException if reservation date range is already booked"() {
+        given:
+            def reservationID = 540293812
+            LocalDateTime timeFrom = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 15, 0, 0)
+            LocalDateTime timeTo = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 30, 0, 0)
+            repository.findById(ID) >> Optional.of(reservation)
+            reservation.getId() >> reservationID
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+            repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> true
+        when:
+            service.update(ID, reservationPersistRequest)
+        then:
+            thrown(ReservationClashException)
+    }
+
+    def "update should invoke repository.save method if reservation validation passes"() {
+        given:
+            def reservationID = 540293812
+            LocalDateTime timeFrom = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 15, 0, 0)
+            LocalDateTime timeTo = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 30, 0, 0)
+            repository.findById(ID) >> Optional.of(reservation)
+            reservation.getId() >> reservationID
+            reservationPersistRequest.getDateFrom() >> timeFrom
+            reservationPersistRequest.getDateTo() >> timeTo
+            repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> false
+        when:
+            service.update(ID, reservationPersistRequest)
+        then:
+            1 * repository.save(_ as Reservation)
     }
 
     def "existsById should invoke repository->existsById"() {
