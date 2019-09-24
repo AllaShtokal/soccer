@@ -20,11 +20,14 @@ import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
+import pl.com.tt.intern.soccer.util.DateUtil;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
@@ -38,6 +41,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserService userService;
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
+    private final Timer timer;
 
     @Override
     public List<ReservationResponse> findAll() {

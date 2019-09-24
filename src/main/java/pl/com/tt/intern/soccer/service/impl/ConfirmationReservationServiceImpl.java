@@ -5,13 +5,16 @@ import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.repository.ConfirmationReservationRepository;
+import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.util.DateUtil;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,9 +26,11 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     private final Timer timer;
     private final ChangeAccountMailFactory mailFactory;
     private final ChangeAccountUrlGeneratorFactory urlFactory;
+    private final ReservationRepository reservationRepository;
+
 
     @Override
-    public List<ConfirmationReservation> findAll(){
+    public List<ConfirmationReservation> findAll() {
         return repository.findAll();
     }
 
@@ -40,16 +45,16 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     @Override
-    public ConfirmationReservation findConfirmationReservationByUUID(String uuid){
+    public ConfirmationReservation findConfirmationReservationByUUID(String uuid) {
         return repository.findByUuid(uuid);
     }
 
     @Override
-    public void createAndSaveConfirmationReservation(Reservation reservation) {
+    public void createAndSaveConfirmationReservation(Reservation reservation) throws NotFoundException {
         ConfirmationReservation confirmationReservation = generateConfirmationReservation(reservation);
         repository.save(confirmationReservation);
         addTaskToTimerTask(confirmationReservation);
-
+        addRemoveReservationTaskToTimerTask(confirmationReservation);
     }
 
     private ConfirmationReservation generateConfirmationReservation(Reservation reservation) {
@@ -60,16 +65,16 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
         timer.schedule(getTimerTask(confirmationReservation), DateUtil.toDate(confirmationReservation.getTimeToMailSend()));
     }
 
-    private TimerTask getTimerTask(ConfirmationReservation confirmationReservation){
+    private TimerTask getTimerTask(ConfirmationReservation confirmationReservation) {
         return new TimerTask() {
             @Override
             public void run() {
-                simulateMailSend(confirmationReservation);
+                MailSendTask(confirmationReservation);
             }
         };
     }
 
-    private void simulateMailSend(ConfirmationReservation confirmationReservation){
+    private void MailSendTask(ConfirmationReservation confirmationReservation) {
         String url = urlFactory.getUrlGenerator(AccountChangeType.CONFIRM_RESERVATION)
                 .generate(confirmationReservation.getReservation().getUser().getEmail(), confirmationReservation.getUuid());
         mailFactory.getMailSender(AccountChangeType.CONFIRM_RESERVATION)
@@ -77,8 +82,32 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
         confirmEmailSent(confirmationReservation);
     }
 
-    private void confirmEmailSent (ConfirmationReservation confirmationReservation){
+    private void confirmEmailSent(ConfirmationReservation confirmationReservation) {
         confirmationReservation.setEmailSent(true);
         repository.save(confirmationReservation);
+    }
+
+    private void addRemoveReservationTaskToTimerTask(ConfirmationReservation confirmationReservation) throws NotFoundException {
+        timer.schedule(getTimerTask(getReservation(confirmationReservation.getReservation().getId())), DateUtil.toDate(confirmationReservation.getExpirationTime().plusMinutes(1)));
+    }
+
+    private Reservation getReservation(Long id) throws NotFoundException {
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        if (optionalReservation.isPresent()) {
+            return optionalReservation.get();
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    private TimerTask getTimerTask(Reservation reservation) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                if (!reservation.getConfirmed()) {
+                    reservationRepository.deleteById(reservation.getId());
+                }
+            }
+        };
     }
 }
