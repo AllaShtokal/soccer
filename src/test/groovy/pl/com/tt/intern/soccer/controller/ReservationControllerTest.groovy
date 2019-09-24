@@ -27,6 +27,26 @@ class ReservationControllerTest extends Specification {
         controller = new ReservationController(service)
     }
 
+    def "findAll method should return OK status"() {
+        when:
+        def status = controller.findAll().getStatusCode()
+
+        then:
+        status == OK
+    }
+
+    def "findAll method should return a list of ReservationResponse"() {
+        given:
+        def list = new ArrayList<ReservationResponse>()
+
+        when:
+        def body = controller.findAll().getBody()
+
+        then:
+        1 * service.findAll() >> list
+        body == list
+    }
+
     def "deleteReservation should invoke ReservationService.deleteById"() {
         given:
         UserPrincipal user = Mock(UserPrincipal)
@@ -38,6 +58,17 @@ class ReservationControllerTest extends Specification {
         with(service) {
             1 * deleteById(ID)
         }
+    }
+
+    def "deleteOwnReservation method should throw an exception if reservation does not exists"() {
+        given:
+        UserPrincipal user = Mock(UserPrincipal)
+        user.getId() >> userId
+        service.existsByIdAndByUserId(ID, userId) >> false
+        when:
+        controller.deleteOwnReservation(user, ID)
+        then:
+        thrown(NotFoundException)
     }
 
     def "update method should be invoked when reservation exists"() {
