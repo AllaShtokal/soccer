@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.service
 
-
 import org.springframework.security.crypto.password.PasswordEncoder
 import pl.com.tt.intern.soccer.exception.NotFoundException
 import pl.com.tt.intern.soccer.model.User
@@ -67,7 +66,6 @@ class UserServiceTest extends Specification {
 
     def "findByEmail should invoke repository->findByEmail()"() {
         given:
-
             repository.findByEmail(EMAIL) >> Optional.of(user)
         when:
             User userFound = service.findByEmail(EMAIL)
@@ -86,21 +84,77 @@ class UserServiceTest extends Specification {
 
     def "findByUsernameOrEmail should invoke repository->findByUsernameOrEmail()"() {
         given:
-
-        repository.findByUsernameOrEmail(USERNAME, EMAIL) >> Optional.of(user)
+            repository.findByUsernameOrEmail(USERNAME, EMAIL) >> Optional.of(user)
         when:
-        User userFound = service.findByUsernameOrEmail(USERNAME, EMAIL)
+            User userFound = service.findByUsernameOrEmail(USERNAME, EMAIL)
         then:
-        userFound == user
+            userFound == user
     }
 
     def "findByUsernameOrEmail should throw exception if no user was found"() {
         given:
-        repository.findByUsernameOrEmail(USERNAME, EMAIL) >> Optional.empty()
+            repository.findByUsernameOrEmail(USERNAME, EMAIL) >> Optional.empty()
         when:
-        service.findByUsernameOrEmail(USERNAME, EMAIL)
+            service.findByUsernameOrEmail(USERNAME, EMAIL)
         then:
-        thrown(NotFoundException)
+            thrown(NotFoundException)
     }
 
+    def "findByIdIn"() {
+        given:
+            List<Long> userIds = new LinkedList<>()
+        when:
+            service.findByIdIn(userIds)
+        then:
+            1 * repository.findByIdIn(userIds)
+    }
+
+    def "findByUsername should invoke repository->findByUsername()"() {
+        given:
+            repository.findByUsername(USERNAME) >> Optional.of(user)
+        when:
+            User userFound = service.findByUsername(USERNAME)
+        then:
+            userFound == user
+    }
+
+    def "findByUsername should throw exception if no user was found"() {
+        given:
+            repository.findByUsername(USERNAME) >> Optional.empty()
+        when:
+            service.findByUsername(USERNAME)
+        then:
+            thrown(NotFoundException)
+    }
+
+    def "existsByEmail should invoke repository->existsByEmail"() {
+        when:
+            service.existsByEmail(EMAIL)
+        then:
+            1 * repository.existsByEmail(EMAIL)
+    }
+
+    def "existsByUsername should invoke repository->existsByUsername"() {
+        when:
+        service.existsByUsername(USERNAME)
+        then:
+        1 * repository.existsByUsername(USERNAME)
+    }
+
+    def "changeEnabledUser saves user"() {
+        when:
+            service.changeEnabledAccount(user, false)
+        then:
+            1 * repository.save(user)
+    }
+
+    def "changePassword saves user"() {
+        given:
+            def newPass = "newPass"
+            encoder.encode(newPass) >> "encoded"
+        when:
+            service.changePassword(user, newPass)
+        then:
+            1 * repository.save(user)
+    }
 }
