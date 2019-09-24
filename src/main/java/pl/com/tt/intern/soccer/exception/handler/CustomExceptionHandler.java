@@ -27,8 +27,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     public ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException e,
-                                                                           HttpHeaders headers, HttpStatus status,
-                                                                           WebRequest request) {
+                                                       HttpHeaders headers, HttpStatus status,
+                                                       WebRequest request) {
         return entity(validate(e.getBindingResult()), BAD_REQUEST);
     }
 
