@@ -5,7 +5,6 @@ import pl.com.tt.intern.soccer.model.enums.RoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import java.io.Serializable;
 
 import static javax.persistence.EnumType.STRING;

@@ -47,96 +47,96 @@ class ReservationServiceTest extends Specification {
 
     def "isDateRangeAvailable should return true if there are no date collisions"() {
         given:
-            LocalDateTime timeFrom = LocalDateTime.now()
-            LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
-            Reservation reservation = Mock(Reservation)
-            reservation.getId() >> ID
-            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
-            reservationPersistRequest.getDateFrom() >> timeFrom
-            reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
+        LocalDateTime timeFrom = LocalDateTime.now()
+        LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
+        Reservation reservation = Mock(Reservation)
+        reservation.getId() >> ID
+        ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+        reservationPersistRequest.getDateFrom() >> timeFrom
+        reservationPersistRequest.getDateTo() >> timeTo
+        repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
 
         expect:
-            service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+        service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there are date collisions"() {
         given:
-            LocalDateTime timeFrom = LocalDateTime.now()
-            LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
-            Reservation reservation = Mock(Reservation)
-            reservation.getId() >> ID
-            ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
-            reservationPersistRequest.getDateFrom() >> timeFrom
-            reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
+        LocalDateTime timeFrom = LocalDateTime.now()
+        LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
+        Reservation reservation = Mock(Reservation)
+        reservation.getId() >> ID
+        ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
+        reservationPersistRequest.getDateFrom() >> timeFrom
+        reservationPersistRequest.getDateTo() >> timeTo
+        repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
 
         expect:
-            !service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+        !service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
     }
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
         given:
-            LocalDateTime time1 = LocalDateTime.now()
-            LocalDateTime time2 = LocalDateTime.now().plusDays(1)
-            repository.datesCollide(time1, time2) >> true
+        LocalDateTime time1 = LocalDateTime.now()
+        LocalDateTime time2 = LocalDateTime.now().plusDays(1)
+        repository.datesCollide(time1, time2) >> true
         expect:
-            service.datesCollideWithExistingReservations(time1, time2)
+        service.datesCollideWithExistingReservations(time1, time2)
     }
 
     def "isDate15MinuteRounded should consider minutes, seconds and nanoseconds"() {
         given:
-            LocalDateTime time = LocalDateTime.of(2019, Month.JULY, 1, hour, min, sec, nano)
+        LocalDateTime time = LocalDateTime.of(2019, Month.JULY, 1, hour, min, sec, nano)
         expect:
-            service.isDate15MinuteRounded(time) == expected
+        service.isDate15MinuteRounded(time) == expected
         where:
-            hour    | min     | sec       | nano      | expected
-            0       | 0       | 0         | 0         | true
-            12      | 0       | 0         | 0         | true
-            23      | 15      | 0         | 0         | true
-            7       | 30      | 0         | 0         | true
-            7       | 45      | 0         | 0         | true
-            13      | 1       | 0         | 0         | false
-            14      | 2       | 0         | 0         | false
-            15      | 3       | 0         | 0         | false
-            16      | 5       | 0         | 0         | false
-            17      | 6       | 0         | 0         | false
-            18      | 7       | 0         | 0         | false
-            19      | 8       | 0         | 0         | false
-            20      | 9       | 0         | 0         | false
-            21      | 10      | 0         | 0         | false
-            22      | 12      | 0         | 0         | false
-            8       | 15      | 1         | 0         | false
-            9       | 15      | 0         | 1         | false
+        hour | min | sec | nano | expected
+        0    | 0   | 0   | 0    | true
+        12   | 0   | 0   | 0    | true
+        23   | 15  | 0   | 0    | true
+        7    | 30  | 0   | 0    | true
+        7    | 45  | 0   | 0    | true
+        13   | 1   | 0   | 0    | false
+        14   | 2   | 0   | 0    | false
+        15   | 3   | 0   | 0    | false
+        16   | 5   | 0   | 0    | false
+        17   | 6   | 0   | 0    | false
+        18   | 7   | 0   | 0    | false
+        19   | 8   | 0   | 0    | false
+        20   | 9   | 0   | 0    | false
+        21   | 10  | 0   | 0    | false
+        22   | 12  | 0   | 0    | false
+        8    | 15  | 1   | 0    | false
+        9    | 15  | 0   | 1    | false
     }
 
     def "isDateOrderOk should only return true if dateFrom is smaller than dateTo"() {
         given:
-            LocalDateTime timeFrom = LocalDateTime.of(2019, Month.JULY, day1, hour1, min1, 0, 0)
-            LocalDateTime timeTo = LocalDateTime.of(2019, Month.JULY, day2, hour2, min2, 0, 0)
-            reservationPersistDTO.getDateFrom() >> timeFrom
-            reservationPersistDTO.getDateTo() >> timeTo
+        LocalDateTime timeFrom = LocalDateTime.of(2019, Month.JULY, day1, hour1, min1, 0, 0)
+        LocalDateTime timeTo = LocalDateTime.of(2019, Month.JULY, day2, hour2, min2, 0, 0)
+        reservationPersistDTO.getDateFrom() >> timeFrom
+        reservationPersistDTO.getDateTo() >> timeTo
         expect:
-            service.isDateOrderOk(reservationPersistDTO) == expected
+        service.isDateOrderOk(reservationPersistDTO) == expected
         where:
-            day1| hour1 | min1   | day2  | hour2 | min2  | expected
-            15  | 12    | 30     | 15    | 12    | 45    | true
-            15  | 12    | 30     | 15    | 12    | 30    | false
-            15  | 12    | 30     | 14    | 12    | 30    | false
+        day1 | hour1 | min1 | day2 | hour2 | min2 | expected
+        15   | 12    | 30   | 15   | 12    | 45   | true
+        15   | 12    | 30   | 15   | 12    | 30   | false
+        15   | 12    | 30   | 14   | 12    | 30   | false
     }
 
-    def "isInFuture should return true if persisted dto has future date" () {
+    def "isInFuture should return true if persisted dto has future date"() {
         given:
-            reservationPersistDTO.getDateFrom() >> LocalDateTime.now().plusDays(1L)
+        reservationPersistDTO.getDateFrom() >> LocalDateTime.now().plusDays(1L)
         expect:
-            service.isInFuture(reservationPersistDTO)
+        service.isInFuture(reservationPersistDTO)
     }
 
-    def "isInFuture should return false if persisted dto has past date" () {
+    def "isInFuture should return false if persisted dto has past date"() {
         given:
-            reservationPersistDTO.getDateFrom() >> LocalDateTime.now().minusDays(1L)
+        reservationPersistDTO.getDateFrom() >> LocalDateTime.now().minusDays(1L)
         expect:
-            !service.isInFuture(reservationPersistDTO)
+        !service.isInFuture(reservationPersistDTO)
     }
 
     def "'findAll' method should return list of ReservationResponse"() {

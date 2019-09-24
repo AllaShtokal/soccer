@@ -3,7 +3,6 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -12,15 +11,14 @@ import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -171,18 +169,18 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public boolean datesCollideWithExistingReservationsExcludingEditedOne(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) {
-        return reservationRepository.datesCollideExcludingCurrent( reservationPersistRequest.getDateFrom(),
-                                                                    reservationPersistRequest.getDateTo(),
-                                                                    currentReservation.getId());
+        return reservationRepository.datesCollideExcludingCurrent(reservationPersistRequest.getDateFrom(),
+                reservationPersistRequest.getDateTo(),
+                currentReservation.getId());
     }
 
     @Override
-    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO)  {
+    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO) {
         return reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
     }
 
     @Override
-    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest)  {
+    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest) {
         return reservationPersistRequest.getDateFrom().isBefore(reservationPersistRequest.getDateTo());
     }
 
@@ -190,11 +188,11 @@ public class ReservationServiceImpl implements ReservationService {
     public boolean isDate15MinuteRounded(LocalDateTime time) {
         if (time.getNano() != 0) return false;
         if (time.getSecond() != 0) return false;
-        return time.getMinute()%TIME_ROUNDING_IN_MINUTES == 0;
+        return time.getMinute() % TIME_ROUNDING_IN_MINUTES == 0;
     }
 
     @Override
-    public boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo)  {
+    public boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo) {
         return reservationRepository.datesCollide(dateFrom, dateTo);
     }
 }

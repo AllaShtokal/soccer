@@ -57,7 +57,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception {
+    public void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request)
+            throws PasswordsMismatchException, IncorrectConfirmationKeyException {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordKey);
             checkIfExpired(confirmationKey.getExpirationTime());
@@ -79,7 +80,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePasswordLoggedInUser(UserPrincipal userPrincipal, ChangePasswordRequest request) throws InvalidChangePasswordException {
+    public void changePasswordLoggedInUser(UserPrincipal userPrincipal, ChangePasswordRequest request)
+            throws InvalidChangePasswordException {
         if (isPossibleChangePassword(request, userPrincipal.getPassword())) {
             userService.changePassword(
                     mapper.map(userPrincipal, User.class),

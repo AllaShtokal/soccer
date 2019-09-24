@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
-import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 

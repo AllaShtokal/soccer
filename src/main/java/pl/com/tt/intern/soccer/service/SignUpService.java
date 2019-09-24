@@ -7,6 +7,6 @@ import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
 
 public interface SignUpService {
 
-    SuccessfulSignUpResponse signUp(SignUpRequest request) throws PasswordsMismatchException, NotFoundException, Exception;
+    SuccessfulSignUpResponse signUp(SignUpRequest request) throws PasswordsMismatchException, NotFoundException;
 
 }

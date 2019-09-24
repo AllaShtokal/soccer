@@ -31,7 +31,7 @@ public class ConfirmationKey implements Serializable {
 
     @NotNull
     @Column(name = "uuid", unique = true)
-    private String uuid ;
+    private String uuid;
 
     @NotNull
     @Column(name = "expiration_time")

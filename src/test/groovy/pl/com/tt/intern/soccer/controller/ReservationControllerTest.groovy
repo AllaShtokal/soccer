@@ -22,67 +22,67 @@ class ReservationControllerTest extends Specification {
     ReservationService service = Mock()
     def ID = 1
     def userId = 2
-    
+
     def setup() {
         controller = new ReservationController(service)
     }
 
     def "deleteReservation should invoke ReservationService.deleteById"() {
         given:
-            UserPrincipal user = Mock(UserPrincipal)
-            user.getId() >> userId
-            service.existsByIdAndByUserId(ID, userId) >> true
+        UserPrincipal user = Mock(UserPrincipal)
+        user.getId() >> userId
+        service.existsByIdAndByUserId(ID, userId) >> true
         when:
-            controller.deleteOwnReservation(user, ID)
+        controller.deleteOwnReservation(user, ID)
         then:
-            with(service) {
-                1 * deleteById(ID)
-            }
+        with(service) {
+            1 * deleteById(ID)
+        }
     }
 
     def "update method should be invoked when reservation exists"() {
         given:
-            service.existsByIdAndByUserId(_,_) >> true
+        service.existsByIdAndByUserId(_, _) >> true
         when:
-            controller.editOwnReservation(Mock(UserPrincipal), ID , reservationPersistRequest)
+        controller.editOwnReservation(Mock(UserPrincipal), ID, reservationPersistRequest)
         then:
-            with(service) {
-                1 * update(ID, reservationPersistRequest)
-            }
+        with(service) {
+            1 * update(ID, reservationPersistRequest)
+        }
     }
 
     def "update method should throw exception when reservation does not exist"() {
         given:
-            service.existsByIdAndByUserId(_ as Long, _ as Long) >> false
+        service.existsByIdAndByUserId(_ as Long, _ as Long) >> false
         when:
-            controller.editOwnReservation(Mock(UserPrincipal), ID, reservationPersistRequest)
+        controller.editOwnReservation(Mock(UserPrincipal), ID, reservationPersistRequest)
         then:
-            thrown(NotFoundException)
+        thrown(NotFoundException)
     }
 
     def "saveNewReservationWithOwnId should invoke verification and save"() {
         given:
-            ReservationPersistRequest reservationPersistRequest = Mock()
-            UserPrincipal user = Mock(UserPrincipal)
-            user.getId() >> userId
-            service.verifyPersistedObject() >> {}
+        ReservationPersistRequest reservationPersistRequest = Mock()
+        UserPrincipal user = Mock(UserPrincipal)
+        user.getId() >> userId
+        service.verifyPersistedObject() >> {}
         when:
-            controller.saveNewReservationWithOwnId(user, reservationPersistRequest)
+        controller.saveNewReservationWithOwnId(user, reservationPersistRequest)
         then:
-            with(service) {
-                1 * verifyPersistedObject(reservationPersistRequest)
-                1 * save(reservationPersistRequest, userId)
-            }
+        with(service) {
+            1 * verifyPersistedObject(reservationPersistRequest)
+            1 * save(reservationPersistRequest, userId)
+        }
     }
 
     def "saveNewReservation should return CREATED status"() {
         given:
-            ReservationPersistRequest reservationPersistRequest = Mock()
-            UserPrincipal user = Mock(UserPrincipal)
-            user.getId() >> userId
-            service.verifyPersistedObject() >> {}
+        ReservationPersistRequest reservationPersistRequest = Mock()
+        UserPrincipal user = Mock(UserPrincipal)
+        user.getId() >> userId
+        service.verifyPersistedObject() >> {}
         expect:
-            controller.saveNewReservationWithOwnId(user, reservationPersistRequest).getStatusCode() == HttpStatus.CREATED
+        controller.saveNewReservationWithOwnId(user, reservationPersistRequest).getStatusCode() == HttpStatus.CREATED
     }
 
     def "findByPeriod method should return OK status"() {
