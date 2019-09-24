@@ -44,14 +44,10 @@ public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
             );
             confirmationKeyService.save(confirmationKey);
 
-            return serverAddress + ":" +
-                    serverPort +
-                    link +
-                    linkParamFirst +
-                    params[0] +
-                    linkParamSecond +
-                    confirmationKey.getUuid();
-
+            return createUrl(
+                    confirmationKey.getUuid(),
+                    params
+            );
         } catch (NotFoundException e) {
             log.error("Not found user..", e);
             return null;
@@ -61,5 +57,16 @@ public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
     @Override
     public boolean supports(AccountChangeType type) {
         return EMAIL.equals(type);
+    }
+
+    private String createUrl(String uuid, String... params) {
+        return String.format("%s:%s/%s?%s=%s&%s=%s",
+                serverAddress,
+                serverPort,
+                link,
+                linkParamFirst,
+                params[0],
+                linkParamSecond,
+                uuid);
     }
 }

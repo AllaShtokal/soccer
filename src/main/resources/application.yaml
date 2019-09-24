@@ -40,9 +40,9 @@ properties:
       email:
         file-name: change_email
         link:
-          main: /change-data?
-          param1: "newEmail="
-          param2: "&changeEmailKey="
+          main: /change-data
+          param1: "newEmail"
+          param2: "changeEmailKey"
         mail:
           subject: Confirm the change of email address.
 
