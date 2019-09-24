@@ -47,4 +47,5 @@ public class AccountController {
         accountService.deactivate(user.getId());
         return ok().build();
     }
+
 }

@@ -10,10 +10,6 @@ import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {

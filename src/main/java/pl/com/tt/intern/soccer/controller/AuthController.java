@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.tt.intern.soccer.payload.request.LoginRequest;
+import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
 import pl.com.tt.intern.soccer.payload.response.JwtAuthenticationResponse;
+import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
 import pl.com.tt.intern.soccer.security.JwtTokenProvider;
 import pl.com.tt.intern.soccer.service.LogInService;
-import pl.com.tt.intern.soccer.payload.request.SignUpRequest;
-import pl.com.tt.intern.soccer.payload.response.SuccessfulSignUpResponse;
 import pl.com.tt.intern.soccer.service.SignUpService;
 
 import javax.validation.Valid;
