@@ -30,4 +30,6 @@ public interface UserService {
     void changeEnabledAccount(User user, Boolean enabled);
 
     void changePassword(User user, String password);
+
+    void changeEmail(User user, String email);
 }

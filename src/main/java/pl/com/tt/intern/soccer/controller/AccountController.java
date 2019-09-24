@@ -9,6 +9,7 @@ import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
@@ -31,8 +32,15 @@ public class AccountController {
     }
 
     @GetMapping(value = "/change", params = "email")
-    public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email)  {
+    public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email) {
         accountService.setAndSendMailToChangePassword(email);
+        return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/change/email", params = {"email", "newEmail"})
+    public ResponseEntity<?> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) {
+        accountService.setAndSendMailToChangeEmail(email, newEmail);
         return ok().build();
     }
 
@@ -55,6 +63,15 @@ public class AccountController {
     public ResponseEntity<?> changePasswordLoggedInUser(@CurrentUser UserPrincipal user,
                                                         @Valid @RequestBody ChangePasswordRequest request) throws InvalidChangePasswordException {
         accountService.changePasswordLoggedInUser(user, request);
+        return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping(value = "/change/email", params = "changeEmailKey")
+    public ResponseEntity<?> changeEmail(@CurrentUser UserPrincipal user,
+                                         @RequestParam(name = "changeEmailKey") String changeEmailKey,
+                                         @Valid @RequestBody EmailRequest request) throws Exception {
+        accountService.changeEmail(user, changeEmailKey, request);
         return ok().build();
     }
 }
