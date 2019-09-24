@@ -101,10 +101,8 @@ public class AccountServiceImpl implements AccountService {
         ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changeEmailKey);
         checkIfExpired(confirmationKey.getExpirationTime());
 
-        if (confirmationKey.getUser().getId()
-                .equals(
-                        mapper.map(user, User.class).getId()
-                )
+        if (confirmationKey.getUser().getId().equals(
+                mapper.map(user, User.class).getId())
         ) {
             userService.changeEmail(
                     confirmationKey.getUser(),
