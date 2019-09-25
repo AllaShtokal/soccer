@@ -23,19 +23,15 @@
         <sonar.exclusions>
             **/SoccerApplication.java,
             **/account/factory/*.java,
-            **/account/mail/PerAccountTypeMailSender.java,
-            **/account/url/ChangeAccountUrlGenerator.java,
-            **/annotation/**,
             **/configuration/**,
             **/exception/**,
-            **/mail/MailSender.java,
-            **/mail/customizer/CustomizedSender.java,
             **/mail/customizer/MailCustomizerTemplate.java,
             **/model/**,
             **/payload/**,
-            **/repository/**,
-            **/security/**,
-            **/service/*.java,
+            **/security/model/*.java,
+            **/security/JwtAuthenticationEntryPoint.java,
+            **/security/JwtAuthenticationFilter.java,
+            **/security/UserPrincipal.java,
             **/util/Messages.java
         </sonar.exclusions>
 
