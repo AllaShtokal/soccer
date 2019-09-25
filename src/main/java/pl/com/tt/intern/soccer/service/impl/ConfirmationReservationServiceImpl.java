@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
@@ -14,12 +15,12 @@ import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.util.DateUtil;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ConfirmationReservationServiceImpl implements ConfirmationReservationService {
 
     private final ConfirmationReservationRepository repository;
@@ -50,7 +51,7 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     @Override
-    public void createAndSaveConfirmationReservation(Reservation reservation) throws NotFoundException {
+    public void createAndSaveConfirmationReservation(Reservation reservation) {
         ConfirmationReservation confirmationReservation = generateConfirmationReservation(reservation);
         repository.save(confirmationReservation);
         addTaskToTimerTask(confirmationReservation);
@@ -77,8 +78,10 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     private void MailSendTask(ConfirmationReservation confirmationReservation) {
         String url = urlFactory.getUrlGenerator(AccountChangeType.CONFIRM_RESERVATION)
                 .generate(confirmationReservation.getReservation().getUser().getEmail(), confirmationReservation.getUuid());
+
         mailFactory.getMailSender(AccountChangeType.CONFIRM_RESERVATION)
                 .send(confirmationReservation.getReservation().getUser().getEmail(), url);
+
         confirmEmailSent(confirmationReservation);
     }
 
@@ -87,17 +90,16 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
         repository.save(confirmationReservation);
     }
 
-    private void addRemoveReservationTaskToTimerTask(ConfirmationReservation confirmationReservation) throws NotFoundException {
-        timer.schedule(getTimerTask(getReservation(confirmationReservation.getReservation().getId())), DateUtil.toDate(confirmationReservation.getExpirationTime().plusMinutes(1)));
+    private void addRemoveReservationTaskToTimerTask(ConfirmationReservation confirmationReservation) {
+        try {
+            timer.schedule(getTimerTask(getReservation(confirmationReservation.getReservation().getId())), DateUtil.toDate(confirmationReservation.getExpirationTime().plusMinutes(1)));
+        } catch (NotFoundException e) {
+            log.error("Reservation can't be found in database");
+        }
     }
 
     private Reservation getReservation(Long id) throws NotFoundException {
-        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-        if (optionalReservation.isPresent()) {
-            return optionalReservation.get();
-        } else {
-            throw new NotFoundException();
-        }
+        return reservationRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     private TimerTask getTimerTask(Reservation reservation) {

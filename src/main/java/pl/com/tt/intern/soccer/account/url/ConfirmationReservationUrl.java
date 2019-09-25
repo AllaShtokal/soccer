@@ -20,7 +20,6 @@ public class ConfirmationReservationUrl implements ChangeAccountUrlGenerator {
     @Value("${frontend.server.port}")
     private String serverPort;
 
-
     @Override
     public String generate(String email, String... params) {
         return serverAddress + ":" + serverPort + link + params[0];

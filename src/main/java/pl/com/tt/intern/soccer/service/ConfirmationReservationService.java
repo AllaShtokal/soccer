@@ -1,12 +1,12 @@
 package pl.com.tt.intern.soccer.service;
 
-import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
 
 import java.util.List;
 
 public interface ConfirmationReservationService {
+
     List<ConfirmationReservation> findAll();
 
     ConfirmationReservation save(ConfirmationReservation confirmationReservation);
@@ -15,5 +15,5 @@ public interface ConfirmationReservationService {
 
     ConfirmationReservation findConfirmationReservationByUUID(String uuid);
 
-    void createAndSaveConfirmationReservation(Reservation reservation) throws NotFoundException;
+    void createAndSaveConfirmationReservation(Reservation reservation);
 }
