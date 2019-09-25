@@ -30,9 +30,8 @@ public class LoadDataConfiguration {
     private final ChangeAccountUrlGeneratorFactory urlFactory;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void addConfirmationsToList(){
-        List<ConfirmationReservation> listOfAllConfirmationFromBase = confirmationReservationService.findAllByEmailSend(false);
-        List<ConfirmationReservation> filteredListOfConfirmationFromDatabase = listOfAllConfirmationFromBase.stream()
+    public void addConfirmationsToList() {
+        List<ConfirmationReservation> filteredListOfConfirmationFromDatabase = confirmationReservationService.findAllByEmailSend(false).stream()
                 .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
 
@@ -41,7 +40,7 @@ public class LoadDataConfiguration {
 
     }
 
-    private TimerTask getNewTimerTask(ConfirmationReservation cr){
+    private TimerTask getNewTimerTask(ConfirmationReservation cr) {
         return new TimerTask() {
             @Override
             public void run() {
@@ -58,31 +57,24 @@ public class LoadDataConfiguration {
         };
     }
 
-    private void setMailSent(ConfirmationReservation cr){
+    private void setMailSent(ConfirmationReservation cr) {
         cr.setEmailSent(true);
         confirmationReservationService.save(cr);
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void removeFromDataBaseExpiredConfirmationReservations(){
-        List<ConfirmationReservation> listOfAllConfirmationFromBase = confirmationReservationService.findAll();
-        List<ConfirmationReservation> filteredListOfConfirmationFromDatabase = listOfAllConfirmationFromBase.stream()
+    public void removeFromDataBaseExpiredConfirmationReservations() {
+        confirmationReservationService.findAll().stream()
                 .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
-                .collect(Collectors.toList());
-
-        filteredListOfConfirmationFromDatabase
-                .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()),
-                        DateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
+                .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()), DateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
     }
 
-    private TimerTask getNewTimerTaskForRemoveExpiredConfirmationKeys(Reservation reservation){
+    private TimerTask getNewTimerTaskForRemoveExpiredConfirmationKeys(Reservation reservation) {
         return new TimerTask() {
             @Override
             public void run() {
-                System.out.println("Podjeto sie zadania usuniecia rezerwacji");
-                if(!reservation.getConfirmed()) {
+                if (!reservation.getConfirmed()) {
                     reservationService.deleteById(reservation.getId());
-                    System.out.println("Usunięto rezerwacje");
                 }
             }
         };

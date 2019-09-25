@@ -15,7 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @Table(name = "confirmation_reservation")
-@EqualsAndHashCode(exclude = {"reservation"})
+@EqualsAndHashCode(exclude = "reservation")
 public class ConfirmationReservation {
 
     @Id
