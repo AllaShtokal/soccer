@@ -1,7 +1,5 @@
 package pl.com.tt.intern.soccer.service
 
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import pl.com.tt.intern.soccer.model.Role
 import pl.com.tt.intern.soccer.model.User
@@ -14,12 +12,11 @@ import spock.lang.Specification
 class CustomUserDetailsServiceTest extends Specification {
 
     CustomUserDetailsServiceImpl service
-    UserPrincipal userDetails = Mock()
     User user = Mock()
 
     static Set<Role> roleSet
-
     def USERNAME_OR_EMAIL = "kek"
+    def ID = 1
 
     def setup() {
         service = new CustomUserDetailsServiceImpl(userRepository: Mock(UserRepository))
@@ -34,7 +31,7 @@ class CustomUserDetailsServiceTest extends Specification {
         roleSet.add(roleAdmin)
     }
 
-    def "verify if user is retrieved by checking its roles"() {
+    def "verify if loadUserByUsername retrieves UserDetails with proper roles"() {
         given:
             user.getRoles() >> roleSet
             service.userRepository.findByUsernameOrEmail(USERNAME_OR_EMAIL, USERNAME_OR_EMAIL) >> Optional.of(user)
@@ -53,4 +50,22 @@ class CustomUserDetailsServiceTest extends Specification {
             thrown(UsernameNotFoundException)
     }
 
+    def "verify if loadUserById retrieves UserDetails with proper roles"() {
+        given:
+            user.getRoles() >> roleSet
+            service.userRepository.findById(ID) >> Optional.of(user)
+        when:
+            UserPrincipal userDetailsFound = service.loadUserById(ID)
+        then:
+            userDetailsFound.getAuthorities().size() == roleSet.size()
+    }
+
+    def "findById should throw UsernameNotFoundException if empty Optional was returned"() {
+        given:
+            service.userRepository.findById(ID) >> Optional.empty()
+        when:
+            service.loadUserById(ID)
+        then:
+            thrown(UsernameNotFoundException)
+    }
 }
