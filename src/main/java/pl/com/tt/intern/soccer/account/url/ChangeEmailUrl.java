@@ -34,7 +34,7 @@ public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
 
         return createUrl(
                 confirmationKey.getUuid(),
-                params
+                params[0]
         );
     }
 
@@ -43,11 +43,11 @@ public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
         return EMAIL.equals(type);
     }
 
-    private String createUrl(String uuid, String... params) {
+    private String createUrl(String uuid, String email) {
         return UriComponentsBuilder.newInstance()
                 .host(HostGeneratorUtil.generate())
                 .path(URL_SUFFIX)
-                .queryParam(NEW_EMAIL_PARAM, params[0])
+                .queryParam(NEW_EMAIL_PARAM, email)
                 .queryParam(CHANGE_EMAIL_KEY_PARAM, uuid)
                 .build()
                 .toString();
