@@ -14,11 +14,15 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.model.UserInfo;
+import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+import pl.com.tt.intern.soccer.service.UserInfoService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
@@ -36,6 +40,7 @@ public class AccountServiceImpl implements AccountService {
     private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
     private final ModelMapper mapper;
     private final PasswordEncoder encoder;
+    private final UserInfoService userInfoService;
 
     @Override
     public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
@@ -87,6 +92,16 @@ public class AccountServiceImpl implements AccountService {
                     mapper.map(userPrincipal, User.class),
                     request.getNewPassword());
         } else throw new InvalidChangePasswordException("Incorrect old password or new passwords do not match.");
+    }
+
+    @Override
+    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) {
+        UserInfo userInfo = mapper.map(userPrincipal, User.class).getUserInfo();
+        userInfo.setFirstName(request.getFirstName());
+        userInfo.setLastName(request.getLastName());
+        userInfo.setPhone(request.getPhone());
+        userInfo.setSkype(request.getSkype());
+        return new ChangeDataAccountResponse(userInfoService.update(userInfo).getUser());
     }
 
     private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {
