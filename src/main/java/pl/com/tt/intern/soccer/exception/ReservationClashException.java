@@ -6,5 +6,6 @@ public class ReservationClashException extends Exception {
         super(message);
     }
 
-    public ReservationClashException() { }
+    public ReservationClashException() {
+    }
 }

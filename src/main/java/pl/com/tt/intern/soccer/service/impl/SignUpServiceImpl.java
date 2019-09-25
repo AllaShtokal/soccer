@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
@@ -31,7 +32,7 @@ public class SignUpServiceImpl implements SignUpService {
     private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
 
     @Override
-    public SuccessfulSignUpResponse signUp(SignUpRequest request) throws Exception {
+    public SuccessfulSignUpResponse signUp(SignUpRequest request) throws NotFoundException, PasswordsMismatchException {
         if (doPasswordsMatch(request)) {
             UserInfo userInfo = mapper.map(request, UserInfo.class);
             User user = mapper.map(request, User.class);
@@ -41,7 +42,7 @@ public class SignUpServiceImpl implements SignUpService {
             user.setRoles(singleton(roleService.findByType(ROLE_USER)));
 
             User result = userService.save(user);
-            setAndSendActivationMailMsg(result);
+            // setAndSendActivationMailMsg(result);
             return new SuccessfulSignUpResponse("User registered successfully", result);
         } else
             throw new PasswordsMismatchException();
@@ -56,4 +57,6 @@ public class SignUpServiceImpl implements SignUpService {
     private boolean doPasswordsMatch(SignUpRequest request) {
         return request.getPassword().equals(request.getConfirmPassword());
     }
+
+
 }

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import static java.util.UUID.randomUUID;
@@ -14,7 +15,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @Table(name = "confirmation_key")
-public class ConfirmationKey {
+public class ConfirmationKey implements Serializable {
+
+    private static final long serialVersionUID = 9114226883488956491L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -28,7 +31,7 @@ public class ConfirmationKey {
 
     @NotNull
     @Column(name = "uuid", unique = true)
-    private String uuid ;
+    private String uuid;
 
     @NotNull
     @Column(name = "expiration_time")
