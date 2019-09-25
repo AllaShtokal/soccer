@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
+import pl.com.tt.intern.soccer.account.url.enums.UrlParam;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -28,10 +28,13 @@ import pl.com.tt.intern.soccer.service.UserInfoService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGGED_IN_USER_PASSWORD;
+import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.*;
 
 @Slf4j
 @Service
@@ -62,14 +65,21 @@ public class AccountServiceImpl implements AccountService {
     @SneakyThrows
     @Override
     public void setAndSendMailToChangePassword(String email) {
-        String url = accountUrlGeneratorFactory.getUrlGenerator(NOT_LOGGED_IN_USER_PASSWORD).generate(email, null);
+        Map<UrlParam, String> params = new HashMap<>();
+        params.put(CHANGE_PASSWORD_KEY, confirmationKeyService.createAndAssignToUserByEmail(email).getUuid());
+
+        String url = accountUrlGeneratorFactory.getUrlGenerator(NOT_LOGGED_IN_USER_PASSWORD).generate(params);
         accountMailFactory.getMailSender(NOT_LOGGED_IN_USER_PASSWORD).send(email, url);
     }
 
     @SneakyThrows
     @Override
     public void setAndSendMailToChangeEmail(String email, String newEmail) {
-        String url = accountUrlGeneratorFactory.getUrlGenerator(EMAIL).generate(email, newEmail);
+        Map<UrlParam, String> params = new HashMap<>();
+        params.put(CHANGE_EMAIL_KEY, confirmationKeyService.createAndAssignToUserByEmail(email).getUuid());
+        params.put(NEW_EMAIL, newEmail);
+
+        String url = accountUrlGeneratorFactory.getUrlGenerator(EMAIL).generate(params);
         accountMailFactory.getMailSender(EMAIL).send(email, url);
     }
 
