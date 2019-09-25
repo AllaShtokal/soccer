@@ -37,7 +37,7 @@ properties:
         link: /change-password?changePasswordKey=
         mail:
           subject: Change your password in soccker.
-    confirmationReservation:
+    confirmation-reservation:
       mail:
         file-name: confirmation_reservation
         subject: Confirm your reservation

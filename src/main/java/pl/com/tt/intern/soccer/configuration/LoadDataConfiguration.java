@@ -31,13 +31,9 @@ public class LoadDataConfiguration {
 
     @EventListener(ApplicationReadyEvent.class)
     public void addConfirmationsToList() {
-        List<ConfirmationReservation> filteredListOfConfirmationFromDatabase = confirmationReservationService.findAllByEmailSend(false).stream()
+        confirmationReservationService.findAllByEmailSend(false).stream()
                 .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
-                .collect(Collectors.toList());
-
-        filteredListOfConfirmationFromDatabase
                 .forEach(cr -> timer.schedule(getNewTimerTask(cr), DateUtil.toDate(cr.getTimeToMailSend())));
-
     }
 
     private TimerTask getNewTimerTask(ConfirmationReservation cr) {

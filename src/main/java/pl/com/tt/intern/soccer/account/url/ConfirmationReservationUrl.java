@@ -11,7 +11,7 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.CONFIRM_
 @Service
 public class ConfirmationReservationUrl implements ChangeAccountUrlGenerator {
 
-    @Value("${properties.account.confirmationReservation.mail.link}")
+    @Value("${properties.account.confirmation-reservation.mail.link}")
     private String link;
 
     @Value("${frontend.server.address}")

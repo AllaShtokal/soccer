@@ -10,10 +10,10 @@ import pl.com.tt.intern.soccer.mail.customizer.CustomizedSender;
 @RequiredArgsConstructor
 public class ConfirmationReservationMailSender implements PerAccountTypeMailSender {
 
-    @Value("${properties.account.confirmationReservation.mail.file-name}")
+    @Value("${properties.account.confirmation-reservation.mail.file-name}")
     private String fileName;
 
-    @Value("${properties.account.confirmationReservation.mail.subject}")
+    @Value("${properties.account.confirmation-reservation.mail.subject}")
     private String subject;
 
     private final CustomizedSender sender;
