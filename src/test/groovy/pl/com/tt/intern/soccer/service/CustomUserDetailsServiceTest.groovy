@@ -11,7 +11,7 @@ import pl.com.tt.intern.soccer.security.UserPrincipal
 import pl.com.tt.intern.soccer.service.impl.CustomUserDetailsServiceImpl
 import spock.lang.Specification
 
-class CustomUserDetailsServiceImplTest extends Specification {
+class CustomUserDetailsServiceTest extends Specification {
 
     CustomUserDetailsServiceImpl service
     UserPrincipal userDetails = Mock()
