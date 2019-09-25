@@ -22,8 +22,6 @@ public interface AccountService {
 
     void setAndSendMailToChangeEmail(String email, String newEmail);
 
-    void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request) throws Exception;
-
     void deactivate(Long userId) throws NotFoundException;
 
     void changePasswordLoggedInUser(UserPrincipal user, ChangePasswordRequest request) throws InvalidChangePasswordException;

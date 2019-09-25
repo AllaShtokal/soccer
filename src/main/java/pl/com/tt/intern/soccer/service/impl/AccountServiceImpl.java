@@ -114,7 +114,7 @@ public class AccountServiceImpl implements AccountService {
 
     @SneakyThrows
     @Override
-    public void changeEmail(UserPrincipal user, String changeEmailKey, EmailRequest request)  {
+    public void changeEmail(UserPrincipal user, String changeEmailKey, EmailRequest request) {
         ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changeEmailKey);
         checkIfExpired(confirmationKey.getExpirationTime());
 
