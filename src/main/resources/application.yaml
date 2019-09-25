@@ -24,16 +24,3 @@ jwt:
   app:
     jwtSecret: uCYXW(/H!5pYIX`~.wlKOVh/Y|2gmO
     jwtExpirationInMs: 1209600000
-properties:
-  account:
-    active:
-      file-name: active
-      link: /login?activeKey=
-      mail:
-        subject: Confirm your register in soccker.
-    change:
-      password:
-        file-name: change_password
-        link: /change-password?changePasswordKey=
-        mail:
-          subject: Change your password in soccker.

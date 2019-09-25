@@ -11,4 +11,6 @@ public interface ConfirmationKeyService {
 
     void scanAndDeleteExpiredConfirmationKeys();
 
+    ConfirmationKey createAndAssignToUserByEmail(String email) throws NotFoundException;
+
 }

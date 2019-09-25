@@ -36,7 +36,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "/change", params = "email")
-    public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) {
+    public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
         accountService.setAndSendMailToChangePassword(email);
         return ok().build();
     }

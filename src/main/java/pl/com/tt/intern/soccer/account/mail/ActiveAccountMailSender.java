@@ -1,31 +1,31 @@
 package pl.com.tt.intern.soccer.account.mail;
 
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
-import pl.com.tt.intern.soccer.mail.customizer.CustomizedSender;
+import pl.com.tt.intern.soccer.mail.customizer.CustomizedSenderImpl;
+
+import java.util.Locale;
+
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_ACCOUNT;
 
 @Service
 @RequiredArgsConstructor
 public class ActiveAccountMailSender implements PerAccountTypeMailSender {
 
-    @Value("${properties.account.active.file-name}")
-    private String fileName;
-
-    @Value("${properties.account.active.mail.subject}")
-    private String subject;
-
-    private final CustomizedSender sender;
+    private final String FILE_NAME = "active";
+    private final MessageSource messageSource;
+    private final CustomizedSenderImpl sender;
 
     @Override
     public void send(String email, String url) {
-        sender.insertLinkToMsgAndSendMail(email, fileName, subject, url);
+        String subject = messageSource.getMessage("account.active.mail.subject", null, Locale.US);
+        sender.insertLinkToMsgAndSendMail(email, FILE_NAME, subject, url);
     }
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return type.equals(AccountChangeType.valueOf(202));
+        return ACTIVE_ACCOUNT.equals(type);
     }
 }

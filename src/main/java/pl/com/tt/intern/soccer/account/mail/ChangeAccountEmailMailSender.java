@@ -26,6 +26,6 @@ public class ChangeAccountEmailMailSender implements PerAccountTypeMailSender {
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return type.equals(EMAIL);
+        return EMAIL.equals(type);
     }
 }
