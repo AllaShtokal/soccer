@@ -37,12 +37,3 @@ properties:
         link: /change-password?changePasswordKey=
         mail:
           subject: Change your password in soccker.
-      email:
-        file-name: change_email
-        link:
-          main: /change-data
-          param1: "newEmail"
-          param2: "changeEmailKey"
-        mail:
-          subject: Confirm the change of email address.
-

@@ -17,14 +17,9 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 @RequiredArgsConstructor
 public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
 
-    @Value("${properties.account.change.email.link.main}")
-    private String link;
-
-    @Value("${properties.account.change.email.link.param1}")
-    private String linkParamFirst;
-
-    @Value("${properties.account.change.email.link.param2}")
-    private String linkParamSecond;
+    private final String linkParamFirst = "newEmail";
+    private final String linkParamSecond = "changeEmailKey";
+    private final String link = "/change-data";
 
     @Value("${frontend.server.address}")
     private String serverAddress;

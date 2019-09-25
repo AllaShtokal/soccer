@@ -1,27 +1,26 @@
 package pl.com.tt.intern.soccer.account.mail;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.mail.customizer.CustomizedSenderImpl;
 
-import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.*;
+import java.util.Locale;
+
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 
 @Service
 @RequiredArgsConstructor
 public class ChangeAccountEmailMailSender implements PerAccountTypeMailSender {
 
-    @Value("${properties.account.change.email.file-name}")
-    private String fileName;
-
-    @Value("${properties.account.change.email.mail.subject}")
-    private String subject;
-
+    private final String fileName = "change_email";
+    private final MessageSource messageSource;
     private final CustomizedSenderImpl sender;
 
     @Override
     public void send(String email, String url) {
+        String subject = messageSource.getMessage("account.change.email.mail.subject", null, Locale.US);
         sender.insertLinkToMsgAndSendMail(email, fileName, subject, url);
     }
 
