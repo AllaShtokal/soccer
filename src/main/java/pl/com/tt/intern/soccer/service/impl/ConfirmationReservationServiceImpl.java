@@ -12,7 +12,7 @@ import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.repository.ConfirmationReservationRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
-import pl.com.tt.intern.soccer.util.DateUtil;
+import pl.com.tt.intern.soccer.util.CustomDateUtil;
 
 import java.util.List;
 import java.util.Timer;
@@ -63,7 +63,7 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     private void addTaskToTimerTask(ConfirmationReservation confirmationReservation) {
-        timer.schedule(getTimerTask(confirmationReservation), DateUtil.toDate(confirmationReservation.getTimeToMailSend()));
+        timer.schedule(getTimerTask(confirmationReservation), CustomDateUtil.toDate(confirmationReservation.getTimeToMailSend()));
     }
 
     private TimerTask getTimerTask(ConfirmationReservation confirmationReservation) {
@@ -92,7 +92,7 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
 
     private void addRemoveReservationTaskToTimerTask(ConfirmationReservation confirmationReservation) {
         try {
-            timer.schedule(getTimerTask(getReservation(confirmationReservation.getReservation().getId())), DateUtil.toDate(confirmationReservation.getExpirationTime().plusMinutes(1)));
+            timer.schedule(getTimerTask(getReservation(confirmationReservation.getReservation().getId())), CustomDateUtil.toDate(confirmationReservation.getExpirationTime().plusMinutes(1)));
         } catch (NotFoundException e) {
             log.error("Reservation can't be found in database");
         }

@@ -11,13 +11,11 @@ import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.service.ReservationService;
-import pl.com.tt.intern.soccer.util.DateUtil;
+import pl.com.tt.intern.soccer.util.CustomDateUtil;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 @Configuration
 @AllArgsConstructor
@@ -33,7 +31,7 @@ public class LoadDataConfiguration {
     public void addConfirmationsToList() {
         confirmationReservationService.findAllByEmailSend(false).stream()
                 .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
-                .forEach(cr -> timer.schedule(getNewTimerTask(cr), DateUtil.toDate(cr.getTimeToMailSend())));
+                .forEach(cr -> timer.schedule(getNewTimerTask(cr), CustomDateUtil.toDate(cr.getTimeToMailSend())));
     }
 
     private TimerTask getNewTimerTask(ConfirmationReservation cr) {
@@ -48,12 +46,12 @@ public class LoadDataConfiguration {
 
                 mailFactory.getMailSender(AccountChangeType.CONFIRM_RESERVATION)
                         .send(email, url);
-                setMailSent(cr);
+                setMailSend(cr);
             }
         };
     }
 
-    private void setMailSent(ConfirmationReservation cr) {
+    private void setMailSend(ConfirmationReservation cr) {
         cr.setEmailSent(true);
         confirmationReservationService.save(cr);
     }
@@ -62,7 +60,7 @@ public class LoadDataConfiguration {
     public void removeFromDataBaseExpiredConfirmationReservations() {
         confirmationReservationService.findAll().stream()
                 .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
-                .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()), DateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
+                .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()), CustomDateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
     }
 
     private TimerTask getNewTimerTaskForRemoveExpiredConfirmationKeys(Reservation reservation) {

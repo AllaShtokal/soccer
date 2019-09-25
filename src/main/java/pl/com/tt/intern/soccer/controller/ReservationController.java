@@ -107,7 +107,7 @@ public class ReservationController {
 
     @PreAuthorize("isAuthenticated()")
     @PatchMapping(params = "confirmationKey")
-    public ResponseEntity<?> activateAccount(@RequestParam(name = "confirmationKey") String activationKey) throws IncorrectConfirmationKeyException {
+    public ResponseEntity<String> activateAccount(@RequestParam(name = "confirmationKey") String activationKey) throws IncorrectConfirmationKeyException {
         reservationService.confirmReservationByConfirmationKey(activationKey);
         return ok().build();
     }

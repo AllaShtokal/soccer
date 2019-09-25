@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -45,7 +46,7 @@ public class ConfirmationReservation {
 
     public ConfirmationReservation(Reservation reservation) {
         this.reservation = reservation;
-        this.uuid = UUID.randomUUID().toString();
+        this.uuid = randomUUID().toString();
         this.expirationTime = reservation.getDateFrom().minusMinutes(15);
         this.timeToMailSend = reservation.getDateFrom().minusHours(1);
         this.emailSent = false;
