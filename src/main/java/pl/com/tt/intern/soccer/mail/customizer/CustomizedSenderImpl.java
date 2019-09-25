@@ -22,10 +22,11 @@ public class CustomizedSenderImpl implements CustomizedSender {
 
         context.setVariable("emailTemplate", template);
         String msgMail = templateEngine.process(fileName, context);
-        mailSender.sendSimpleMessageHtml(
-                emailTo,
-                subject,
-                msgMail
-        );
+        System.out.println(msgMail);
+//        mailSender.sendSimpleMessageHtml(
+//                emailTo,
+//                subject,
+//                msgMail
+//        );
     }
 }

@@ -11,6 +11,7 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
@@ -37,6 +38,13 @@ public class AccountController {
     @GetMapping(value = "/change", params = "email")
     public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) {
         accountService.setAndSendMailToChangePassword(email);
+        return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/change/email", params = {"email", "newEmail"})
+    public ResponseEntity<?> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
+        accountService.setAndSendMailToChangeEmail(email, newEmail);
         return ok().build();
     }
 
@@ -68,5 +76,14 @@ public class AccountController {
     public ResponseEntity<ChangeDataAccountResponse> changeBasicAccountData(@CurrentUser UserPrincipal user,
                                                                             @Valid @RequestBody ChangeAccountDataRequest request) throws NotFoundException {
         return ok(accountService.changeUserInfo(user, request));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping(value = "/change/email", params = "changeEmailKey")
+    public ResponseEntity<?> changeEmail(@CurrentUser UserPrincipal user,
+                                         @RequestParam(name = "changeEmailKey") String changeEmailKey,
+                                         @Valid @RequestBody EmailRequest request) throws Exception {
+        accountService.changeEmail(user, changeEmailKey, request);
+        return ok().build();
     }
 }

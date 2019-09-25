@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,7 @@ import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
@@ -61,6 +63,13 @@ public class AccountServiceImpl implements AccountService {
         accountMailFactory.getMailSender(AccountChangeType.valueOf(201)).send(email, url);
     }
 
+    @SneakyThrows
+    @Override
+    public void setAndSendMailToChangeEmail(String email, String newEmail) {
+        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(203)).generate(email, newEmail);
+        accountMailFactory.getMailSender(AccountChangeType.valueOf(203)).send(email, url);
+    }
+
     @Override
     public void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException {
@@ -102,6 +111,22 @@ public class AccountServiceImpl implements AccountService {
         userInfo.setPhone(request.getPhone());
         userInfo.setSkype(request.getSkype());
         return new ChangeDataAccountResponse(userInfoService.update(userInfo).getUser());
+    }
+
+    @SneakyThrows
+    @Override
+    public void changeEmail(UserPrincipal user, String changeEmailKey, EmailRequest request) {
+        ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changeEmailKey);
+        checkIfExpired(confirmationKey.getExpirationTime());
+
+        if (confirmationKey.getUser().getId().equals(
+                mapper.map(user, User.class).getId())
+        ) {
+            userService.changeEmail(
+                    confirmationKey.getUser(),
+                    request.getEmail()
+            );
+        }
     }
 
     private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {

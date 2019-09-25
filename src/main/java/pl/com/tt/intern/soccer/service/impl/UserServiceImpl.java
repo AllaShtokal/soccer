@@ -99,4 +99,10 @@ public class UserServiceImpl implements UserService {
     public User update(User user) {
         return userRepository.save(user);
     }
+
+    @Override
+    public void changeEmail(User user, String email) {
+        user.setEmail(email);
+        userRepository.save(user);
+    }
 }
