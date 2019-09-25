@@ -1,11 +1,11 @@
 package pl.com.tt.intern.soccer.account.url;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 import pl.com.tt.intern.soccer.service.UserService;
@@ -35,23 +35,18 @@ public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
 
+    @SneakyThrows
     @Override
     public String generate(String mail, String... params) {
-        try {
+        ConfirmationKey confirmationKey = new ConfirmationKey(
+                userService.findByEmail(mail)
+        );
+        confirmationKeyService.save(confirmationKey);
 
-            ConfirmationKey confirmationKey = new ConfirmationKey(
-                    userService.findByEmail(mail)
-            );
-            confirmationKeyService.save(confirmationKey);
-
-            return createUrl(
-                    confirmationKey.getUuid(),
-                    params
-            );
-        } catch (NotFoundException e) {
-            log.error("Not found user..", e);
-            return null;
-        }
+        return createUrl(
+                confirmationKey.getUuid(),
+                params
+        );
     }
 
     @Override

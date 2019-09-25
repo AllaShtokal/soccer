@@ -63,6 +63,7 @@ public class AccountServiceImpl implements AccountService {
         accountMailFactory.getMailSender(AccountChangeType.valueOf(201)).send(email, url);
     }
 
+    @SneakyThrows
     @Override
     public void setAndSendMailToChangeEmail(String email, String newEmail) {
         String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(203)).generate(email, newEmail);

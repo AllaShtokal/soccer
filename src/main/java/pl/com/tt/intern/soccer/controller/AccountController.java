@@ -43,7 +43,7 @@ public class AccountController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/change/email", params = {"email", "newEmail"})
-    public ResponseEntity<?> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) {
+    public ResponseEntity<?> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
         accountService.setAndSendMailToChangeEmail(email, newEmail);
         return ok().build();
     }
