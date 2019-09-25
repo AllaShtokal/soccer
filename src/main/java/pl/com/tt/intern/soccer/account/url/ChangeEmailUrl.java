@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.url.util.HostGeneratorUtil;
-import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
-import pl.com.tt.intern.soccer.service.UserService;
 
 import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 
@@ -22,20 +20,12 @@ public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
     private final String NEW_EMAIL_PARAM = "newEmail";
     private final String CHANGE_EMAIL_KEY_PARAM = "changeEmailKey";
     private final ConfirmationKeyService confirmationKeyService;
-    private final UserService userService;
 
     @SneakyThrows
     @Override
-    public String generate(String mail, String... params) {
-        ConfirmationKey confirmationKey = new ConfirmationKey(
-                userService.findByEmail(mail)
-        );
-        confirmationKeyService.save(confirmationKey);
-
-        return createUrl(
-                confirmationKey.getUuid(),
-                params[0]
-        );
+    public String generate(String email, String... params) {
+        String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
+        return createUrl(uuid, params[0]);
     }
 
     @Override

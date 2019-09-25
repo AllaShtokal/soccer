@@ -30,6 +30,8 @@ import pl.com.tt.intern.soccer.service.UserService;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGGED_IN_USER_PASSWORD;
 
 @Slf4j
 @Service
@@ -57,17 +59,18 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @SneakyThrows
     @Override
     public void setAndSendMailToChangePassword(String email) {
-        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(201)).generate(email, null);
-        accountMailFactory.getMailSender(AccountChangeType.valueOf(201)).send(email, url);
+        String url = accountUrlGeneratorFactory.getUrlGenerator(NOT_LOGGED_IN_USER_PASSWORD).generate(email, null);
+        accountMailFactory.getMailSender(NOT_LOGGED_IN_USER_PASSWORD).send(email, url);
     }
 
     @SneakyThrows
     @Override
     public void setAndSendMailToChangeEmail(String email, String newEmail) {
-        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(203)).generate(email, newEmail);
-        accountMailFactory.getMailSender(AccountChangeType.valueOf(203)).send(email, url);
+        String url = accountUrlGeneratorFactory.getUrlGenerator(EMAIL).generate(email, newEmail);
+        accountMailFactory.getMailSender(EMAIL).send(email, url);
     }
 
     @Override
