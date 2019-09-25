@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.annotation.validator;
 
-import com.google.common.base.Joiner;
 import org.passay.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
 
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(
-                Joiner.on(" ").join(validator.getMessages(result)))
+                String.join(" ", validator.getMessages(result)))
                 .addConstraintViolation();
 
         return false;

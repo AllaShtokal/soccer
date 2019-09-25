@@ -13,6 +13,8 @@ public interface UserInfoService {
 
     UserInfo save(UserInfo userInfo);
 
+    UserInfo update(UserInfo userInfo);
+
     void deleteById(Long id);
 
 }

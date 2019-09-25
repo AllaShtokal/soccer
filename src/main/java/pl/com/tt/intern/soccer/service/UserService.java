@@ -31,5 +31,7 @@ public interface UserService {
 
     void changePassword(User user, String password);
 
+    User update(User user);
+
     void changeEmail(User user, String email);
 }
