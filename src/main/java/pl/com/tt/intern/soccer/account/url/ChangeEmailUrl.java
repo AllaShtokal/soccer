@@ -17,9 +17,9 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 @RequiredArgsConstructor
 public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
 
-    private final String linkParamFirst = "newEmail";
-    private final String linkParamSecond = "changeEmailKey";
-    private final String link = "/change-data";
+    private final String LINK_MAIN = "/change-data";
+    private final String LINK_PARAM_FIRST = "newEmail";
+    private final String LINK_PARAM_SECOND = "changeEmailKey";
 
     @Value("${frontend.server.address}")
     private String serverAddress;
@@ -53,10 +53,10 @@ public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
         return String.format("%s:%s/%s?%s=%s&%s=%s",
                 serverAddress,
                 serverPort,
-                link,
-                linkParamFirst,
+                LINK_MAIN,
+                LINK_PARAM_FIRST,
                 params[0],
-                linkParamSecond,
+                LINK_PARAM_SECOND,
                 uuid);
     }
 }

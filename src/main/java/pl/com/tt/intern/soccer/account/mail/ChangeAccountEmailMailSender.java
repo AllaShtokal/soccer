@@ -14,14 +14,14 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 @RequiredArgsConstructor
 public class ChangeAccountEmailMailSender implements PerAccountTypeMailSender {
 
-    private final String fileName = "change_email";
+    private final String FILE_NAME = "change_email";
     private final MessageSource messageSource;
     private final CustomizedSenderImpl sender;
 
     @Override
     public void send(String email, String url) {
         String subject = messageSource.getMessage("account.change.email.mail.subject", null, Locale.US);
-        sender.insertLinkToMsgAndSendMail(email, fileName, subject, url);
+        sender.insertLinkToMsgAndSendMail(email, FILE_NAME, subject, url);
     }
 
     @Override

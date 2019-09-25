@@ -28,6 +28,7 @@ public class AppConfiguration {
 
     private static final String RESOLVER_PREFIX = "classpath:/docs/mail/";
     private static final String RESOLVER_SUFFIX = ".html";
+    private static final String MESSAGE_SOURCE_BASENAME = "classpath:messages";
 
     @PostConstruct
     void init() {
@@ -63,7 +64,7 @@ public class AppConfiguration {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
+        messageSource.setBasename(MESSAGE_SOURCE_BASENAME);
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
