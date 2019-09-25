@@ -51,7 +51,6 @@ public class SignUpServiceImpl implements SignUpService {
     private void setAndSendActivationMailMsg(User user) {
         String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(202)).generate(user.getEmail(), null);
         accountMailFactory.getMailSender(AccountChangeType.valueOf(202)).send(user.getEmail(), url);
-
     }
 
     private boolean doPasswordsMatch(SignUpRequest request) {
