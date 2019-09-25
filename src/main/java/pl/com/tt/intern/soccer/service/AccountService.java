@@ -4,10 +4,9 @@ import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
-import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
+import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
-import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 
