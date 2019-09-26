@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
-import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
+import pl.com.tt.intern.soccer.account.url.enums.UrlParam;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
@@ -14,8 +14,13 @@ import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.util.CustomDateUtil;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.CONFIRM_RESERVATION;
+import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.CONFIRMATION_RESERVATION_KEY;
 
 @Configuration
 @AllArgsConstructor
@@ -38,14 +43,23 @@ public class LoadDataConfiguration {
         return new TimerTask() {
             @Override
             public void run() {
+                Map<UrlParam, String> params = new HashMap<>();
+                params.put(CONFIRMATION_RESERVATION_KEY, cr.getUuid());
 
-                String email = cr.getReservation().getUser().getEmail();
+                String url = urlFactory
+                        .getUrlGenerator(CONFIRM_RESERVATION)
+                        .generate(params);
 
-                String url = urlFactory.getUrlGenerator(AccountChangeType.CONFIRM_RESERVATION)
-                        .generate(email, cr.getUuid());
+                mailFactory
+                        .getMailSender(CONFIRM_RESERVATION)
+                        .send(
+                                cr
+                                        .getReservation()
+                                        .getUser()
+                                        .getEmail(),
+                                url
+                        );
 
-                mailFactory.getMailSender(AccountChangeType.CONFIRM_RESERVATION)
-                        .send(email, url);
                 setMailSend(cr);
             }
         };

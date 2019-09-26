@@ -3,9 +3,9 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
+import pl.com.tt.intern.soccer.account.url.enums.UrlParam;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
@@ -14,9 +14,10 @@ import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.util.CustomDateUtil;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.CONFIRM_RESERVATION;
+import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.CONFIRMATION_RESERVATION_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -76,11 +77,22 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     }
 
     private void MailSendTask(ConfirmationReservation confirmationReservation) {
-        String url = urlFactory.getUrlGenerator(AccountChangeType.CONFIRM_RESERVATION)
-                .generate(confirmationReservation.getReservation().getUser().getEmail(), confirmationReservation.getUuid());
+        Map<UrlParam, String> params = new HashMap<>();
+        params.put(CONFIRMATION_RESERVATION_KEY, confirmationReservation.getUuid());
 
-        mailFactory.getMailSender(AccountChangeType.CONFIRM_RESERVATION)
-                .send(confirmationReservation.getReservation().getUser().getEmail(), url);
+        String url = urlFactory
+                .getUrlGenerator(CONFIRM_RESERVATION)
+                .generate(params);
+
+        mailFactory
+                .getMailSender(CONFIRM_RESERVATION)
+                .send(
+                        confirmationReservation
+                                .getReservation()
+                                .getUser()
+                                .getEmail(),
+                        url
+                );
 
         confirmEmailSent(confirmationReservation);
     }

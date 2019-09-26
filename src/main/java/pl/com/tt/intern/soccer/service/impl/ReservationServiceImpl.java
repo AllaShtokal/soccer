@@ -193,7 +193,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public boolean datesCollideWithExistingReservationsExcludingEditedOne(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) {
-        return !reservationRepository.datesCollideExcludingCurrent(reservationPersistRequest.getDateFrom(),
+        return reservationRepository.datesCollideExcludingCurrent(reservationPersistRequest.getDateFrom(),
                 reservationPersistRequest.getDateTo(),
                 currentReservation.getId());
     }
@@ -217,6 +217,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return !reservationRepository.datesCollide(dateFrom, dateTo);
+        return reservationRepository.datesCollide(dateFrom, dateTo);
     }
 }
