@@ -9,34 +9,36 @@ import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.url.util.HostGeneratorUtil;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
 
-import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_ACCOUNT;
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ActiveAccountUrl implements ChangeAccountUrlGenerator {
+public class ChangeEmailUrl implements ChangeAccountUrlGenerator {
 
-    private final String URL_SUFFIX = "login";
-    private final String ACTIVE_KEY_PARAM = "activeKey";
+    private final String URL_SUFFIX = "/change-data";
+    private final String NEW_EMAIL_PARAM = "newEmail";
+    private final String CHANGE_EMAIL_KEY_PARAM = "changeEmailKey";
     private final ConfirmationKeyService confirmationKeyService;
 
     @SneakyThrows
     @Override
     public String generate(String email, String... params) {
         String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
-        return createUrl(uuid);
+        return createUrl(uuid, params[0]);
     }
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return ACTIVE_ACCOUNT.equals(type);
+        return EMAIL.equals(type);
     }
 
-    private String createUrl(String uuid) {
+    private String createUrl(String uuid, String email) {
         return UriComponentsBuilder.newInstance()
                 .host(HostGeneratorUtil.generate())
                 .path(URL_SUFFIX)
-                .queryParam(ACTIVE_KEY_PARAM, uuid)
+                .queryParam(NEW_EMAIL_PARAM, email)
+                .queryParam(CHANGE_EMAIL_KEY_PARAM, uuid)
                 .build()
                 .toString();
     }

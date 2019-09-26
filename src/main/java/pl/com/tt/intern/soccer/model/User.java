@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "user")
 @EqualsAndHashCode(callSuper = true)
-public class User extends DateAudit {
+public class User extends DateAudit implements Serializable {
+
+    private static final long serialVersionUID = -1674802143717599061L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

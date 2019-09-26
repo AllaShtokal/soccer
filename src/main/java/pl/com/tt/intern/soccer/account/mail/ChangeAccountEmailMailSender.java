@@ -8,24 +8,24 @@ import pl.com.tt.intern.soccer.mail.customizer.CustomizedSenderImpl;
 
 import java.util.Locale;
 
-import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_ACCOUNT;
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 
 @Service
 @RequiredArgsConstructor
-public class ActiveAccountMailSender implements PerAccountTypeMailSender {
+public class ChangeAccountEmailMailSender implements PerAccountTypeMailSender {
 
-    private final String FILE_NAME = "active";
+    private final String FILE_NAME = "change_email";
     private final MessageSource messageSource;
     private final CustomizedSenderImpl sender;
 
     @Override
     public void send(String email, String url) {
-        String subject = messageSource.getMessage("account.active.mail.subject", null, Locale.US);
+        String subject = messageSource.getMessage("account.change.email.mail.subject", null, Locale.US);
         sender.insertLinkToMsgAndSendMail(email, FILE_NAME, subject, url);
     }
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return ACTIVE_ACCOUNT.equals(type);
+        return EMAIL.equals(type);
     }
 }

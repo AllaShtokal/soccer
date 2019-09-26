@@ -3,7 +3,6 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -12,15 +11,14 @@ import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +30,13 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Slf4j
 public class ReservationServiceImpl implements ReservationService {
+
+    private static final Integer TIME_ROUNDING_IN_MINUTES = 15;
+    private static final String NOT_ROUNDED_MESSAGE = String.format("Date must be rounded to %s minutes 0 s 0 ns", TIME_ROUNDING_IN_MINUTES);
+    private static final String RESERVATION_ALREADY_BOOKED_MESSAGE = "Reservation date range is already booked";
+    private static final String WRONG_DATE_ORDER_MESSAGE = "Wrong date order";
+    private static final String DATE_MUST_BE_FUTURE_MESSAGE = "Date must be in future";
+
 
     private final ReservationRepository reservationRepository;
     private final UserService userService;
@@ -138,44 +143,44 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public void verifyEditedReservation(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) throws ReservationFormatException, ReservationClashException {
-         if (!isInFuture(reservationPersistRequest))
-            throw new ReservationFormatException("Date must be in future");
+        if (!isInFuture(reservationPersistRequest))
+            throw new ReservationFormatException(DATE_MUST_BE_FUTURE_MESSAGE);
         if (!isDateOrderOk(reservationPersistRequest))
-            throw new ReservationFormatException("Wrong date order");
+            throw new ReservationFormatException(WRONG_DATE_ORDER_MESSAGE);
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+            throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDateRangeAvailableForEdit(reservationPersistRequest, currentReservation))
-            throw new ReservationClashException("Reservation date range is already booked");
+            throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
+        if (datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, currentReservation))
+            throw new ReservationClashException(RESERVATION_ALREADY_BOOKED_MESSAGE);
     }
 
     public void verifyPersistedObject(ReservationPersistRequest reservationPersistRequest) throws ReservationFormatException, ReservationClashException {
         if (!isInFuture(reservationPersistRequest))
-            throw new ReservationFormatException("Date must be in future");
+            throw new ReservationFormatException(DATE_MUST_BE_FUTURE_MESSAGE);
         if (!isDateOrderOk(reservationPersistRequest))
-            throw new ReservationFormatException("Wrong date order");
+            throw new ReservationFormatException(WRONG_DATE_ORDER_MESSAGE);
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateFrom()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
+            throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
         if (!isDate15MinuteRounded(reservationPersistRequest.getDateTo()))
-            throw new ReservationFormatException("Date must be rounded to 15 minutes 0 s 0 ns");
-        if (!isDateRangeAvailable(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
-            throw new ReservationClashException("Reservation date range is already booked");
+            throw new ReservationFormatException(NOT_ROUNDED_MESSAGE);
+        if (datesCollideWithExistingReservations(reservationPersistRequest.getDateFrom(), reservationPersistRequest.getDateTo()))
+            throw new ReservationClashException(RESERVATION_ALREADY_BOOKED_MESSAGE);
     }
 
-    public boolean isDateRangeAvailableForEdit(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) {
-        return !reservationRepository.datesCollideExcludingCurrent( reservationPersistRequest.getDateFrom(),
-                                                                    reservationPersistRequest.getDateTo(),
-                                                                    currentReservation.getId());
+    public boolean datesCollideWithExistingReservationsExcludingEditedOne(ReservationPersistRequest reservationPersistRequest, Reservation currentReservation) {
+        return reservationRepository.datesCollideExcludingCurrent(reservationPersistRequest.getDateFrom(),
+                reservationPersistRequest.getDateTo(),
+                currentReservation.getId());
     }
 
     @Override
-    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO)  {
+    public boolean isInFuture(ReservationPersistRequest reservationPersistDTO) {
         return reservationPersistDTO.getDateFrom().isAfter(LocalDateTime.now());
     }
 
     @Override
-    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest)  {
+    public boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest) {
         return reservationPersistRequest.getDateFrom().isBefore(reservationPersistRequest.getDateTo());
     }
 
@@ -183,12 +188,11 @@ public class ReservationServiceImpl implements ReservationService {
     public boolean isDate15MinuteRounded(LocalDateTime time) {
         if (time.getNano() != 0) return false;
         if (time.getSecond() != 0) return false;
-        if (time.getMinute()%15 !=0) return false;
-        return true;
+        return time.getMinute() % TIME_ROUNDING_IN_MINUTES == 0;
     }
 
     @Override
-    public boolean isDateRangeAvailable(LocalDateTime dateFrom, LocalDateTime dateTo)  {
-        return !reservationRepository.datesCollide(dateFrom, dateTo);
+    public boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo) {
+        return reservationRepository.datesCollide(dateFrom, dateTo);
     }
 }

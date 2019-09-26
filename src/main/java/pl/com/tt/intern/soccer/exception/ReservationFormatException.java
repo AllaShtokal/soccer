@@ -6,5 +6,6 @@ public class ReservationFormatException extends Exception {
         super(message);
     }
 
-    public ReservationFormatException() { }
+    public ReservationFormatException() {
+    }
 }
