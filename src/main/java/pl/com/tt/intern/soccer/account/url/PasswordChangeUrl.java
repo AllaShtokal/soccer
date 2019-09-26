@@ -15,7 +15,7 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGG
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ChangePasswordUrl implements ChangeAccountUrlGenerator {
+public class PasswordChangeUrl implements AccountChangeUrlGenerator {
 
     private final String URL_SUFFIX = "change-password";
 
