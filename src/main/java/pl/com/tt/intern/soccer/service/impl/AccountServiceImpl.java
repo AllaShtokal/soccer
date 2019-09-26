@@ -22,7 +22,6 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
-import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
 import pl.com.tt.intern.soccer.payload.response.PasswordChangeKeyResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
@@ -70,12 +69,13 @@ public class AccountServiceImpl implements AccountService {
     @SneakyThrows
     @Override
     public PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) {
-        Map<UrlParam, String> params = new HashMap<>();
         String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
 
         if (!enabledMail) return new PasswordChangeKeyResponse(uuid);
 
+        Map<UrlParam, String> params = new HashMap<>();
         params.put(CHANGE_PASSWORD_KEY, uuid);
+
         accountMailFactory.getMailSender(NOT_LOGGED_IN_USER_PASSWORD).send(
                 email,
                 accountUrlGeneratorFactory
@@ -87,21 +87,13 @@ public class AccountServiceImpl implements AccountService {
 
     @SneakyThrows
     @Override
-    public EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) {
+    public void setAndSendMailToChangeEmail(String email, String newEmail) {
         Map<UrlParam, String> params = new HashMap<>();
-        String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
-
-        if (!enabledMail) return new EmailChangeKeyResponse(uuid, newEmail);
-
-        params.put(CHANGE_EMAIL_KEY, uuid);
+        params.put(CHANGE_EMAIL_KEY, confirmationKeyService.createAndAssignToUserByEmail(email).getUuid());
         params.put(NEW_EMAIL, newEmail);
-        accountMailFactory.getMailSender(EMAIL).send(
-                email,
-                accountUrlGeneratorFactory
-                        .getUrlGenerator(EMAIL)
-                        .generate(params));
 
-        return new EmailChangeKeyResponse(null, null);
+        String url = accountUrlGeneratorFactory.getUrlGenerator(EMAIL).generate(params);
+        accountMailFactory.getMailSender(EMAIL).send(email, url);
     }
 
     @Override
