@@ -6,14 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.url.AbstractAccountChangeUrlGenerator;
-import pl.com.tt.intern.soccer.account.url.AccountChangeUrlGenerator;
 
 import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGGED_IN_USER_PASSWORD;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PasswordChangeUrlGenerator extends AbstractAccountChangeUrlGenerator implements AccountChangeUrlGenerator {
+public class PasswordChangeUrlGenerator extends AbstractAccountChangeUrlGenerator {
 
     @Getter
     private final String urlSuffix = "login/password-change";

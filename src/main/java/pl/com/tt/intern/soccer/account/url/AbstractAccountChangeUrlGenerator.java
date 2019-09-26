@@ -6,7 +6,7 @@ import pl.com.tt.intern.soccer.account.url.util.UrlGeneratorHelper;
 
 import java.util.Map;
 
-public abstract class AbstractAccountChangeUrlGenerator {
+public abstract class AbstractAccountChangeUrlGenerator implements AccountChangeUrlGenerator {
     public abstract String getUrlSuffix();
 
     @SneakyThrows
