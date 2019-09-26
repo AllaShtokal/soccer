@@ -17,7 +17,7 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 @RequiredArgsConstructor
 public class EmailChangeUrl implements AccountChangeUrlGenerator {
 
-    private final String URL_SUFFIX = "/change-data";
+    private final String URL_SUFFIX = " user-settings";
 
     @SneakyThrows
     @Override
