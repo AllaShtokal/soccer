@@ -36,6 +36,9 @@
         </sonar.exclusions>
 
         <sonar.dynamic>reuseReports</sonar.dynamic>
+        <gmavenplus.plugin.version>1.5</gmavenplus.plugin.version>
+        <jacoco.version>0.8.4</jacoco.version>
+
         <swagger.version>2.9.2</swagger.version>
         <passay.version>1.0</passay.version>
         <spock-core-version>1.3-groovy-2.5</spock-core-version>
