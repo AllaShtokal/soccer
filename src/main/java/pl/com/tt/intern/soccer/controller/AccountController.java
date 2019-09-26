@@ -14,6 +14,7 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
+import pl.com.tt.intern.soccer.payload.response.CurrentUserInfo;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
@@ -27,6 +28,11 @@ import static org.springframework.http.ResponseEntity.ok;
 public class AccountController {
 
     private final AccountService accountService;
+
+    @GetMapping("/me")
+    public ResponseEntity me(@CurrentUser UserPrincipal user) {
+        return ok(new CurrentUserInfo(user));
+    }
 
     @PatchMapping(params = "activationKey")
     public ResponseEntity<String> activateAccount(@RequestParam(name = "activationKey") String activationKey)
