@@ -14,6 +14,7 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
+import pl.com.tt.intern.soccer.payload.response.PasswordChangeKeyResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
@@ -29,9 +30,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping(value = "/change/password", params = "email")
-    public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
-        accountService.setAndSendMailToChangePassword(email);
-        return ok().build();
+    public ResponseEntity<PasswordChangeKeyResponse> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
+        return ok(accountService.setAndSendMailToChangePassword(email));
     }
 
     @PreAuthorize("isAuthenticated()")
