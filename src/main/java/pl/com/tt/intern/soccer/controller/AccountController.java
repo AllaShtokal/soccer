@@ -11,6 +11,7 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
@@ -27,6 +28,19 @@ public class AccountController {
 
     private final AccountService accountService;
 
+    @GetMapping(value = "/change/password", params = "email")
+    public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
+        accountService.setAndSendMailToChangePassword(email);
+        return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/change/email", params = {"email", "newEmail"})
+    public ResponseEntity<String> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
+        accountService.setAndSendMailToChangeEmail(email, newEmail);
+        return ok().build();
+    }
+
     @PatchMapping(params = "activationKey")
     public ResponseEntity<String> activateAccount(@RequestParam(name = "activationKey") String activationKey)
             throws IncorrectConfirmationKeyException {
@@ -34,13 +48,7 @@ public class AccountController {
         return ok().build();
     }
 
-    @GetMapping(value = "/change", params = "email")
-    public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) {
-        accountService.setAndSendMailToChangePassword(email);
-        return ok().build();
-    }
-
-    @PatchMapping(value = "/change", params = "changePasswordKey")
+    @PatchMapping(value = "/change/password", params = "changePasswordKey")
     public ResponseEntity<String> changePasswordNotLoggedInUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
                                                                 @Valid @RequestBody ForgottenPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException {
@@ -64,7 +72,16 @@ public class AccountController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/change")
+    @PatchMapping(value = "/change/email", params = "changeEmailKey")
+    public ResponseEntity<String> changeEmail(@CurrentUser UserPrincipal user,
+                                              @RequestParam(name = "changeEmailKey") String changeEmailKey,
+                                              @Valid @RequestBody EmailRequest request) throws Exception {
+        accountService.changeEmail(user, changeEmailKey, request);
+        return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping
     public ResponseEntity<ChangeDataAccountResponse> changeBasicAccountData(@CurrentUser UserPrincipal user,
                                                                             @Valid @RequestBody ChangeAccountDataRequest request) throws NotFoundException {
         return ok(accountService.changeUserInfo(user, request));

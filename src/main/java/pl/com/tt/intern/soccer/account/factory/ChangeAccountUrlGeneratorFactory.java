@@ -1,7 +1,7 @@
 package pl.com.tt.intern.soccer.account.factory;
 
-import pl.com.tt.intern.soccer.account.url.ChangeAccountUrlGenerator;
+import pl.com.tt.intern.soccer.account.url.AccountChangeUrlGenerator;
 
 public interface ChangeAccountUrlGeneratorFactory {
-    ChangeAccountUrlGenerator getUrlGenerator(AccountChangeType type);
+    AccountChangeUrlGenerator getUrlGenerator(AccountChangeType type);
 }
