@@ -1,10 +1,10 @@
 package pl.com.tt.intern.soccer.account.url.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum UrlParam {
 
     NEW_EMAIL("newEmail"),
@@ -12,5 +12,5 @@ public enum UrlParam {
     CHANGE_EMAIL_KEY("changeEmailKey"),
     CHANGE_PASSWORD_KEY("changePasswordKey");
 
-    private String parameterName;
+    private final String parameterName;
 }
