@@ -11,23 +11,24 @@ import pl.com.tt.intern.soccer.account.url.util.UrlGeneratorHelper;
 
 import java.util.Map;
 
-import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_ACCOUNT;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailChangeUrl implements AccountChangeUrlGenerator {
+public class AccountActivationUrlGenerator implements AccountChangeUrlGenerator {
 
-    private final String URL_SUFFIX = "user-settings";
+    private final String urlSuffix = "login";
 
     @SneakyThrows
     @Override
     public String generate(Map<UrlParam, String> params) {
-        return UrlGeneratorHelper.createUrl(URL_SUFFIX, params);
+        return UrlGeneratorHelper.createUrl(urlSuffix, params);
     }
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return EMAIL.equals(type);
+        return ACTIVE_ACCOUNT.equals(type);
     }
+
 }

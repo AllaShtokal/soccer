@@ -16,14 +16,14 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGG
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PasswordChangeUrl implements AccountChangeUrlGenerator {
+public class PasswordChangeUrlGenerator implements AccountChangeUrlGenerator {
 
-    private final String URL_SUFFIX = "login/password-change";
+    private final String urlSuffix = "login/password-change";
 
     @SneakyThrows
     @Override
     public String generate(Map<UrlParam, String> params) {
-        return UrlGeneratorHelper.createUrl(URL_SUFFIX, params);
+        return UrlGeneratorHelper.createUrl(urlSuffix, params);
     }
 
     @Override
