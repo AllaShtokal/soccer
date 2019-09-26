@@ -15,7 +15,7 @@ public final class UrlGeneratorHelper {
 
     public static String createUrl(String urlSuffix, Map<UrlParam, String> map) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        map.forEach((k, v) -> params.add(k.getParameterName(), v));
+        map.forEach((key, value) -> params.add(key.getParameterName(), value));
 
         return UriComponentsBuilder.newInstance()
                 .host(HostGeneratorUtil.generate())
