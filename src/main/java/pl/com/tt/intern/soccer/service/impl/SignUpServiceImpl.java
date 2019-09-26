@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
@@ -32,6 +33,9 @@ import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
 @RequiredArgsConstructor
 public class SignUpServiceImpl implements SignUpService {
 
+    @Value("${mail.config.enabled}")
+    private Boolean enabledMail;
+    private final String SUCCESSFUL_SIGN_UP_MSG = "User registered successfully";
     private final UserService userService;
     private final RoleService roleService;
     private final ModelMapper mapper;
@@ -48,12 +52,28 @@ public class SignUpServiceImpl implements SignUpService {
             userInfo.setUser(user);
             user.setUserInfo(userInfo);
             user.setRoles(singleton(roleService.findByType(ROLE_USER)));
-
             User result = userService.save(user);
-            setAndSendActivationMailMsg(result);
-            return new SuccessfulSignUpResponse("User registered successfully", result);
+
+            return createKeyAndSendEmailIfIsEnabled(result);
         } else
             throw new PasswordsMismatchException();
+    }
+
+    @SneakyThrows
+    private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) {
+        if (enabledMail) {
+            setAndSendActivationMailMsg(user);
+
+            return new SuccessfulSignUpResponse(
+                    SUCCESSFUL_SIGN_UP_MSG,
+                    null,
+                    user);
+        } else
+            return new SuccessfulSignUpResponse(
+                    SUCCESSFUL_SIGN_UP_MSG,
+                    confirmationKeyService.createAndAssignToUserByEmail(user.getEmail()).getUuid(),
+                    user
+            );
     }
 
     @SneakyThrows
@@ -68,6 +88,4 @@ public class SignUpServiceImpl implements SignUpService {
     private boolean doPasswordsMatch(SignUpRequest request) {
         return request.getPassword().equals(request.getConfirmPassword());
     }
-
-
 }

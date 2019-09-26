@@ -10,12 +10,13 @@ public class SuccessfulSignUpResponse {
     private String firstName;
     private String lastName;
     private String email;
+    private String activeKey;
 
-    public SuccessfulSignUpResponse(String message, User user) {
+    public SuccessfulSignUpResponse(String message, String activeKey, User user) {
         this.message = message;
+        this.activeKey = activeKey;
         this.firstName = user.getUserInfo().getFirstName();
         this.lastName = user.getUserInfo().getLastName();
         this.email = user.getEmail();
     }
-
 }
