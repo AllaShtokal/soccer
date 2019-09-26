@@ -74,8 +74,8 @@ public class AccountController {
     @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/change/email", params = "changeEmailKey")
     public ResponseEntity<String> changeEmail(@CurrentUser UserPrincipal user,
-                                         @RequestParam(name = "changeEmailKey") String changeEmailKey,
-                                         @Valid @RequestBody EmailRequest request) throws Exception {
+                                              @RequestParam(name = "changeEmailKey") String changeEmailKey,
+                                              @Valid @RequestBody EmailRequest request) throws Exception {
         accountService.changeEmail(user, changeEmailKey, request);
         return ok().build();
     }
