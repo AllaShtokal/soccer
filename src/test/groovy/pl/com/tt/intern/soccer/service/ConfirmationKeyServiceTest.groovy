@@ -10,11 +10,12 @@ class ConfirmationKeyServiceTest extends Specification {
 
     ConfirmationKeyService service
     ConfirmationKeyRepository repository = Mock()
+    UserService userService = Mock()
     ConfirmationKey key = Mock()
     def UUID = "12451251"
 
     def setup() {
-        service = new ConfirmationKeyServiceImpl(repository)
+        service = new ConfirmationKeyServiceImpl(repository, userService)
     }
 
     def "findById"() {
