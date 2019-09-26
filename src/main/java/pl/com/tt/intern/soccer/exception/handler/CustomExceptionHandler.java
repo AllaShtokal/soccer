@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.exception.response.ExceptionResponse;
 
@@ -61,6 +58,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IncorrectConfirmationKeyException.class)
     public ResponseEntity<ExceptionResponse> incorrectConfirmationKey(IncorrectConfirmationKeyException ex) {
         log.error("Throw IncorrectConfirmationKeyException with message: {}", ex.getMessage());
+        return entity(ex.getMessage(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidChangePasswordException.class)
+    public ResponseEntity<ExceptionResponse> invalidChangePassword(InvalidChangePasswordException ex) {
+        log.error("Throw InvalidChangePasswordException with message: {}", ex.getMessage(), ex);
         return entity(ex.getMessage(), BAD_REQUEST);
     }
 

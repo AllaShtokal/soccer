@@ -6,8 +6,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
+import pl.com.tt.intern.soccer.exception.InvalidChangePasswordException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
+import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
+import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
@@ -22,29 +28,62 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @PatchMapping(params = "activationKey")
-    public ResponseEntity<?> activateAccount(@RequestParam(name = "activationKey") String activationKey) throws IncorrectConfirmationKeyException {
-        accountService.activateAccountByConfirmationKey(activationKey);
-        return ok().build();
-    }
-
-    @GetMapping(value = "/change", params = "email")
-    public ResponseEntity<?> sendMailToChangePassword(@RequestParam(name = "email") String email)  {
+    @GetMapping(value = "/change/password", params = "email")
+    public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
         accountService.setAndSendMailToChangePassword(email);
         return ok().build();
     }
 
-    @PatchMapping(value = "/change", params = "changePasswordKey")
-    public ResponseEntity<?> changePasswordNotLoggedInUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
-                                                           @Valid @RequestBody ForgottenPasswordRequest request) throws Exception {
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/change/email", params = {"email", "newEmail"})
+    public ResponseEntity<String> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
+        accountService.setAndSendMailToChangeEmail(email, newEmail);
+        return ok().build();
+    }
+
+    @PatchMapping(params = "activationKey")
+    public ResponseEntity<String> activateAccount(@RequestParam(name = "activationKey") String activationKey)
+            throws IncorrectConfirmationKeyException {
+        accountService.activateAccountByConfirmationKey(activationKey);
+        return ok().build();
+    }
+
+    @PatchMapping(value = "/change/password", params = "changePasswordKey")
+    public ResponseEntity<String> changePasswordNotLoggedInUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
+                                                                @Valid @RequestBody ForgottenPasswordRequest request)
+            throws PasswordsMismatchException, IncorrectConfirmationKeyException {
         accountService.changePasswordNotLoggedInUser(changePasswordKey, request);
         return ok().build();
     }
 
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/deactivate")
-    public ResponseEntity<?> deactivateAccount(@CurrentUser UserPrincipal user) throws NotFoundException {
+    public ResponseEntity<String> deactivateAccount(@CurrentUser UserPrincipal user) throws NotFoundException {
         accountService.deactivate(user.getId());
         return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/change/password")
+    public ResponseEntity<String> changePasswordLoggedInUser(@CurrentUser UserPrincipal user,
+                                                             @Valid @RequestBody ChangePasswordRequest request) throws InvalidChangePasswordException {
+        accountService.changePasswordLoggedInUser(user, request);
+        return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping(value = "/change/email", params = "changeEmailKey")
+    public ResponseEntity<String> changeEmail(@CurrentUser UserPrincipal user,
+                                              @RequestParam(name = "changeEmailKey") String changeEmailKey,
+                                              @Valid @RequestBody EmailRequest request) throws Exception {
+        accountService.changeEmail(user, changeEmailKey, request);
+        return ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping
+    public ResponseEntity<ChangeDataAccountResponse> changeBasicAccountData(@CurrentUser UserPrincipal user,
+                                                                            @Valid @RequestBody ChangeAccountDataRequest request) throws NotFoundException {
+        return ok(accountService.changeUserInfo(user, request));
     }
 }

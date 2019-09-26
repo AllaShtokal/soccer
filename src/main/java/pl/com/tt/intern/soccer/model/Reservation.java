@@ -5,15 +5,18 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name="reservation")
+@Table(name = "reservation")
 @EqualsAndHashCode(exclude = "user")
-public class Reservation {
+public class Reservation implements Serializable {
+
+    private static final long serialVersionUID = -6635819115881755604L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -26,15 +29,15 @@ public class Reservation {
     private User user;
 
     @NotNull
-    @Column(name="date_from", nullable = false, unique = true)
+    @Column(name = "date_from", nullable = false, unique = true)
     private LocalDateTime dateFrom;
 
     @NotNull
-    @Column(name="date_to", nullable = false)
+    @Column(name = "date_to", nullable = false)
     private LocalDateTime dateTo;
 
     @NotNull
-    @Column(name="confirmed", nullable = false)
+    @Column(name = "confirmed", nullable = false)
     private Boolean confirmed;
 
 }
