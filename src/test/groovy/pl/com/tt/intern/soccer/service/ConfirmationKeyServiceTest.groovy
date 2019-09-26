@@ -45,6 +45,6 @@ class ConfirmationKeyServiceTest extends Specification {
         when:
             service.scanAndDeleteExpiredConfirmationKeys()
         then:
-            repository.deleteByExpirationTime()
+            1 * repository.deleteByExpirationTime()
     }
 }

@@ -44,7 +44,7 @@ class CustomUserDetailsServiceTest extends Specification {
         when:
             service.loadUserByUsername(USERNAME_OR_EMAIL)
         then:
-            service.userRepository.findByUsernameOrEmail(USERNAME_OR_EMAIL, USERNAME_OR_EMAIL) >> Optional.empty()
+            1 * service.userRepository.findByUsernameOrEmail(USERNAME_OR_EMAIL, USERNAME_OR_EMAIL) >> Optional.empty()
             thrown(UsernameNotFoundException)
     }
 
@@ -52,7 +52,7 @@ class CustomUserDetailsServiceTest extends Specification {
         when:
             UserPrincipal userDetailsFound = service.loadUserById(ID)
         then:
-            user.getRoles() >> roleSet
+            1 * user.getRoles() >> roleSet
             service.userRepository.findById(ID) >> Optional.of(user)
             userDetailsFound.getAuthorities().size() == roleSet.size()
     }
@@ -61,7 +61,7 @@ class CustomUserDetailsServiceTest extends Specification {
         when:
             service.loadUserById(ID)
         then:
-            service.userRepository.findById(ID) >> Optional.empty()
+            1 * service.userRepository.findById(ID) >> Optional.empty()
             thrown(UsernameNotFoundException)
     }
 }
