@@ -14,7 +14,7 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
-import pl.com.tt.intern.soccer.payload.response.CurrentUserInfo;
+import pl.com.tt.intern.soccer.payload.response.CurrentUserInfoResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
@@ -30,8 +30,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/me")
-    public ResponseEntity<CurrentUserInfo> me(@CurrentUser UserPrincipal user) {
-        return ok(new CurrentUserInfo(user));
+    public ResponseEntity<CurrentUserInfoResponse> me(@CurrentUser UserPrincipal user) {
+        return ok(new CurrentUserInfoResponse(user));
     }
 
     @PatchMapping(params = "activationKey")

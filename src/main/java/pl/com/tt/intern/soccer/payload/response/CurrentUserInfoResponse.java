@@ -4,7 +4,7 @@ import lombok.Data;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 
 @Data
-public class CurrentUserInfo {
+public class CurrentUserInfoResponse {
 
     private String username;
     private String email;
@@ -13,7 +13,7 @@ public class CurrentUserInfo {
     private String phone;
     private String skype;
 
-    public CurrentUserInfo(UserPrincipal userPrincipal) {
+    public CurrentUserInfoResponse(UserPrincipal userPrincipal) {
         this.username = userPrincipal.getUsername();
         this.email = userPrincipal.getEmail();
         this.firstName = userPrincipal.getUserInfo().getFirstName();
