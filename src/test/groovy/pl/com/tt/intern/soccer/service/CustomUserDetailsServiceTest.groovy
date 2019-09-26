@@ -32,40 +32,36 @@ class CustomUserDetailsServiceTest extends Specification {
     }
 
     def "verify if loadUserByUsername retrieves UserDetails with proper roles"() {
-        given:
-            user.getRoles() >> roleSet
-            service.userRepository.findByUsernameOrEmail(USERNAME_OR_EMAIL, USERNAME_OR_EMAIL) >> Optional.of(user)
         when:
             UserPrincipal userDetailsFound = service.loadUserByUsername(USERNAME_OR_EMAIL)
         then:
+            1 * service.userRepository.findByUsernameOrEmail(USERNAME_OR_EMAIL, USERNAME_OR_EMAIL) >> Optional.of(user)
+            1 * user.getRoles() >> roleSet
             userDetailsFound.getAuthorities().size() == roleSet.size()
     }
 
     def "service should throw UsernameNotFoundException if findByUsernameOrEmail returns empty Optional"() {
-        given:
-            service.userRepository.findByUsernameOrEmail(USERNAME_OR_EMAIL, USERNAME_OR_EMAIL) >> Optional.empty()
         when:
             service.loadUserByUsername(USERNAME_OR_EMAIL)
         then:
+            service.userRepository.findByUsernameOrEmail(USERNAME_OR_EMAIL, USERNAME_OR_EMAIL) >> Optional.empty()
             thrown(UsernameNotFoundException)
     }
 
     def "verify if loadUserById retrieves UserDetails with proper roles"() {
-        given:
-            user.getRoles() >> roleSet
-            service.userRepository.findById(ID) >> Optional.of(user)
         when:
             UserPrincipal userDetailsFound = service.loadUserById(ID)
         then:
+            user.getRoles() >> roleSet
+            service.userRepository.findById(ID) >> Optional.of(user)
             userDetailsFound.getAuthorities().size() == roleSet.size()
     }
 
     def "findById should throw UsernameNotFoundException if empty Optional was returned"() {
-        given:
-            service.userRepository.findById(ID) >> Optional.empty()
         when:
             service.loadUserById(ID)
         then:
+            service.userRepository.findById(ID) >> Optional.empty()
             thrown(UsernameNotFoundException)
     }
 }

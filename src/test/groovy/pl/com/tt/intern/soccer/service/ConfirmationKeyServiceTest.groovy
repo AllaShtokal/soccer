@@ -25,20 +25,18 @@ class ConfirmationKeyServiceTest extends Specification {
     }
 
     def "findByEmail should invoke repository->findByEmail()"() {
-        given:
-            repository.findByUuid(UUID) >> Optional.of(key)
         when:
             ConfirmationKey keyFound = service.findConfirmationKeyByUuid(UUID)
         then:
+            1 * repository.findByUuid(UUID) >> Optional.of(key)
             keyFound == key
     }
 
     def "findByEmail should throw exception if no user was found"() {
-        given:
-            repository.findByUuid(UUID) >> Optional.empty()
         when:
             service.findConfirmationKeyByUuid(UUID)
         then:
+            1 * repository.findByUuid(UUID) >> Optional.empty()
             thrown(NotFoundException)
     }
 

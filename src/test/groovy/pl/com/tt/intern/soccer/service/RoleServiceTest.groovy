@@ -18,21 +18,19 @@ class RoleServiceTest extends Specification {
         service = new RoleServiceImpl(repository)
     }
 
-    def "kek"() {
-        given:
-            repository.findByType(roleType) >> Optional.of(role)
+    def "findByType should invoke repository->findByType once"() {
         when:
             Role roleFound = service.findByType(roleType)
         then:
+            1 * repository.findByType(roleType) >> Optional.of(role)
             roleFound == role
     }
 
-    def "kek2"() {
-        given:
-            repository.findByType(roleType) >> Optional.empty()
+    def "findByType should throw NotFoundException if repository did no return any Role"() {
         when:
             service.findByType(roleType)
         then:
+            1 * repository.findByType(roleType) >> Optional.empty()
             thrown(NotFoundException)
     }
 

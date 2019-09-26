@@ -41,7 +41,7 @@ class ReservationServiceTest extends Specification {
 
     def "deleteById should invoke ReservationRepository.deleteById"() {
         when:
-        service.deleteById(ID)
+            service.deleteById(ID)
         then:
             1 * repository.deleteById(ID)
     }
@@ -52,13 +52,16 @@ class ReservationServiceTest extends Specification {
             LocalDateTime timeFrom = LocalDateTime.now()
             LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
             Reservation reservation = Mock(Reservation)
-            reservation.getId() >> ID
+
             ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
-            reservationPersistRequest.getDateFrom() >> timeFrom
-            reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
-        expect:
-            service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+        when:
+            boolean collides = service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+        then:
+            collides == true
+            1 * reservation.getId() >> ID
+            1 * reservationPersistRequest.getDateFrom() >> timeFrom
+            1 * reservationPersistRequest.getDateTo() >> timeTo
+            1 * repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> true
     }
 
     def "isDateRangeAvailable should return false if there are date collisions"() {
@@ -66,22 +69,26 @@ class ReservationServiceTest extends Specification {
             LocalDateTime timeFrom = LocalDateTime.now()
             LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
             Reservation reservation = Mock(Reservation)
-            reservation.getId() >> ID
             ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
-            reservationPersistRequest.getDateFrom() >> timeFrom
-            reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
-        expect:
-            !service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+        when:
+            boolean collides = service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
+        then:
+            collides == false
+            1 * reservation.getId() >> ID
+            1 * reservationPersistRequest.getDateFrom() >> timeFrom
+            1 * reservationPersistRequest.getDateTo() >> timeTo
+            1 * repository.datesCollideExcludingCurrent(timeFrom, timeTo, ID) >> false
     }
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
         given:
             LocalDateTime time1 = LocalDateTime.now()
             LocalDateTime time2 = LocalDateTime.now().plusDays(1)
-            repository.datesCollide(time1, time2) >> true
-        expect:
-            service.datesCollideWithExistingReservations(time1, time2)
+        when:
+            boolean collides = service.datesCollideWithExistingReservations(time1, time2)
+        then:
+            1 * repository.datesCollide(time1, time2) >> true
+            collides == true
     }
 
     def "isDate15MinuteRounded should consider minutes, seconds and nanoseconds"() {
@@ -114,10 +121,12 @@ class ReservationServiceTest extends Specification {
         given:
             LocalDateTime timeFrom = LocalDateTime.of(2019, Month.JULY, day1, hour1, min1, 0, 0)
             LocalDateTime timeTo = LocalDateTime.of(2019, Month.JULY, day2, hour2, min2, 0, 0)
-            reservationPersistRequest.getDateFrom() >> timeFrom
-            reservationPersistRequest.getDateTo() >> timeTo
-        expect:
-            service.isDateOrderOk(reservationPersistRequest) == expected
+        when:
+            def result = service.isDateOrderOk(reservationPersistRequest)
+        then:
+            result == expected
+            1 * reservationPersistRequest.getDateFrom() >> timeFrom
+            1 * reservationPersistRequest.getDateTo() >> timeTo
         where:
             day1 | hour1 | min1 | day2 | hour2 | min2 | expected
             15   | 12    | 30   | 15   | 12    | 45   | true
@@ -162,7 +171,7 @@ class ReservationServiceTest extends Specification {
 
     def "'findById' method should throw a NotFoundException if not found"() {
         when:
-            def result = service.findById(ID)
+            service.findById(ID)
         then:
             1 * repository.findById(ID) >> Optional.empty()
             thrown(NotFoundException)
@@ -233,12 +242,12 @@ class ReservationServiceTest extends Specification {
         given:
             LocalDateTime timeFrom = LocalDateTime.of(year1, Month.MAY, day1, hour1, min1, 0, 0)
             LocalDateTime timeTo = LocalDateTime.of(year2, Month.MAY, day2, hour2, min2, 0, 0)
-            repository.findById(ID) >> Optional.of(reservation)
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
         when:
             service.update(ID, reservationPersistRequest)
         then:
+            1 * repository.findById(ID) >> Optional.of(reservation)
             thrown(ReservationFormatException)
         where:
             year1            | day1 | hour1 | min1 | year2              |  day2 | hour2 | min2
@@ -253,14 +262,14 @@ class ReservationServiceTest extends Specification {
             def reservationID = 540293812
             LocalDateTime timeFrom = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 15, 0, 0)
             LocalDateTime timeTo = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 30, 0, 0)
-            repository.findById(ID) >> Optional.of(reservation)
             reservation.getId() >> reservationID
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> true
         when:
             service.update(ID, reservationPersistRequest)
         then:
+            1 * repository.findById(ID) >> Optional.of(reservation)
+            1 * repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> true
             thrown(ReservationClashException)
     }
 
@@ -269,14 +278,14 @@ class ReservationServiceTest extends Specification {
             def reservationID = 540293812
             LocalDateTime timeFrom = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 15, 0, 0)
             LocalDateTime timeTo = LocalDateTime.of(timeNow.year+1, Month.MAY, 11, 2, 30, 0, 0)
-            repository.findById(ID) >> Optional.of(reservation)
             reservation.getId() >> reservationID
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> false
         when:
             service.update(ID, reservationPersistRequest)
         then:
+            1 * repository.findById(ID) >> Optional.of(reservation)
+            1 * repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> false
             1 * repository.save(_ as Reservation)
     }
 
@@ -284,9 +293,7 @@ class ReservationServiceTest extends Specification {
         when:
             service.existsById(ID)
         then:
-            with(repository){
-                1 * existsById(ID)
-            }
+            1 * repository.existsById(ID)
     }
 
     def "existsByIdAndByUserId should invoke repository->existsByIdAndByUserId"() {
@@ -333,10 +340,10 @@ class ReservationServiceTest extends Specification {
             LocalDateTime timeTo = LocalDateTime.of(timeNow.year+2, Month.MAY, 12, 4, 30, 0, 0)
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollide(timeFrom, timeTo) >> true
         when:
             service.verifyPersistedObject(reservationPersistRequest)
         then:
+            1 * repository.datesCollide(timeFrom, timeTo) >> true
             thrown(ReservationClashException)
     }
 
@@ -346,10 +353,10 @@ class ReservationServiceTest extends Specification {
             LocalDateTime timeTo = LocalDateTime.of(timeNow.year+2, Month.MAY, 12, 4, 30, 0, 0)
             reservationPersistRequest.getDateFrom() >> timeFrom
             reservationPersistRequest.getDateTo() >> timeTo
-            repository.datesCollide(timeFrom, timeTo) >> false
         when:
             service.verifyPersistedObject(reservationPersistRequest)
         then:
+            1 * repository.datesCollide(timeFrom, timeTo) >> false
             noExceptionThrown()
     }
 }
