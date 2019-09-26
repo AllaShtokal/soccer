@@ -19,13 +19,23 @@
 
         <sonar.jdbc.username>admin</sonar.jdbc.username>
         <sonar.jdbc.password>admin</sonar.jdbc.password>
-        <sonar.exclusions>
-            */SoccerApplication.java
-        </sonar.exclusions>
-        <sonar.dynamic>reuseReports</sonar.dynamic>
-        <gmavenplus.plugin.version>1.5</gmavenplus.plugin.version>
-        <jacoco.version>0.8.4</jacoco.version>
 
+        <sonar.exclusions>
+            **/SoccerApplication.java,
+            **/account/factory/*.java,
+            **/configuration/**,
+            **/exception/**,
+            **/mail/customizer/MailCustomizerTemplate.java,
+            **/model/**,
+            **/payload/**,
+            **/security/model/*.java,
+            **/security/JwtAuthenticationEntryPoint.java,
+            **/security/JwtAuthenticationFilter.java,
+            **/security/UserPrincipal.java,
+            **/util/Messages.java
+        </sonar.exclusions>
+
+        <sonar.dynamic>reuseReports</sonar.dynamic>
         <swagger.version>2.9.2</swagger.version>
         <passay.version>1.0</passay.version>
         <spock-core-version>1.3-groovy-2.5</spock-core-version>
