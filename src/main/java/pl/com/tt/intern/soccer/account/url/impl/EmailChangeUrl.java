@@ -1,23 +1,24 @@
-package pl.com.tt.intern.soccer.account.url;
+package pl.com.tt.intern.soccer.account.url.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
+import pl.com.tt.intern.soccer.account.url.AccountChangeUrlGenerator;
 import pl.com.tt.intern.soccer.account.url.enums.UrlParam;
 import pl.com.tt.intern.soccer.account.url.util.UrlGeneratorHelper;
 
 import java.util.Map;
 
-import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_ACCOUNT;
+import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.EMAIL;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AccountActivationUrl implements AccountChangeUrlGenerator {
+public class EmailChangeUrl implements AccountChangeUrlGenerator {
 
-    private final String URL_SUFFIX = "login";
+    private final String URL_SUFFIX = "user-settings";
 
     @SneakyThrows
     @Override
@@ -27,7 +28,6 @@ public class AccountActivationUrl implements AccountChangeUrlGenerator {
 
     @Override
     public boolean supports(AccountChangeType type) {
-        return ACTIVE_ACCOUNT.equals(type);
+        return EMAIL.equals(type);
     }
-
 }
