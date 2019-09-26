@@ -30,7 +30,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/me")
-    public ResponseEntity me(@CurrentUser UserPrincipal user) {
+    public ResponseEntity<CurrentUserInfo> me(@CurrentUser UserPrincipal user) {
         return ok(new CurrentUserInfo(user));
     }
 
