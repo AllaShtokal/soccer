@@ -67,9 +67,8 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    @SneakyThrows
     @Override
-    public PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) {
+    public PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) throws NotFoundException {
         Map<UrlParam, String> params = new HashMap<>();
         String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
 
@@ -85,9 +84,8 @@ public class AccountServiceImpl implements AccountService {
         return new PasswordChangeKeyResponse();
     }
 
-    @SneakyThrows
     @Override
-    public EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) {
+    public EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) throws NotFoundException {
         Map<UrlParam, String> params = new HashMap<>();
         String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
 
