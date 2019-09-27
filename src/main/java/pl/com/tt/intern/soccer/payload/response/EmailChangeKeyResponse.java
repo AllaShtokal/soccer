@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordChangeKeyResponse {
-    private String passwordChangeKey;
+public class EmailChangeKeyResponse {
+    private String emailChangeKey;
+    private String newEmail;
 }
