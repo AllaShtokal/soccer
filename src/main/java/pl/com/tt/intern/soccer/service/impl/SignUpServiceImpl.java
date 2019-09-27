@@ -59,8 +59,7 @@ public class SignUpServiceImpl implements SignUpService {
             throw new PasswordsMismatchException();
     }
 
-    @SneakyThrows
-    private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) {
+    private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) throws NotFoundException {
         if (enabledMail) {
             setAndSendActivationMailMsg(user);
 

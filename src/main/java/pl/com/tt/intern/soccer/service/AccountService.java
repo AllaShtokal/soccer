@@ -17,12 +17,12 @@ public interface AccountService {
 
     void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException;
 
-    PasswordChangeKeyResponse setAndSendMailToChangePassword(String email);
+    PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) throws NotFoundException;
 
     void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException;
 
-    EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail);
+    EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) throws NotFoundException;
 
     void deactivate(Long userId) throws NotFoundException;
 
