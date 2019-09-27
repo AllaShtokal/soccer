@@ -21,6 +21,18 @@
         <sonar.jdbc.password>admin</sonar.jdbc.password>
 
         <sonar.exclusions>
+            **/SoccerApplication.java,
+            **/account/factory/*.java,
+            **/configuration/**,
+            **/exception/**,
+            **/mail/customizer/MailCustomizerTemplate.java,
+            **/model/**,
+            **/payload/**,
+            **/security/model/*.java,
+            **/security/JwtAuthenticationEntryPoint.java,
+            **/security/JwtAuthenticationFilter.java,
+            **/security/UserPrincipal.java,
+            **/util/Messages.java
         </sonar.exclusions>
 
         <sonar.dynamic>reuseReports</sonar.dynamic>
