@@ -3,3 +3,10 @@ When running the *.jar file, you must specify the `email.config.password` proper
 ```sh
 -Dmail.config.password=
 ```
+
+If you want to disable or enable sending e-mails, you must add an additional parameter when running the * .jar file
+```sh
+-Dmail.config.enabled=
+```
+By default, sending e-mails is disabled
+
