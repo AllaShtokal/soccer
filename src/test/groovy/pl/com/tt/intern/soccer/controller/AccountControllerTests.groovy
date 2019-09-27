@@ -51,7 +51,7 @@ class AccountControllerTests extends Specification {
         String email = new String()
 
         when:
-        controller.sendMailToChangePassword(email)
+        controller.sendMailToChangePasswordIfEnabledAndAssignConfirmationKey(email)
 
         then:
         1 * accountService.setAndSendMailToChangePassword(email)

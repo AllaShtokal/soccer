@@ -31,13 +31,15 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping(value = "/change/password", params = "email")
-    public ResponseEntity<PasswordChangeKeyResponse> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
+    public ResponseEntity<PasswordChangeKeyResponse> sendMailToChangePasswordIfEnabledAndAssignConfirmationKey(
+            @RequestParam(name = "email") String email) throws Exception {
         return ok(accountService.setAndSendMailToChangePassword(email));
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/change/email", params = {"email", "newEmail"})
-    public ResponseEntity<EmailChangeKeyResponse> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
+    public ResponseEntity<EmailChangeKeyResponse> sendMailToChangeEmailIfEnabledAndAssignConfirmationKey(
+            @RequestParam String email, @RequestParam String newEmail) throws Exception {
         return ok(accountService.setAndSendMailToChangeEmail(email, newEmail));
     }
 
