@@ -34,7 +34,7 @@ import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
 public class SignUpServiceImpl implements SignUpService {
 
     @Value("${mail.config.enabled}")
-    private Boolean enabledMail;
+    private Boolean mailEnabled;
     private final String SUCCESSFUL_SIGN_UP_MSG = "User registered successfully";
     private final UserService userService;
     private final RoleService roleService;
@@ -60,7 +60,7 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) throws NotFoundException {
-        if (enabledMail) {
+        if (mailEnabled) {
             setAndSendActivationMailMsg(user);
 
             return new SuccessfulSignUpResponse(
