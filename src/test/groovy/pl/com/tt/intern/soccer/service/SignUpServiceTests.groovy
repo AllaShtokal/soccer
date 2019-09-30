@@ -38,27 +38,27 @@ class SignUpServiceTests extends Specification {
 
     def "doPasswordMatch should return true when both passwords are the same"() {
         given:
-        SignUpRequest request = new SignUpRequest()
-        request.setPassword("Password123")
-        request.setConfirmPassword("Password123")
+        SignUpRequest request = Mock()
 
         when:
         def result = service.doPasswordsMatch(request)
 
         then:
+        1 * request.getPassword() >> "Password123"
+        1 * request.getConfirmPassword() >> "Password123"
         result
     }
 
     def "doPasswordMatch should return false when both passwords are different"() {
         given:
-        SignUpRequest request = new SignUpRequest()
-        request.setPassword("Password123")
-        request.setConfirmPassword("Pass1234567")
+        SignUpRequest request = Mock()
 
         when:
         def result = service.doPasswordsMatch(request)
 
         then:
+        1 * request.getPassword() >> "Password123"
+        1 * request.getConfirmPassword() >> "Pass1234567"
         !result
     }
 
