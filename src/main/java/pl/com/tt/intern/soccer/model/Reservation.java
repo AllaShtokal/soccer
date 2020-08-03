@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @Table(name = "reservation")
+@EqualsAndHashCode(exclude = "user")
 public class Reservation implements Serializable {
 
     private static final long serialVersionUID = -6635819115881755604L;

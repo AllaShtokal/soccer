@@ -10,7 +10,8 @@ import java.util.Arrays;
 public enum AccountChangeType {
     NOT_LOGGED_IN_USER_PASSWORD(201),
     ACTIVE_ACCOUNT(202),
-    EMAIL(203);
+    EMAIL(203),
+    CONFIRM_RESERVATION(204);
 
     private final int value;
 

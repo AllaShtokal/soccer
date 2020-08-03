@@ -17,6 +17,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.TimeZone;
+import java.util.Timer;
 
 @Configuration
 @EnableScheduling
@@ -59,6 +60,11 @@ public class AppConfiguration {
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         templateResolver.setApplicationContext(applicationContext);
         return templateResolver;
+    }
+
+    @Bean
+    public Timer timer(){
+        return new Timer();
     }
 
     @Bean

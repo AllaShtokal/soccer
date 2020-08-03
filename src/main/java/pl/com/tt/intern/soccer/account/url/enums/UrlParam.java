@@ -10,7 +10,8 @@ public enum UrlParam {
     NEW_EMAIL("newEmail"),
     ACTIVE_KEY("activeKey"),
     CHANGE_EMAIL_KEY("changeEmailKey"),
-    CHANGE_PASSWORD_KEY("changePasswordKey");
+    CHANGE_PASSWORD_KEY("changePasswordKey"),
+    CONFIRMATION_RESERVATION_KEY("confirmationKey");
 
     private final String parameterName;
 }

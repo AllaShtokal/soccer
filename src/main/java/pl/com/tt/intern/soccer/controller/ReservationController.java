@@ -5,6 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
+import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
+import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
+import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
@@ -95,6 +103,13 @@ public class ReservationController {
                     .ok(reservationService.update(id, reservationPersistRequest));
         }
         throw new NotFoundException("Reservation either does not exist or does not belong to the requesting user.");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping(params = "confirmationKey")
+    public ResponseEntity<String> activateAccount(@RequestParam(name = "confirmationKey") String activationKey) throws IncorrectConfirmationKeyException {
+        reservationService.confirmReservationByConfirmationKey(activationKey);
+        return ok().build();
     }
 
 }

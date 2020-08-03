@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
@@ -15,6 +17,7 @@ import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
+import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
 
@@ -41,6 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
     private final ModelMapper mapper;
+    private final ConfirmationReservationService confirmationService;
 
     @Override
     public List<ReservationResponse> findAll() {
@@ -71,6 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setId(null);
         reservation.setUser(userService.findById(userId));
         Reservation savedEntity = reservationRepository.save(reservation);
+        confirmationService.createAndSaveConfirmationReservation(savedEntity);
         return mapper.map(savedEntity, ReservationPersistedResponse.class);
     }
 
@@ -120,6 +125,25 @@ public class ReservationServiceImpl implements ReservationService {
         return mapper.map(reservation, ReservationResponse.class);
     }
 
+    @Override
+    public void confirmReservationByConfirmationKey(String confirmationKey) throws IncorrectConfirmationKeyException {
+        ConfirmationReservation confirmationReservation = confirmationService.findConfirmationReservationByUUID(confirmationKey);
+
+        checkIfExpired(confirmationReservation.getExpirationTime());
+        confirmationReservation.setExpirationTime(now());
+        changeConfirmationReservationStatus(confirmationReservation.getReservation(), true);
+    }
+
+    private void checkIfExpired(LocalDateTime expirationTimeToken) throws IncorrectConfirmationKeyException {
+        if (!expirationTimeToken.isAfter(now().plusHours(2)))
+            throw new IncorrectConfirmationKeyException("The token has expired.");
+    }
+
+    @Override
+    public void changeConfirmationReservationStatus(Reservation reservation, Boolean confirmed) {
+        reservation.setConfirmed(confirmed);
+        reservationRepository.save(reservation);
+    }
 
     @Override
     public boolean existsById(Long id) {

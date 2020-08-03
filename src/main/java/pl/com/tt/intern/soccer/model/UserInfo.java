@@ -16,7 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_info")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "user")
 public class UserInfo extends DateAudit implements Serializable {
 
     private static final long serialVersionUID = -4256607112910571292L;
