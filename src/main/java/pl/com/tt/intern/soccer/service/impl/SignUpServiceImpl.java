@@ -58,11 +58,8 @@ public class SignUpServiceImpl implements SignUpService {
 
     @SneakyThrows
     private void setAndSendActivationMailMsg(User user) {
-        Map<UrlParam, String> params = new HashMap<>();
-        params.put(ACTIVE_KEY, confirmationKeyService.createAndAssignToUserByEmail(user.getEmail()).getUuid());
-
-        String url = accountUrlGeneratorFactory.getUrlGenerator(ACTIVE_ACCOUNT).generate(params);
-        accountMailFactory.getMailSender(ACTIVE_ACCOUNT).send(user.getEmail(), url);
+        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(202)).generate(user.getEmail(), null);
+        accountMailFactory.getMailSender(AccountChangeType.valueOf(202)).send(user.getEmail(), url);
     }
 
     private boolean doPasswordsMatch(SignUpRequest request) {
