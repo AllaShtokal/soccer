@@ -9,7 +9,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum AccountChangeType {
     NOT_LOGGED_IN_USER_PASSWORD(201),
-    ACTIVE_ACCOUNT(202);
+    ACTIVE_ACCOUNT(202),
+    EMAIL(203);
 
     private final int value;
 

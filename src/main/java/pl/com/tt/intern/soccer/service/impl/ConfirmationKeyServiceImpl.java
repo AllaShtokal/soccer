@@ -7,6 +7,7 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.ConfirmationKey;
 import pl.com.tt.intern.soccer.repository.ConfirmationKeyRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
+import pl.com.tt.intern.soccer.service.UserService;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {
 
     private final ConfirmationKeyRepository confirmationKeyRepository;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -34,4 +36,11 @@ public class ConfirmationKeyServiceImpl implements ConfirmationKeyService {
         confirmationKeyRepository.deleteByExpirationTime();
     }
 
+    @Override
+    public ConfirmationKey createAndAssignToUserByEmail(String email) throws NotFoundException {
+        return confirmationKeyRepository.save(
+                new ConfirmationKey(
+                        userService.findByEmail(email)
+                ));
+    }
 }

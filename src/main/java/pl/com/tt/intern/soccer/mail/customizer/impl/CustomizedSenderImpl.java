@@ -1,4 +1,4 @@
-package pl.com.tt.intern.soccer.mail.customizer;
+package pl.com.tt.intern.soccer.mail.customizer.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import pl.com.tt.intern.soccer.mail.MailSender;
+import pl.com.tt.intern.soccer.mail.customizer.CustomizedSender;
+import pl.com.tt.intern.soccer.mail.customizer.MailCustomizerTemplate;
 
 @Component
 @RequiredArgsConstructor
