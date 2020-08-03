@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
 import pl.com.tt.intern.soccer.account.url.enums.UrlParam;
@@ -56,11 +57,11 @@ public class SignUpServiceImpl implements SignUpService {
             throw new PasswordsMismatchException();
     }
 
-    @SneakyThrows
-    private void setAndSendActivationMailMsg(User user) {
-        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(202)).generate(user.getEmail(), null);
-        accountMailFactory.getMailSender(AccountChangeType.valueOf(202)).send(user.getEmail(), url);
-    }
+//    @SneakyThrows
+//    private void setAndSendActivationMailMsg(User user) {
+//        String url = accountUrlGeneratorFactory.getUrlGenerator(AccountChangeType.valueOf(202)).generate(user.getEmail(), null);
+//        accountMailFactory.getMailSender(AccountChangeType.valueOf(202)).send(user.getEmail(), url);
+//    }
 
     private boolean doPasswordsMatch(SignUpRequest request) {
         return request.getPassword().equals(request.getConfirmPassword());
