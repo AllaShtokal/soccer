@@ -14,7 +14,8 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
-import pl.com.tt.intern.soccer.payload.response.CurrentUserInfoResponse;
+import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
+import pl.com.tt.intern.soccer.payload.response.PasswordChangeKeyResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
@@ -29,29 +30,17 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping("/me")
-    public ResponseEntity<CurrentUserInfoResponse> me(@CurrentUser UserPrincipal user) {
-        return ok(new CurrentUserInfoResponse(user));
-    }
-
-    @PatchMapping(params = "activationKey")
-    public ResponseEntity<String> activateAccount(@RequestParam(name = "activationKey") String activationKey)
-            throws IncorrectConfirmationKeyException {
-        accountService.activateAccountByConfirmationKey(activationKey);
-        return ok().build();
-    }
-
-    @GetMapping(value = "/change", params = "email")
-    public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
-        accountService.setAndSendMailToChangePassword(email);
-        return ok().build();
+    @GetMapping(value = "/change/password", params = "email")
+    public ResponseEntity<PasswordChangeKeyResponse> sendMailToChangePasswordIfEnabledAndAssignConfirmationKey(
+            @RequestParam(name = "email") String email) throws Exception {
+        return ok(accountService.setAndSendMailToChangePassword(email));
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/change/email", params = {"email", "newEmail"})
-    public ResponseEntity<String> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
-        accountService.setAndSendMailToChangeEmail(email, newEmail);
-        return ok().build();
+    public ResponseEntity<EmailChangeKeyResponse> sendMailToChangeEmailIfEnabledAndAssignConfirmationKey(
+            @RequestParam String email, @RequestParam String newEmail) throws Exception {
+        return ok(accountService.setAndSendMailToChangeEmail(email, newEmail));
     }
 
     @PatchMapping(params = "activationKey")

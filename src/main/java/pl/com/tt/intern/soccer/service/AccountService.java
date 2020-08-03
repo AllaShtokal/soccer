@@ -9,18 +9,20 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
+import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
+import pl.com.tt.intern.soccer.payload.response.PasswordChangeKeyResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 
 public interface AccountService {
 
     void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException;
 
-    void setAndSendMailToChangePassword(String email);
+    PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) throws NotFoundException;
 
     void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException;
 
-    void setAndSendMailToChangeEmail(String email, String newEmail);
+    EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) throws NotFoundException;
 
     void deactivate(Long userId) throws NotFoundException;
 

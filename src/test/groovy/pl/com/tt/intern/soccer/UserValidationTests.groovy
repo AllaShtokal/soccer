@@ -1,11 +1,13 @@
 package pl.com.tt.intern.soccer
 
+import org.assertj.core.internal.bytebuddy.dynamic.scaffold.inline.MethodRebaseResolver
 import org.passay.PasswordData
 import org.passay.PasswordValidator
 import org.passay.RuleResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
+
 
 @SpringBootTest
 class UserValidationTests extends Specification {

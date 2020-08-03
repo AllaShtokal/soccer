@@ -3,8 +3,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                [%d{yyyy-MM-dd' 'HH:mm:ss,SSS' '}] %highlight([ %-5p]) %magenta([%L]) --- %green([%t])
-                %cyan([%logger{32}]) : %gray(%m%n)
+                [%d{yyyy-MM-dd' 'HH:mm:ss,SSS' '}] %highlight([ %-5p]) %magenta([%L]) --- %green([%t]) %cyan([%logger{32}]) : %gray(%m%n)
             </pattern>
         </layout>
     </appender>

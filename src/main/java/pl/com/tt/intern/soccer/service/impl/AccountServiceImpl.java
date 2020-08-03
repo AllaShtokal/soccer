@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
@@ -21,6 +22,8 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
+import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
+import pl.com.tt.intern.soccer.payload.response.PasswordChangeKeyResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 import pl.com.tt.intern.soccer.service.ConfirmationKeyService;
@@ -41,6 +44,8 @@ import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.*;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+    @Value("${mail.config.enabled}")
+    private Boolean enabledMail;
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
     private final ChangeAccountMailFactory accountMailFactory;
@@ -62,25 +67,39 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    @SneakyThrows
     @Override
-    public void setAndSendMailToChangePassword(String email) {
+    public PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) throws NotFoundException {
         Map<UrlParam, String> params = new HashMap<>();
-        params.put(CHANGE_PASSWORD_KEY, confirmationKeyService.createAndAssignToUserByEmail(email).getUuid());
+        String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
 
-        String url = accountUrlGeneratorFactory.getUrlGenerator(NOT_LOGGED_IN_USER_PASSWORD).generate(params);
-        accountMailFactory.getMailSender(NOT_LOGGED_IN_USER_PASSWORD).send(email, url);
+        if (!enabledMail) return new PasswordChangeKeyResponse(uuid);
+
+        params.put(CHANGE_PASSWORD_KEY, uuid);
+        accountMailFactory.getMailSender(NOT_LOGGED_IN_USER_PASSWORD).send(
+                email,
+                accountUrlGeneratorFactory
+                        .getUrlGenerator(NOT_LOGGED_IN_USER_PASSWORD)
+                        .generate(params));
+
+        return new PasswordChangeKeyResponse();
     }
 
-    @SneakyThrows
     @Override
-    public void setAndSendMailToChangeEmail(String email, String newEmail) {
+    public EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) throws NotFoundException {
         Map<UrlParam, String> params = new HashMap<>();
-        params.put(CHANGE_EMAIL_KEY, confirmationKeyService.createAndAssignToUserByEmail(email).getUuid());
-        params.put(NEW_EMAIL, newEmail);
+        String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
 
-        String url = accountUrlGeneratorFactory.getUrlGenerator(EMAIL).generate(params);
-        accountMailFactory.getMailSender(EMAIL).send(email, url);
+        if (!enabledMail) return new EmailChangeKeyResponse(uuid, newEmail);
+
+        params.put(CHANGE_EMAIL_KEY, uuid);
+        params.put(NEW_EMAIL, newEmail);
+        accountMailFactory.getMailSender(EMAIL).send(
+                email,
+                accountUrlGeneratorFactory
+                        .getUrlGenerator(EMAIL)
+                        .generate(params));
+
+        return new EmailChangeKeyResponse();
     }
 
     @Override
