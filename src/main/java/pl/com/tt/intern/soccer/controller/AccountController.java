@@ -14,6 +14,7 @@ import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
+import pl.com.tt.intern.soccer.payload.response.CurrentUserInfoResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.AccountService;
 
@@ -28,7 +29,19 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping(value = "/change/password", params = "email")
+    @GetMapping("/me")
+    public ResponseEntity<CurrentUserInfoResponse> me(@CurrentUser UserPrincipal user) {
+        return ok(new CurrentUserInfoResponse(user));
+    }
+
+    @PatchMapping(params = "activationKey")
+    public ResponseEntity<String> activateAccount(@RequestParam(name = "activationKey") String activationKey)
+            throws IncorrectConfirmationKeyException {
+        accountService.activateAccountByConfirmationKey(activationKey);
+        return ok().build();
+    }
+
+    @GetMapping(value = "/change", params = "email")
     public ResponseEntity<String> sendMailToChangePassword(@RequestParam(name = "email") String email) throws Exception {
         accountService.setAndSendMailToChangePassword(email);
         return ok().build();
