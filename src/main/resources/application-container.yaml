@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://db:3333/soccer?allowPublicKeyRetrieval=true&useSSL=false
+    username: admin
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+  h2:
+    console:
+      enabled: false
+  liquibase:
+    change-log: classpath:db/master.xml
+    default-schema: soccer
+frontend:
+  server:
+    address: localhost
+    port: 4200
