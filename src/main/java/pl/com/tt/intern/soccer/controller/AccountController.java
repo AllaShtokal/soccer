@@ -49,12 +49,19 @@ public class AccountController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/change/email", params = {"email", "newEmail"})
-    public ResponseEntity<?> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
+    public ResponseEntity<String> sendMailToChangeEmail(@RequestParam String email, @RequestParam String newEmail) throws Exception {
         accountService.setAndSendMailToChangeEmail(email, newEmail);
         return ok().build();
     }
 
-    @PatchMapping(value = "/change", params = "changePasswordKey")
+    @PatchMapping(params = "activationKey")
+    public ResponseEntity<String> activateAccount(@RequestParam(name = "activationKey") String activationKey)
+            throws IncorrectConfirmationKeyException {
+        accountService.activateAccountByConfirmationKey(activationKey);
+        return ok().build();
+    }
+
+    @PatchMapping(value = "/change/password", params = "changePasswordKey")
     public ResponseEntity<String> changePasswordNotLoggedInUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
                                                                 @Valid @RequestBody ForgottenPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException {
@@ -78,18 +85,18 @@ public class AccountController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/change")
-    public ResponseEntity<ChangeDataAccountResponse> changeBasicAccountData(@CurrentUser UserPrincipal user,
-                                                                            @Valid @RequestBody ChangeAccountDataRequest request) throws NotFoundException {
-        return ok(accountService.changeUserInfo(user, request));
+    @PatchMapping(value = "/change/email", params = "changeEmailKey")
+    public ResponseEntity<String> changeEmail(@CurrentUser UserPrincipal user,
+                                              @RequestParam(name = "changeEmailKey") String changeEmailKey,
+                                              @Valid @RequestBody EmailRequest request) throws Exception {
+        accountService.changeEmail(user, changeEmailKey, request);
+        return ok().build();
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping(value = "/change/email", params = "changeEmailKey")
-    public ResponseEntity<?> changeEmail(@CurrentUser UserPrincipal user,
-                                         @RequestParam(name = "changeEmailKey") String changeEmailKey,
-                                         @Valid @RequestBody EmailRequest request) throws Exception {
-        accountService.changeEmail(user, changeEmailKey, request);
-        return ok().build();
+    @PutMapping
+    public ResponseEntity<ChangeDataAccountResponse> changeBasicAccountData(@CurrentUser UserPrincipal user,
+                                                                            @Valid @RequestBody ChangeAccountDataRequest request) throws NotFoundException {
+        return ok(accountService.changeUserInfo(user, request));
     }
 }
