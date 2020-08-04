@@ -27,6 +27,10 @@ public class Lobby {
             length = 20)
     private String name;
 
+    private boolean available;
+
+    private  Long limit;
+
     @OneToMany(mappedBy = "lobby", cascade = CascadeType.ALL, fetch = LAZY)
     private Set<Reservation> reservations;
 
