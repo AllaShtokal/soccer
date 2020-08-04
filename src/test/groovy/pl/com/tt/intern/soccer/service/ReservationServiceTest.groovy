@@ -27,14 +27,17 @@ class ReservationServiceTest extends Specification {
     UserService userService = Mock()
     ModelMapper mapper = Mock()
     ReservationPersistRequest reservationPersistRequest = Mock()
+    ConfirmationReservationService confirmationService = Mock()
+
     ReservationService service
     ReservationResponse response
     Reservation reservation
+
     def ID = 1
     static LocalDateTime timeNow = LocalDateTime.now()
 
     def setup() {
-        service = new ReservationServiceImpl(repository, userService, mapper)
+        service = new ReservationServiceImpl(repository, userService, mapper,confirmationService)
         response = Mock()
         reservation = Mock()
     }
