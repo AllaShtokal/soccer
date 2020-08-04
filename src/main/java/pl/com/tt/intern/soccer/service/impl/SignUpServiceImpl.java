@@ -30,11 +30,11 @@ import static pl.com.tt.intern.soccer.model.enums.RoleType.ROLE_USER;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class SignUpServiceImpl implements SignUpService {
 
     @Value("${mail.config.enabled}")
     private Boolean mailEnabled;
+
     private final String SUCCESSFUL_SIGN_UP_MSG = "User registered successfully";
     private final UserService userService;
     private final RoleService roleService;
@@ -42,6 +42,22 @@ public class SignUpServiceImpl implements SignUpService {
     private final ConfirmationKeyService confirmationKeyService;
     private final ChangeAccountMailFactory accountMailFactory;
     private final ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory;
+
+    public SignUpServiceImpl(UserService userService,
+                             RoleService roleService,
+                             ModelMapper mapper,
+                             ConfirmationKeyService confirmationKeyService,
+                             ChangeAccountMailFactory accountMailFactory,
+                             ChangeAccountUrlGeneratorFactory accountUrlGeneratorFactory) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.mapper = mapper;
+        this.confirmationKeyService = confirmationKeyService;
+        this.accountMailFactory = accountMailFactory;
+        this.accountUrlGeneratorFactory = accountUrlGeneratorFactory;
+    }
+
+
 
     @Override
     public SuccessfulSignUpResponse signUp(SignUpRequest request) throws NotFoundException, PasswordsMismatchException {

@@ -46,6 +46,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
 
+
+
     @Override
     public List<ReservationResponse> findAll() {
         log.debug("Finding all reservations...");
