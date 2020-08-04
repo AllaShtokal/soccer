@@ -7,10 +7,13 @@
 
     <changeSet author="dziewulskij" id="656810192060231">
         <createTable tableName="reservation">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="reservation_id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lobby_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="date_from" type="DATETIME">
@@ -23,13 +26,14 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="user_id"
+
+        <addForeignKeyConstraint baseColumnNames="lobby_id"
                                  baseTableName="reservation"
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
-                                 constraintName="reservation_user_constraint"
-                                 referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 constraintName="reservation_lobby_constraint"
+                                 referencedColumnNames="lobby_id"
+                                 referencedTableName="lobby"/>
 
     </changeSet>
 

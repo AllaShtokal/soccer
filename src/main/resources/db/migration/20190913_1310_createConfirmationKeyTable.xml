@@ -25,7 +25,7 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
                                  constraintName="confirmationKey_user_constraint"
-                                 referencedColumnNames="id"
+                                 referencedColumnNames="user_id"
                                  referencedTableName="user"/>
     </changeSet>
 </databaseChangeLog>

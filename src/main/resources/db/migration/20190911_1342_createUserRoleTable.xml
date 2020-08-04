@@ -14,6 +14,13 @@
                 <constraints primaryKey="true"/>
             </column>
         </createTable>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_role"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="user_role_reservation_constraint"
+                                 referencedColumnNames="user_id"
+                                 referencedTableName="user"/>
     </changeSet>
 
 </databaseChangeLog>

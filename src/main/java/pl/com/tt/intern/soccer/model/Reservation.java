@@ -7,7 +7,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -20,13 +23,18 @@ public class Reservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id")
+    @Column(name = "reservation_id")
     private Long id;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "lobby_id", nullable = false)
+    private Lobby lobby;
 
     @NotNull
     @Column(name = "date_from", nullable = false, unique = true)
@@ -39,5 +47,10 @@ public class Reservation implements Serializable {
     @NotNull
     @Column(name = "confirmed", nullable = false)
     private Boolean confirmed;
+//
+//    @ManyToMany(mappedBy = "reservation")
+//   private Set<User> users = new HashSet<>();
 
+    @OneToMany(mappedBy = "reservation")
+    Set<UserReservationEvent> userReservationEvents;
 }

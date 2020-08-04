@@ -27,7 +27,7 @@ public class User extends DateAudit implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "username",
@@ -68,10 +68,19 @@ public class User extends DateAudit implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ElementCollection(fetch = LAZY)
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = LAZY)
     private Set<ConfirmationKey> confirmationKeys;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Reservation> reservations;
+
+//    @ManyToMany(cascade = { CascadeType.ALL })
+//    @JoinTable(
+//            name = "user_reservation",
+//            joinColumns = { @JoinColumn(name = "user_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "reservation_id") }
+//    )
+//    private Set<Reservation> reservations = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    Set<UserReservationEvent> userReservationEvents;
+
 }
