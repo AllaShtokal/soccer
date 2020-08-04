@@ -1,19 +1,18 @@
 package pl.com.tt.intern.soccer.model;
 
-
 import lombok.Data;
-
 import javax.persistence.*;
-
+import java.io.Serializable;
 import java.util.Set;
-
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
 @Table(name = "lobby")
-public class Lobby {
+public class Lobby implements Serializable {
+
+    private static final long serialVersionUID = -6635819115881755601L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
