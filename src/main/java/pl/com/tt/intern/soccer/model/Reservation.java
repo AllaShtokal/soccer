@@ -47,9 +47,6 @@ public class Reservation implements Serializable {
     @NotNull
     @Column(name = "confirmed", nullable = false)
     private Boolean confirmed;
-//
-//    @ManyToMany(mappedBy = "reservation")
-//   private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "reservation")
     Set<UserReservationEvent> userReservationEvents;

@@ -5,6 +5,9 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Data
@@ -13,6 +16,8 @@ public class UserReservationEvent {
 
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "user_reservation_id")
     Long id;
 
     @ManyToOne
@@ -26,4 +31,7 @@ public class UserReservationEvent {
     @Column(name = "registered_at",
             nullable = false)
     LocalDateTime registeredAt;
+
+    @OneToMany(mappedBy="user_reservation")
+    private Set<Match> matchSet;
 }

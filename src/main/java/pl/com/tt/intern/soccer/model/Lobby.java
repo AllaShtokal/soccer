@@ -26,8 +26,12 @@ public class Lobby implements Serializable {
             length = 20)
     private String name;
 
+    @Column(name = "available",
+            nullable = false)
     private boolean available;
 
+    @Column(name = "limit",
+            nullable = false)
     private  Long limit;
 
     @OneToMany(mappedBy = "lobby", cascade = CascadeType.ALL, fetch = LAZY)
