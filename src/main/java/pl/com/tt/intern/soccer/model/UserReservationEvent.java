@@ -32,6 +32,5 @@ public class UserReservationEvent {
             nullable = false)
     LocalDateTime registeredAt;
 
-    @OneToMany(mappedBy="user_reservation")
-    private Set<Match> matchSet;
+
 }

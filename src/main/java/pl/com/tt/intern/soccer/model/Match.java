@@ -42,8 +42,8 @@ public class Match {
     private Set<Game> gameSet;
 
     @ManyToOne
-    @JoinColumn(name="user_reservation_id", nullable=false)
-    private UserReservationEvent userReservationEvent;
+    @JoinColumn(name="reservation_id", nullable=false)
+    private Reservation reservation;
 
 
 

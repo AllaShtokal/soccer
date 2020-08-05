@@ -50,4 +50,7 @@ public class Reservation implements Serializable {
 
     @OneToMany(mappedBy = "reservation")
     Set<UserReservationEvent> userReservationEvents;
+
+    @OneToMany(mappedBy="reservation")
+    private Set<Match> matchSet;
 }
