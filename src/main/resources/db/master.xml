@@ -16,6 +16,10 @@
     <include file="db/migration/20190913_1341_createReservationTable.xml"/>
     <include file="db/migration/20190923_1719_createConfirmationReservationTable.xml"/>
     <include file="db/migration/20200804_199_createUserReservationTable.xml"/>
+    <include file="db/migration/20200805_197_createMatchTable.xml"/>
+    <include file="db/migration/20200805_197_createGameTable.xml"/>
+    <include file="db/migration/20200805_197_createButtleTable.xml"/>
+
 
 
     <include file="db/insert/20190912_1301_insertAdminRole.xml"/>

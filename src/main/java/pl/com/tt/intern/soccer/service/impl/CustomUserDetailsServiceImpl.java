@@ -1,5 +1,6 @@
 package pl.com.tt.intern.soccer.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,6 +14,7 @@ import pl.com.tt.intern.soccer.service.CustomUserDetailsService;
 import javax.transaction.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsServiceImpl implements UserDetailsService, CustomUserDetailsService {
 
     @Autowired

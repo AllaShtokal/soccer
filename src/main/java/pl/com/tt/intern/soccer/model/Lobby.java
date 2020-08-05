@@ -28,7 +28,7 @@ public class Lobby implements Serializable {
 
     @Column(name = "available",
             nullable = false)
-    private boolean available;
+    private Boolean available;
 
     @Column(name = "limit",
             nullable = false)

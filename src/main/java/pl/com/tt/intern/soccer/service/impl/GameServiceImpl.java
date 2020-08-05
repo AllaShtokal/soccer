@@ -24,12 +24,10 @@ public class GameServiceImpl implements GameService {
 
     //works only if set of teams is paired
     @Override
-    public Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> tempTeamList) {
+    public Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teamList) {
 
-
-        //
         Set<Buttle> buttles = new HashSet<>();
-        for (Iterator<Team> it = tempTeamList.iterator(); it.hasNext(); ) {
+        for (Iterator<Team> it = teamList.iterator(); it.hasNext(); ) {
             Team team = it.next();
             Team team2 = it.next();
             buttles.add(new Buttle(team.getName(), team2.getName()));

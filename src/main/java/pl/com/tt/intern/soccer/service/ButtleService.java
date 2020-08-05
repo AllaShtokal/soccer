@@ -5,5 +5,5 @@ import pl.com.tt.intern.soccer.model.Team;
 
 public interface ButtleService {
 
-    Team getTeamWinner(Buttle buttle);
+    String getTeamWinner(Buttle buttle);
 }

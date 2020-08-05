@@ -72,15 +72,12 @@ public class User extends DateAudit implements Serializable {
     private Set<ConfirmationKey> confirmationKeys;
 
 
-//    @ManyToMany(cascade = { CascadeType.ALL })
-//    @JoinTable(
-//            name = "user_reservation",
-//            joinColumns = { @JoinColumn(name = "user_id") },
-//            inverseJoinColumns = { @JoinColumn(name = "reservation_id") }
-//    )
-//    private Set<Reservation> reservations = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     Set<UserReservationEvent> userReservationEvents;
+
+    @ManyToOne
+    @JoinColumn(name="team_id", nullable=false)
+    private Team team;
 
 }

@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 
@@ -38,6 +39,9 @@ public class Team {
     @ManyToOne
     @JoinColumn(name="match_id", nullable=false)
     private Match match;
+
+    @OneToMany(mappedBy = "team", fetch = LAZY)
+    private Set<User> users;
 
 
 }

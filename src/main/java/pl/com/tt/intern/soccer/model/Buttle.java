@@ -20,30 +20,30 @@ public class Buttle {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "match_id")
+    @Column(name = "buttle_id")
     private Long id;
 
     @Size(min = 3, max = 20)
     @NotBlank
-    @Column(name = "first_name",
+    @Column(name = "first_team_name",
             nullable = false,
             length = 20)
     private String teamName1;
 
     @Size(min = 3, max = 20)
     @NotBlank
-    @Column(name = "first_name",
+    @Column(name = "second_team_name",
             nullable = false,
             length = 20)
     private String teamName2;
 
-    @Column(name = "scoreTeam1",
+    @Column(name = "score_team1",
             nullable = false)
-    private int scoreTeam1 = 0;
+    private int scoreTeam1;
 
-    @Column(name = "scoreTeam2",
+    @Column(name = "score_team2",
             nullable = false)
-    private int scoreTeam2 = 0;
+    private int scoreTeam2;
 
     @ManyToOne
     @JoinColumn(name="game_id", nullable=false)
