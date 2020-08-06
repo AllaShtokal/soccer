@@ -3,8 +3,6 @@ package pl.com.tt.intern.soccer.model;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.util.Pair;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

@@ -1,18 +1,19 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.model.Buttle;
-import pl.com.tt.intern.soccer.model.Game;
 import pl.com.tt.intern.soccer.model.Team;
+import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
+import pl.com.tt.intern.soccer.payload.response.TeamResponse;
 import pl.com.tt.intern.soccer.repository.GameRepository;
 import pl.com.tt.intern.soccer.repository.TeamRepository;
 import pl.com.tt.intern.soccer.service.GameService;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +22,11 @@ public class GameServiceImpl implements GameService {
     private final ButtleServiceImpl buttleService;
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
+    private final ModelMapper mapper;
 
     //works only if set of teams is paired
     @Override
-    public Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teamList) {
+    public List<ButtleResponse> generateListOfButtlesFromListOfTeams(Set<Team> teamList) {
 
         Set<Buttle> buttles = new HashSet<>();
         for (Iterator<Team> it = teamList.iterator(); it.hasNext(); ) {
@@ -32,13 +34,12 @@ public class GameServiceImpl implements GameService {
             Team team2 = it.next();
             buttles.add(new Buttle(team.getName(), team2.getName()));
         }
-        return buttles;
+        return mapToButtleResponse(buttles);
     }
 
-    //return Set of winners
 
     @Override
-    public Set<Team> getSetOfWinnersByGameID(Long id) {
+    public List<TeamResponse> getSetOfWinnersByGameID(Long id) {
         Set<Team> winners = new HashSet<>();
         Set<Buttle> batlles = gameRepository.findById(id).get().getListOfButtles();
         for (Buttle battle : batlles) {
@@ -46,6 +47,28 @@ public class GameServiceImpl implements GameService {
             winners.add(teamRepository.findByName(nameOfTheTeam).get());
         }
 
-        return winners;
+        return mapToTeamResponse(winners);
+    }
+
+
+    //TODO: change next 4 methods to 2 <T>templates methods to shortcut the code
+    private List<ButtleResponse> mapToButtleResponse(Set<Buttle> buttles) {
+        return buttles.stream()
+                .map(this::mapToButtleResponse)
+                .collect(toList());
+    }
+
+    private ButtleResponse mapToButtleResponse(Buttle buttle) {
+        return mapper.map(buttle, ButtleResponse.class);
+    }
+
+    private List<TeamResponse> mapToTeamResponse(Set<Team> teams) {
+        return teams.stream()
+                .map(this::mapToTeamResponse)
+                .collect(toList());
+    }
+
+    private TeamResponse mapToTeamResponse(Team team) {
+        return mapper.map(team, TeamResponse.class);
     }
 }
