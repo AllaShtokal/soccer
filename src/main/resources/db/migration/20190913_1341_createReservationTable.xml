@@ -27,13 +27,7 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="lobby_id"
-                                 baseTableName="reservation"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="reservation_lobby_constraint"
-                                 referencedColumnNames="lobby_id"
-                                 referencedTableName="lobby"/>
+
 
     </changeSet>
 

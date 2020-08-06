@@ -24,13 +24,7 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="reservation_id"
-                                 baseTableName="match"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="match_constraint"
-                                 referencedColumnNames="reservation_id"
-                                 referencedTableName="reservation"/>
+
 
     </changeSet>
 

@@ -21,20 +21,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="user_reservation"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="user_id_reservation_constraint"
-                                 referencedColumnNames="user_id"
-                                 referencedTableName="user"/>
-        <addForeignKeyConstraint baseColumnNames="reservation_id"
-                                 baseTableName="user_reservation"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="user_reservation_constraint"
-                                 referencedColumnNames="reservation_id"
-                                 referencedTableName="reservation"/>
+
 
     </changeSet>
 

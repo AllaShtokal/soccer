@@ -18,12 +18,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="match_id"
-                                 baseTableName="game"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="game_constraint"
-                                 referencedColumnNames="match_id"
-                                 referencedTableName="match"/>
+
     </changeSet>
 </databaseChangeLog>

@@ -8,9 +8,6 @@
     <include file="db/migration/20190911_1340_createRoleTable.xml"/>
     <include file="db/migration/20190911_1341_createUserInfoTable.xml"/>
 
-
-
-
     <include file="db/migration/20200804_199_createLobbyTable.xml"/>
     <include file="db/migration/20190913_1341_createReservationTable.xml"/>
     <include file="db/migration/20190923_1719_createConfirmationReservationTable.xml"/>
@@ -24,8 +21,7 @@
     <include file="db/migration/20190911_1344_createIndexToUserRoleTable.xml"/>
     <include file="db/migration/20190911_1345_createIndexToUserInfoTable.xml"/>
     <include file="db/migration/20190913_1310_createConfirmationKeyTable.xml"/>
-
-
+    <include file="db/migration/20200806_197_foreignKeys.xml"/>
 
 
     <include file="db/insert/20190912_1301_insertAdminRole.xml"/>

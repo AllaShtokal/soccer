@@ -38,13 +38,7 @@
 
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="team_id"
-                                 baseTableName="user"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="team_user_constraint"
-                                 referencedColumnNames="team_id"
-                                 referencedTableName="team"/>
+
 
     </changeSet>
 

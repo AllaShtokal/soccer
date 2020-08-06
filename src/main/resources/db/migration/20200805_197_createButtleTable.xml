@@ -28,12 +28,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="game_id"
-                                 baseTableName="buttle"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="buttle_constraint"
-                                 referencedColumnNames="game_id"
-                                 referencedTableName="game"/>
+
     </changeSet>
 </databaseChangeLog>

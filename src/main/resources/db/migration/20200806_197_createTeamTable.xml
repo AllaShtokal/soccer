@@ -21,12 +21,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="match_id"
-                                 baseTableName="team"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="team_constraint"
-                                 referencedColumnNames="match_id"
-                                 referencedTableName="match"/>
+
     </changeSet>
 </databaseChangeLog>
