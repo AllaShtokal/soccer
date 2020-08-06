@@ -32,19 +32,32 @@ public class Match {
     private LocalDateTime dateFrom;
 
     @NotNull
-    @Column(name = "date_to", nullable = false)
+    @Column(name = "date_to", nullable = true)
     private LocalDateTime dateTo;
 
-    @OneToMany(mappedBy="match")
-    private Set<Team> fullTeamList;
+    @OneToMany(mappedBy="match", fetch = FetchType.EAGER)
+    private Set<Team> teams;
 
-    @OneToMany(mappedBy="match")
-    private Set<Game> gameSet;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive ;
+
+    @OneToMany(mappedBy="match", fetch = FetchType.EAGER)
+    private Set<Game> games;
 
     @ManyToOne
     @JoinColumn(name="reservation_id", nullable=false)
     private Reservation reservation;
 
+    public void addGame(Game game) {
+        this.games.add(game);
+        game.setMatch(this);
+
+    }
+    public void addTeam(Team team) {
+        this.teams.add(team);
+        team.setMatch(this);
+
+    }
 
 
 

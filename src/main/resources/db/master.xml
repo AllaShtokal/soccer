@@ -7,18 +7,24 @@
 
     <include file="db/migration/20190911_1340_createRoleTable.xml"/>
     <include file="db/migration/20190911_1341_createUserInfoTable.xml"/>
+
+
+
+
+    <include file="db/migration/20200804_199_createLobbyTable.xml"/>
+    <include file="db/migration/20190913_1341_createReservationTable.xml"/>
+    <include file="db/migration/20190923_1719_createConfirmationReservationTable.xml"/>
+    <include file="db/migration/20200805_197_createMatchTable.xml"/>
+    <include file="db/migration/20200805_197_createGameTable.xml"/>
+    <include file="db/migration/20200805_197_createButtleTable.xml"/>
+    <include file="db/migration/20200806_197_createTeamTable.xml"/>
     <include file="db/migration/20190911_1343_createUserTable.xml"/>
+    <include file="db/migration/20200804_199_createUserReservationTable.xml"/>
     <include file="db/migration/20190911_1342_createUserRoleTable.xml"/>
     <include file="db/migration/20190911_1344_createIndexToUserRoleTable.xml"/>
     <include file="db/migration/20190911_1345_createIndexToUserInfoTable.xml"/>
     <include file="db/migration/20190913_1310_createConfirmationKeyTable.xml"/>
-    <include file="db/migration/20200804_199_createLobbyTable.xml"/>
-    <include file="db/migration/20190913_1341_createReservationTable.xml"/>
-    <include file="db/migration/20190923_1719_createConfirmationReservationTable.xml"/>
-    <include file="db/migration/20200804_199_createUserReservationTable.xml"/>
-    <include file="db/migration/20200805_197_createMatchTable.xml"/>
-    <include file="db/migration/20200805_197_createGameTable.xml"/>
-    <include file="db/migration/20200805_197_createButtleTable.xml"/>
+
 
 
 

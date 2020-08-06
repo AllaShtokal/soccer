@@ -23,7 +23,7 @@ public class UserInfo extends DateAudit implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id")
+    @Column(name = "user_info_id")
     private Long id;
 
     @Size(min = 3, max = 20)

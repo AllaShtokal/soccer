@@ -68,16 +68,16 @@ public class User extends DateAudit implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<ConfirmationKey> confirmationKeys;
 
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     Set<UserReservationEvent> userReservationEvents;
 
     @ManyToOne
-    @JoinColumn(name="team_id", nullable=false)
+    @JoinColumn(name="team_id")
     private Team team;
 
 }

@@ -31,17 +31,20 @@
             <column name="username" type="VARCHAR(20)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="user_info_id" type="BIGINT">
-                <constraints nullable="false"/>
+
+            <column name="team_id" type="BIGINT">
+                <constraints nullable="true"/>
             </column>
+
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="user_info_id"
+
+        <addForeignKeyConstraint baseColumnNames="team_id"
                                  baseTableName="user"
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
-                                 constraintName="user_info_reservation_constraint"
-                                 referencedColumnNames="id"
-                                 referencedTableName="user_info"/>
+                                 constraintName="team_user_constraint"
+                                 referencedColumnNames="team_id"
+                                 referencedTableName="team"/>
 
     </changeSet>
 

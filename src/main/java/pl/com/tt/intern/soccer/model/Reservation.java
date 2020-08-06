@@ -48,9 +48,23 @@ public class Reservation implements Serializable {
     @Column(name = "confirmed", nullable = false)
     private Boolean confirmed;
 
-    @OneToMany(mappedBy = "reservation")
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     Set<UserReservationEvent> userReservationEvents;
 
-    @OneToMany(mappedBy="reservation")
-    private Set<Match> matchSet;
+    @OneToMany(mappedBy="reservation", cascade = CascadeType.ALL)
+    private Set<Match> matches;
+
+    public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
+        this.userReservationEvents.add(userReservationEvent);
+        userReservationEvent.setReservation(this);
+
+    }
+
+    public void addMatch(Match match) {
+        this.matches.add(match);
+        match.setReservation(this);
+
+    }
+
+
 }

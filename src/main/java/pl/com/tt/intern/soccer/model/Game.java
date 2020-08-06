@@ -21,12 +21,21 @@ public class Game {
        @Column(name = "game_id")
        private Long id;
 
+       @Column(name = "is_active", nullable = false)
+       private Boolean isActive;
+
        @ManyToOne
        @JoinColumn(name="match_id", nullable=false)
        private Match match;
 
        @OneToMany(mappedBy="game")
-       private Set<Buttle>  listOfButtles;
+       private Set<Buttle>  buttles;
+
+       public void addButtle(Buttle buttle) {
+              this.buttles.add(buttle);
+              buttle.setGame(this);
+
+       }
 
 
 

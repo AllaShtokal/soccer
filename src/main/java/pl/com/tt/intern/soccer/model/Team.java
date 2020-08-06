@@ -40,8 +40,14 @@ public class Team {
     @JoinColumn(name="match_id", nullable=false)
     private Match match;
 
-    @OneToMany(mappedBy = "team", fetch = LAZY)
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
     private Set<User> users;
+
+    public void addUser(User user) {
+        this.users.add(user);
+        user.setTeam(this);
+
+    }
 
 
 }

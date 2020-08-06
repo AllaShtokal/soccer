@@ -10,6 +10,6 @@ import java.util.Set;
 
 public interface GameService {
 
-    List<TeamResponse> getSetOfWinnersByGameID(Long id);
-    List<ButtleResponse> generateListOfButtlesFromListOfTeams(Set<Team> teamList);
+
+    Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teamList);
 }
