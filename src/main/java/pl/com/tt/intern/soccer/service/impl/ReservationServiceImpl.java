@@ -1,5 +1,6 @@
 package pl.com.tt.intern.soccer.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,7 @@ import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
@@ -80,11 +82,13 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setConfirmed(false);
         reservation.setId(null);
         reservation.setLobby(lobbyService.getByName("MY_FIRST_LOBBY"));
-        reservation.setUser(userRepository.findById(userId).get());
+        User user = userService.findById(userId);
+        reservation.setUser(user);
         Reservation savedEntity = reservationRepository.save(reservation);
         confirmationService.createAndSaveConfirmationReservation(savedEntity);
         return mapper.map(savedEntity, ReservationPersistedResponse.class);
     }
+
 
     @Override
     @Transactional

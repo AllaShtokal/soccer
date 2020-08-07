@@ -40,7 +40,7 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
                                  constraintName="user_id_reservation_constraint"
-                                 referencedColumnNames="user_id"
+                                 referencedColumnNames="id"
                                  referencedTableName="user"/>
         <addForeignKeyConstraint baseColumnNames="reservation_id"
                                  baseTableName="user_reservation"
@@ -68,7 +68,7 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
                                  constraintName="reservation_user_constraint"
-                                 referencedColumnNames="user_id"
+                                 referencedColumnNames="id"
                                  referencedTableName="user"/>
         <addForeignKeyConstraint baseColumnNames="team_id"
                                  baseTableName="user"
@@ -82,14 +82,14 @@
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
                                  constraintName="user_role_reservation_constraint"
-                                 referencedColumnNames="user_id"
+                                 referencedColumnNames="id"
                                  referencedTableName="user"/>
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="confirmation_key"
                                  onUpdate="CASCADE"
                                  onDelete="CASCADE"
                                  constraintName="confirmation_key_constraint"
-                                 referencedColumnNames="user_id"
+                                 referencedColumnNames="id"
                                  referencedTableName="user"/>
 
 

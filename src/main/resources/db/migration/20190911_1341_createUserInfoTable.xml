@@ -7,7 +7,7 @@
 
     <changeSet author="dziewulskij" id="1568201920602-2">
         <createTable tableName="user_info">
-            <column autoIncrement="true" name="user_info_id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="created_at" type="datetime">
