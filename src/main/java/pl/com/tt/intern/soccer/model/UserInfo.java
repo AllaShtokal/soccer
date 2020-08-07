@@ -48,8 +48,10 @@ public class UserInfo extends DateAudit implements Serializable {
             length = 30)
     private String skype;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public UserInfo(String firstName, String lastName) {

@@ -18,6 +18,7 @@ import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
+import pl.com.tt.intern.soccer.service.LobbyService;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserService;
 
@@ -43,6 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserService userService;
+    private final LobbyService lobbyService;
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
 
@@ -75,6 +77,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = mapper.map(reservationPersistRequest, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setId(null);
+        reservation.setLobby(lobbyService.getByName("MY_FIRST_LOBBY"));
         reservation.setUser(userService.findById(userId));
         Reservation savedEntity = reservationRepository.save(reservation);
         confirmationService.createAndSaveConfirmationReservation(savedEntity);

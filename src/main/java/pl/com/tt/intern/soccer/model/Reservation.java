@@ -48,10 +48,10 @@ public class Reservation implements Serializable {
     @Column(name = "confirmed", nullable = false)
     private Boolean confirmed;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<UserReservationEvent> userReservationEvents;
 
-    @OneToMany(mappedBy="reservation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Match> matches;
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {

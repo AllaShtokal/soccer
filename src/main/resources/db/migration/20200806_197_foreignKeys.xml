@@ -84,6 +84,13 @@
                                  constraintName="user_role_reservation_constraint"
                                  referencedColumnNames="user_id"
                                  referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="confirmation_key"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="confirmation_key_constraint"
+                                 referencedColumnNames="user_id"
+                                 referencedTableName="user"/>
 
 
 
