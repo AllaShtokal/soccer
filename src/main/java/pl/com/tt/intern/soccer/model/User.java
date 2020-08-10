@@ -59,7 +59,7 @@ public class User extends DateAudit implements Serializable {
     private boolean enabled;
 
 
-     @OneToOne(mappedBy = "user", cascade = PERSIST)
+     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserInfo userInfo;
 
     @ManyToMany(fetch = EAGER)
@@ -71,8 +71,6 @@ public class User extends DateAudit implements Serializable {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<ConfirmationKey> confirmationKeys;
-
-
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     Set<UserReservationEvent> userReservationEvents;

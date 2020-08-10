@@ -18,7 +18,7 @@ public class Buttle {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "buttle_id")
+    @Column(name = "id")
     private Long id;
 
     @Size(min = 3, max = 20)

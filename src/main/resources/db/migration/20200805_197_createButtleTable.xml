@@ -8,7 +8,7 @@
     <changeSet author="shtokala" id="656820192060454">
         <createTable tableName="buttle">
             <column autoIncrement="true"
-                    name="buttle_id" type="BIGINT">
+                    name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="first_team_name" type="VARCHAR(20)">

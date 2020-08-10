@@ -6,11 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.ReservationClashException;
-import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
+import pl.com.tt.intern.soccer.model.Lobby;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
@@ -81,7 +79,14 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = mapper.map(reservationPersistRequest, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setId(null);
-        reservation.setLobby(lobbyService.getByName("MY_FIRST_LOBBY"));
+
+        Lobby my_first_lobby;
+        try {
+            my_first_lobby = lobbyService.getByName("MY_FIRST_LOBBY");
+        } catch (NullPointerException e) {
+            throw new NotFoundLobbyByIdException("MY_FIRST_LOBBY");
+        }
+        reservation.setLobby(my_first_lobby);
         User user = userService.findById(userId);
         reservation.setUser(user);
         Reservation savedEntity = reservationRepository.save(reservation);

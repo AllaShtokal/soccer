@@ -32,7 +32,7 @@ public class ConfirmationKey implements Serializable {
     private User user;
 
     @NotNull
-    @Column(name = "uuid", unique = true)
+    @Column(name = "uuid", unique = true, length = 70)
     private String uuid;
 
     @NotNull

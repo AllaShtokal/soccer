@@ -30,7 +30,7 @@ public class ConfirmationReservation {
     private Reservation reservation;
 
     @NotNull
-    @Column(name = "uuid", unique = true)
+    @Column(name = "uuid", unique = true, length = 70 ,nullable = false)
     private String uuid;
 
     @NotNull

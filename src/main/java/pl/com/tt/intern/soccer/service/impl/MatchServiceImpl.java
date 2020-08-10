@@ -3,7 +3,6 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.NotFoundReservationException;
 import pl.com.tt.intern.soccer.model.*;
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
@@ -28,8 +27,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public MatchResponse create(Long reservation_id)  {
-       Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow( NotFoundReservationException::new);
+    public MatchResponse create(Long reservation_id) {
+        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundReservationException::new);
         Match m = creteMatch(reservation_id);
         reservation.addMatch(m);
         Reservation reservationAfter = reservationRepository.save(reservation);
@@ -40,15 +39,19 @@ public class MatchServiceImpl implements MatchService {
         //get buttles from acctive game
         Set<Match> matches = reservationAfter.getMatches();
         Match activeMatch = new Match();
-        for(Match match: matches)
-        { if(match.getIsActive())
-           activeMatch = match; break;}
+        for (Match match : matches) {
+            if (match.getIsActive())
+                activeMatch = match;
+            break;
+        }
 
         Set<Game> games = activeMatch.getGames();
         Game activeGame = new Game();
-        for(Game game: games)
-        { if(game.getIsActive())
-            activeGame = game; break;}
+        for (Game game : games) {
+            if (game.getIsActive())
+                activeGame = game;
+            break;
+        }
 
         matchResponse.setActiveButtles(mapToResponse(activeGame.getButtles()));
 
@@ -63,13 +66,13 @@ public class MatchServiceImpl implements MatchService {
 
         //setTeams
         Set<Team> teams = generateTeams(reservation_id);
-        for(Team team: teams)
-        match.addTeam(team);
+        for (Team team : teams) {
+            match.addTeam(team);
+        }
 
         //setGames(add one new)
         Game game = createGame(teams);
         match.addGame(game);
-
         return match;
     }
 
@@ -104,11 +107,11 @@ public class MatchServiceImpl implements MatchService {
     }
 
 
-private List<ButtleResponse> mapToResponse(Set<Buttle> teams) {
-    return teams.stream()
-            .map(this::mapToResponse)
-            .collect(toList());
-}
+    private List<ButtleResponse> mapToResponse(Set<Buttle> teams) {
+        return teams.stream()
+                .map(this::mapToResponse)
+                .collect(toList());
+    }
 
     private ButtleResponse mapToResponse(Buttle buttle) {
         return modelMapper.map(buttle, ButtleResponse.class);

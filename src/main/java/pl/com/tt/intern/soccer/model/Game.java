@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -14,18 +15,18 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "game")
 @Setter
 @Getter
-public class Game {
+public class Game implements Serializable {
 
        @Id
        @GeneratedValue(strategy = IDENTITY)
-       @Column(name = "game_id")
+       @Column(name = "id")
        private Long id;
 
        @Column(name = "is_active", nullable = false)
        private Boolean isActive;
 
        @ManyToOne
-       @JoinColumn(name="match_id", nullable=false)
+       @JoinColumn(name="matchh_id", nullable=false)
        private Match match;
 
        @OneToMany(mappedBy="game")

@@ -9,22 +9,22 @@
         <insert tableName="lobby">
             <column name="lobby_name" value="MY_FIRST_LOBBY"/>
             <column name="available" valueBoolean="true"/>
-            <column name="limit" value="10"/>
+            <column name="limit_members" value="10"/>
         </insert>
         <insert tableName="lobby">
             <column name="lobby_name" value="MY_SECOND_LOBBY"/>
             <column name="available" valueBoolean="true"/>
-            <column name="limit" value="10"/>
+            <column name="limit_members" value="10"/>
         </insert>
         <insert tableName="lobby">
             <column name="lobby_name" value="MY_THIRD_LOBBY"/>
             <column name="available" valueBoolean="true"/>
-            <column name="limit" value="10"/>
+            <column name="limit_members" value="10"/>
         </insert>
         <insert tableName="lobby">
             <column name="lobby_name" value="***LOBBY***"/>
             <column name="available" valueBoolean="true"/>
-            <column name="limit" value="10"/>
+            <column name="limit_members" value="10"/>
         </insert>
     </changeSet>
 

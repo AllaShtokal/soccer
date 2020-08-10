@@ -17,7 +17,7 @@ public class UserReservationEvent {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "user_reservation_id")
+    @Column(name = "id")
     Long id;
 
     @ManyToOne

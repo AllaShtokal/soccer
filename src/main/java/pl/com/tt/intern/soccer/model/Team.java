@@ -7,10 +7,9 @@ import lombok.Setter;
 import javax.persistence.*;
 
 
-import java.util.HashSet;
+import java.io.Serializable;
 import java.util.Set;
 
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 
@@ -19,12 +18,12 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "team")
 @Getter
 @Setter
-public class Team {
+public class Team implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "team_id")
-    private  Long team_id;
+    @Column(name = "id")
+    private  Long id;
 
     @Column(name = "team_name",
             unique = true,
@@ -37,8 +36,8 @@ public class Team {
     private Boolean active;
 
     @ManyToOne
-    @JoinColumn(name="match_id", nullable=false)
-    private Match match;
+    @JoinColumn(name="matchh_id", nullable=false)
+    private Match matchm;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
     private Set<User> users;

@@ -7,7 +7,7 @@
 
     <changeSet author="dziewulskij" id="656810192060231">
         <createTable tableName="reservation">
-            <column autoIncrement="true" name="reservation_id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="user_id" type="BIGINT">

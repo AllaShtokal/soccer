@@ -16,9 +16,8 @@ public class Lobby implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "lobby_id")
+    @Column(name = "id")
     private Long id;
-
 
     @Column(name = "lobby_name",
             unique = true,
@@ -30,7 +29,7 @@ public class Lobby implements Serializable {
             nullable = false)
     private Boolean available;
 
-    @Column(name = "limit",
+    @Column(name = "limit_members",
             nullable = false)
     private  Long limit;
 

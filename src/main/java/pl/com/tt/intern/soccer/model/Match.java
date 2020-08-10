@@ -3,45 +3,44 @@ package pl.com.tt.intern.soccer.model;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.modelmapper.internal.Pair;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "match")
+@Table(name = "matchh")
 @Getter
 @Setter
-public class Match {
+public class Match implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "match_id")
+    @Column(name = "id")
     private Long id;
 
     @NotNull
-    @Column(name = "date_from", nullable = false, unique = true)
+    @Column(name = "date_from", nullable = false)
     private LocalDateTime dateFrom;
 
     @NotNull
     @Column(name = "date_to", nullable = true)
     private LocalDateTime dateTo;
 
-    @OneToMany(mappedBy="match", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="matchm", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Team> teams;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive ;
 
-    @OneToMany(mappedBy="match", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="match", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Game> games;
 
     @ManyToOne
@@ -55,7 +54,7 @@ public class Match {
     }
     public void addTeam(Team team) {
         this.teams.add(team);
-        team.setMatch(this);
+        team.setMatchm(this);
 
     }
 

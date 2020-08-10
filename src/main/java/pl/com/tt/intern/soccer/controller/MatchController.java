@@ -18,12 +18,13 @@ import static org.springframework.http.ResponseEntity.ok;
 @Slf4j
 public class MatchController {
 
-    MatchService matchService;
+    private final MatchService matchService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("{id}")
     public ResponseEntity<MatchResponse> createNewMatchByReservationId(@PathVariable("id") Long reservation_id) {
 
-        return ok(matchService.create(reservation_id));
+        MatchResponse matchResponse = matchService.create(reservation_id);
+        return ok(matchResponse);
     }
 }

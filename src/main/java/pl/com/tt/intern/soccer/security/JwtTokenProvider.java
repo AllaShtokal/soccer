@@ -42,7 +42,8 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return Long.parseLong(claims.getSubject());
+       // return Long.parseLong(claims.getSubject());
+return Long.parseLong(claims.get("user_id",String.class));
     }
 
     public boolean validateToken(String authToken) {
