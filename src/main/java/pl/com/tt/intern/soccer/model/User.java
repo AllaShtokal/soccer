@@ -75,6 +75,12 @@ public class User extends DateAudit implements Serializable {
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     Set<UserReservationEvent> userReservationEvents;
 
+    public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
+        this.userReservationEvents.add(userReservationEvent);
+        userReservationEvent.setUser(this);
+
+    }
+
     @ManyToOne
     @JoinColumn(name="team_id")
     private Team team;

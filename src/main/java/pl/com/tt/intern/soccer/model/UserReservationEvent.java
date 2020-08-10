@@ -20,17 +20,19 @@ public class UserReservationEvent {
     @Column(name = "id")
     Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
     Reservation reservation;
 
     @Column(name = "registered_at",
             nullable = false)
     LocalDateTime registeredAt;
+
+
 
 
 }

@@ -8,7 +8,7 @@
     <changeSet author="shtokala" id="199131313-3">
 
         <createTable tableName="user_reservation">
-            <column name="id" type="BIGINT">
+            <column name="id" autoIncrement="true" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="registered_at" type="DATETIME">

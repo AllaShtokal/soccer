@@ -23,23 +23,23 @@ public class ConfirmationReservationConfiguration {
     private final ConfirmationReservationService service;
     private final Timer timer;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void initializeListToConfirmationMail(){
-        List<ConfirmationReservation> confirmationReservationList = service.findAllByEmailSend(false).stream()
-                .filter(cr -> cr.getReservation().getDateFrom().isAfter(now()))
-                .collect(toList());
-
-        List<LocalDateTime> dateTimeToMailSentList = confirmationReservationList.stream()
-                .map(ConfirmationReservation::getTimeToMailSend)
-                .collect(toList());
-
-        dateTimeToMailSentList.forEach(time -> {
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    System.out.println(time);
-                }
-            }, DateUtil.toDate(time));
-        });
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void initializeListToConfirmationMail(){
+//        List<ConfirmationReservation> confirmationReservationList = service.findAllByEmailSend(false).stream()
+//                .filter(cr -> cr.getReservation().getDateFrom().isAfter(now()))
+//                .collect(toList());
+//
+//        List<LocalDateTime> dateTimeToMailSentList = confirmationReservationList.stream()
+//                .map(ConfirmationReservation::getTimeToMailSend)
+//                .collect(toList());
+//
+//        dateTimeToMailSentList.forEach(time -> {
+//            timer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    System.out.println(time);
+//                }
+//            }, DateUtil.toDate(time));
+//        });
+//    }
 }

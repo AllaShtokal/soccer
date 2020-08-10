@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.payload.response.MatchResponse;
 import pl.com.tt.intern.soccer.service.MatchService;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController

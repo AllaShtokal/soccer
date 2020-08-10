@@ -55,8 +55,8 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     public void createAndSaveConfirmationReservation(Reservation reservation) {
         ConfirmationReservation confirmationReservation = generateConfirmationReservation(reservation);
         repository.save(confirmationReservation);
-        addTaskToTimerTask(confirmationReservation);
-        addRemoveReservationTaskToTimerTask(confirmationReservation);
+       // addTaskToTimerTask(confirmationReservation);
+        //addRemoveReservationTaskToTimerTask(confirmationReservation);
     }
 
     private ConfirmationReservation generateConfirmationReservation(Reservation reservation) {
