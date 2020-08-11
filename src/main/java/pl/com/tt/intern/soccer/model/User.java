@@ -1,7 +1,6 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
@@ -17,7 +16,9 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "user")
 @EqualsAndHashCode(callSuper = true)
@@ -59,7 +60,7 @@ public class User extends DateAudit implements Serializable {
     private boolean enabled;
 
 
-     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = LAZY)
     private UserInfo userInfo;
 
     @ManyToMany(fetch = EAGER)

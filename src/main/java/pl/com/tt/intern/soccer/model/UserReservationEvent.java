@@ -2,6 +2,9 @@ package pl.com.tt.intern.soccer.model;
 
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,10 +13,11 @@ import java.util.Set;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Table(name = "user_reservation")
 public class UserReservationEvent {
-
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -28,8 +32,7 @@ public class UserReservationEvent {
     @JoinColumn(name = "reservation_id")
     Reservation reservation;
 
-    @Column(name = "registered_at",
-            nullable = false)
+    @Column(name = "registered_at", nullable = false)
     LocalDateTime registeredAt;
 
 

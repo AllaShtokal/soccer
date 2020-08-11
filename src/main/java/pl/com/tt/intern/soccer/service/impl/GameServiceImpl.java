@@ -32,9 +32,11 @@ public class GameServiceImpl implements GameService {
 
         Set<Buttle> buttles = new HashSet<>();
         for (Iterator<Team> it = activeTeams.iterator(); it.hasNext(); ) {
-            Team team = it.next();
+            Buttle buttle = new Buttle();
+            buttle.setTeamName1(it.next().getName());
             Team team2 = it.next();
-            buttles.add(new Buttle(team.getName(), team2.getName()));
+            buttle.setTeamName2(team2.getName());
+            buttles.add(buttle);
         }
         return buttles;
 

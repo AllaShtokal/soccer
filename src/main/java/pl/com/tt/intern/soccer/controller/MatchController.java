@@ -5,9 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pl.com.tt.intern.soccer.annotation.CurrentUser;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.ReservationClashException;
+import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.MatchResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.MatchService;
 
+import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -26,4 +36,6 @@ public class MatchController {
         MatchResponse matchResponse = matchService.create(reservation_id);
         return ok(matchResponse);
     }
+
+
 }

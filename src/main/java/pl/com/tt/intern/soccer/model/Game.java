@@ -2,19 +2,22 @@ package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "game")
-@Setter
-@Getter
+
 public class Game implements Serializable {
 
        @Id
@@ -27,10 +30,10 @@ public class Game implements Serializable {
 
        @ManyToOne
        @JoinColumn(name="matchh_id", nullable=false)
-       private Match match;
+       private Match matchh;
 
-       @OneToMany(mappedBy="game")
-       private Set<Buttle>  buttles;
+       @OneToMany(mappedBy="game", cascade = CascadeType.ALL)
+       private Set<Buttle>  buttles = new HashSet<>();
 
        public void addButtle(Buttle buttle) {
               this.buttles.add(buttle);

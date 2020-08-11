@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,16 +10,17 @@ import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
-@Entity
-@Table(name = "matchh")
 @Getter
 @Setter
+@RequiredArgsConstructor
+@Entity
+@Table(name = "matchh")
 public class Match implements Serializable {
 
     @Id
@@ -30,18 +32,17 @@ public class Match implements Serializable {
     @Column(name = "date_from", nullable = false)
     private LocalDateTime dateFrom;
 
-    @NotNull
     @Column(name = "date_to", nullable = true)
     private LocalDateTime dateTo;
 
     @OneToMany(mappedBy="matchm", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Team> teams;
+    private Set<Team> teams = new HashSet<>();
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive ;
 
-    @OneToMany(mappedBy="match", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Game> games;
+    @OneToMany(mappedBy="matchh", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Game> games = new HashSet<>();;
 
     @ManyToOne
     @JoinColumn(name="reservation_id", nullable=false)
@@ -49,7 +50,7 @@ public class Match implements Serializable {
 
     public void addGame(Game game) {
         this.games.add(game);
-        game.setMatch(this);
+        game.setMatchh(this);
 
     }
     public void addTeam(Team team) {

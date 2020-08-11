@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundReservationException;
+import pl.com.tt.intern.soccer.exception.service.RandomString;
 import pl.com.tt.intern.soccer.model.*;
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponse;
@@ -23,6 +24,7 @@ public class MatchServiceImpl implements MatchService {
     private final GameServiceImpl gameService;
     private final ModelMapper modelMapper;
     private final ReservationRepository reservationRepository;
+    private final RandomString randomString;
 
 
     @Transactional
@@ -34,7 +36,6 @@ public class MatchServiceImpl implements MatchService {
         Reservation reservationAfter = reservationRepository.save(reservation);
 
         MatchResponse matchResponse = new MatchResponse();
-        matchResponse.setMatchId(m.getId());
 
         //get buttles from acctive game
         Set<Match> matches = reservationAfter.getMatches();
@@ -45,6 +46,7 @@ public class MatchServiceImpl implements MatchService {
             break;
         }
 
+
         Set<Game> games = activeMatch.getGames();
         Game activeGame = new Game();
         for (Game game : games) {
@@ -52,10 +54,10 @@ public class MatchServiceImpl implements MatchService {
                 activeGame = game;
             break;
         }
-
+        matchResponse.setMatchId(activeMatch.getId());
         matchResponse.setActiveButtles(mapToResponse(activeGame.getButtles()));
 
-        return null;
+        return matchResponse;
     }
 
 
@@ -68,6 +70,7 @@ public class MatchServiceImpl implements MatchService {
         Set<Team> teams = generateTeams(reservation_id);
         for (Team team : teams) {
             match.addTeam(team);
+
         }
 
         //setGames(add one new)
@@ -79,7 +82,10 @@ public class MatchServiceImpl implements MatchService {
     private Game createGame(Set<Team> teams) {
         Game game = new Game();
         game.setIsActive(true);
-        game.setButtles(gameService.generateListOfButtlesFromListOfTeams(teams));
+        Set<Buttle> buttles = gameService.generateListOfButtlesFromListOfTeams(teams);
+        for(Buttle b:buttles){
+          game.addButtle(b);
+        }
         return game;
     }
 
@@ -93,12 +99,13 @@ public class MatchServiceImpl implements MatchService {
 
         Set<Team> teams = new HashSet<>();
         for (User user : users) {
-            int i = 0;
             Team t = new Team();
             t.setActive(true);
-            t.setName("Team Name " + i);
-            i++;
-            t.setUsers((Set<User>) user);
+            t.setName("Team:" + randomString.getAlphaNumericString(6));
+
+            Set<User> tmpSet = new HashSet<>();
+            tmpSet.add(user);
+            t.setUsers(tmpSet);
 
             teams.add(t);
         }

@@ -58,6 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
         return mapToResponse(reservationRepository.findAll());
     }
 
+    @Transactional
     @Override
     public ReservationResponse findById(Long id) throws NotFoundException {
         log.debug("Finding reservation by id: {}", id);

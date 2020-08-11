@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.model;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,11 +14,11 @@ import java.util.Set;
 import static javax.persistence.GenerationType.IDENTITY;
 
 
-@Data
-@Entity
-@Table(name = "team")
 @Getter
 @Setter
+@RequiredArgsConstructor
+@Entity
+@Table(name = "team")
 public class Team implements Serializable {
 
     @Id
