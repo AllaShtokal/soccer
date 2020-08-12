@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-public class MatchResponse {
+public class MatchResponseRequest {
     private Long matchId;
     private List<ButtleResponse> activeButtles;
 

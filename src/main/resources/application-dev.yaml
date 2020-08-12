@@ -7,7 +7,7 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    hibernate:
+    hibernate:K
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
   h2:
     console:
@@ -15,7 +15,7 @@ spring:
   liquibase:
     change-log: classpath:db/master.xml
     default-schema: soccer
-    enabled: true
+    enabled: false
 frontend:
   server:
     address: localhost

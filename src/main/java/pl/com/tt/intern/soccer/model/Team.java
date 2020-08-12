@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -41,7 +42,7 @@ public class Team implements Serializable {
     private Match matchm;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     public void addUser(User user) {
         this.users.add(user);
