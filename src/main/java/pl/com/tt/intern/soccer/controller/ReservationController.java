@@ -15,6 +15,7 @@ import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
@@ -44,6 +45,11 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponse>> findByPeriod(@RequestParam ReservationPeriod period) {
         log.debug("GET /reservations?period={}", period);
         return ok(reservationService.findByPeriod(period));
+    }
+
+    @PostMapping("/period/shortinfo")
+    public ResponseEntity<List<ReservationShortInfoResponse>> findShortInfoByPeriod(@RequestBody ReservationDateRequest period) {
+        return ok(reservationService.findShortByPeriod(period));
     }
 
     @GetMapping(params = "day")

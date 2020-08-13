@@ -7,7 +7,7 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    hibernate:K
+    hibernate:
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
   h2:
     console:

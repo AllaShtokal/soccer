@@ -43,8 +43,9 @@ public class MatchServiceImpl implements MatchService {
             setGamesToMatch(setTeamsToMatch(reservation_id, m), m);
             reservation.addMatch(m);
             reservationRepository.save(reservation);
-        } else{
-            //getMatch and add create new game with new teams(buttles)
+        } else
+            {
+
             Match activeMatch = getActiveMatch(reservation_id);
             if(getActiveGameFromMatch(activeMatch)==null)
             {setGamesToMatch(setTeamsToMatch(reservation_id, activeMatch), activeMatch);

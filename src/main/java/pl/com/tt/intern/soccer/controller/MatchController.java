@@ -38,7 +38,6 @@ public class MatchController {
         MatchResponseRequest matchResponse = matchService.play(reservation_id);
         return ok(matchResponse);
     }
-    //check if only one team is active, if so return
 
     @PostMapping("/confirm")
     public ResponseEntity<Boolean>  confirmGameResults(

@@ -16,6 +16,7 @@ import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
@@ -25,6 +26,7 @@ import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,6 +116,20 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationResponse> findByPeriod(ReservationPeriod period) {
         log.debug("Finding all reservations in period: {}", period);
         return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()));
+    }
+    @Override
+    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationDateRequest period) {
+        log.debug("Finding all reservations in period: {}", period);
+        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromAfterAndDateToBefore(period.getFrom(), period.getTo()));
+    }
+
+    private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations) {
+        List<ReservationShortInfoResponse> responseList = new ArrayList<>();
+        for(Reservation r: reservations)
+        {
+            responseList.add(new ReservationShortInfoResponse(r));
+        }
+        return responseList;
     }
 
     @Override

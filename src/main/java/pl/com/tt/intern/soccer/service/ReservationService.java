@@ -11,6 +11,7 @@ import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -33,6 +34,8 @@ public interface ReservationService {
     List<ReservationResponse> findByDateBetween(ReservationDateRequest request);
 
     List<ReservationResponse> findByPeriod(ReservationPeriod period);
+
+    List<ReservationShortInfoResponse> findShortByPeriod(ReservationDateRequest period);
 
     List<ReservationResponse> findByDay(DayOfWeek day);
 

@@ -23,9 +23,11 @@ public class LobbyController {
     private final LobbyService lobbyService;
 
 
-
     @GetMapping
     public ResponseEntity<List<LobbyResponse>> findAll() {
         return ok(lobbyService.findAll());
     }
+
+
+
 }
