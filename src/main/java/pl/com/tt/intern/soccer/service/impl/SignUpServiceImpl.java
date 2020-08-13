@@ -58,7 +58,6 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
 
-
     @Override
     public SuccessfulSignUpResponse signUp(SignUpRequest request) throws NotFoundException, PasswordsMismatchException {
         if (doPasswordsMatch(request)) {
@@ -73,6 +72,11 @@ public class SignUpServiceImpl implements SignUpService {
             return createKeyAndSendEmailIfIsEnabled(result);
         } else
             throw new PasswordsMismatchException();
+    }
+
+    @Override
+    public Boolean ifUsernameIsTaken(String username) {
+        return null;
     }
 
     private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) throws NotFoundException {

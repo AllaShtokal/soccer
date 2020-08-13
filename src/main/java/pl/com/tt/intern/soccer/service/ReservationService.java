@@ -3,6 +3,7 @@ package pl.com.tt.intern.soccer.service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.model.Reservation;
@@ -35,7 +36,7 @@ public interface ReservationService {
 
     List<ReservationResponse> findByPeriod(ReservationPeriod period);
 
-    List<ReservationShortInfoResponse> findShortByPeriod(ReservationDateRequest period);
+    List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period);
 
     List<ReservationResponse> findByDay(DayOfWeek day);
 

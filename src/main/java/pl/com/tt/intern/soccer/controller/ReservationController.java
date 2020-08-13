@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -48,7 +49,7 @@ public class ReservationController {
     }
 
     @PostMapping("/period/shortinfo")
-    public ResponseEntity<List<ReservationShortInfoResponse>> findShortInfoByPeriod(@RequestBody ReservationDateRequest period) {
+    public ResponseEntity<List<ReservationShortInfoResponse>> findShortInfoByPeriod(@RequestBody ReservationSimpleDateRequest period) {
         return ok(reservationService.findShortByPeriod(period));
     }
 

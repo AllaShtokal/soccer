@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.service.impl;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -14,6 +13,7 @@ import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
@@ -85,9 +85,9 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby my_first_lobby;
         try {
-            my_first_lobby = lobbyService.getByName("MY_FIRST_LOBBY");
+            my_first_lobby = lobbyService.getByName(reservationPersistRequest.getLobbyName());
         } catch (NullPointerException e) {
-            throw new NotFoundLobbyByIdException("MY_FIRST_LOBBY");
+            throw new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName());
         }
         reservation.setLobby(my_first_lobby);
         User user = userService.findById(userId);
@@ -118,7 +118,7 @@ public class ReservationServiceImpl implements ReservationService {
         return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()));
     }
     @Override
-    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationDateRequest period) {
+    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period) {
         log.debug("Finding all reservations in period: {}", period);
         return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromAfterAndDateToBefore(period.getFrom(), period.getTo()));
     }
@@ -195,6 +195,14 @@ public class ReservationServiceImpl implements ReservationService {
         verifyEditedReservation(requestObject, reservation);
         reservation.setDateFrom(requestObject.getDateFrom());
         reservation.setDateTo(requestObject.getDateTo());
+
+        Lobby lobby;
+        try {
+            lobby = lobbyService.getByName(requestObject.getLobbyName());
+        } catch (NullPointerException e) {
+            throw new NotFoundLobbyByIdException(requestObject.getLobbyName());
+        }
+        reservation.setLobby(lobby);
         Reservation savedReservation = reservationRepository.save(reservation);
         return mapper.map(savedReservation, ReservationPersistedResponse.class);
     }

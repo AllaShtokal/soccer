@@ -3,10 +3,7 @@ package pl.com.tt.intern.soccer.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.payload.request.LoginRequest;
@@ -41,6 +38,11 @@ public class AuthController {
     public ResponseEntity<SuccessfulSignUpResponse> signUp(@Valid @RequestBody SignUpRequest request)
             throws PasswordsMismatchException, NotFoundException {
         return ok(signUpService.signUp(request));
+    }
+
+    @GetMapping("/username/{username}")
+    public ResponseEntity<Boolean> ifUsernameIsTaken(@RequestParam("username") String username) {
+        return ok(signUpService.ifUsernameIsTaken(username));
     }
 
 }
