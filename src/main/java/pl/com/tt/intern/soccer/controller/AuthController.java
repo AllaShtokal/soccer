@@ -41,8 +41,12 @@ public class AuthController {
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<Boolean> ifUsernameIsTaken(@RequestParam("username") String username) {
+    public ResponseEntity<Boolean> ifUsernameIsTaken(@RequestParam("username") String username) throws NotFoundException {
         return ok(signUpService.ifUsernameIsTaken(username));
     }
 
+    @GetMapping("/username/{email}")
+    public ResponseEntity<Boolean> ifEmailIsTaken(@RequestParam("email") String email) throws NotFoundException {
+        return ok(signUpService.ifEmailIsTaken(email));
+    }
 }

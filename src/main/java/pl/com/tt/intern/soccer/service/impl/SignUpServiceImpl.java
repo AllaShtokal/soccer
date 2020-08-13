@@ -75,10 +75,14 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     @Override
-    public Boolean ifUsernameIsTaken(String username) {
-        return null;
+    public Boolean ifUsernameIsTaken(String username) throws NotFoundException {
+        return userService.findByUsername(username) != null;
     }
 
+    @Override
+    public Boolean ifEmailIsTaken(String email) throws NotFoundException {
+        return userService.findByEmail(email) != null;
+    }
     private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) throws NotFoundException {
         if (mailEnabled) {
             setAndSendActivationMailMsg(user);

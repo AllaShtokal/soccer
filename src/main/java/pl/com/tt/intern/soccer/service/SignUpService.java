@@ -9,5 +9,7 @@ public interface SignUpService {
 
     SuccessfulSignUpResponse signUp(SignUpRequest request) throws PasswordsMismatchException, NotFoundException;
 
-    Boolean ifUsernameIsTaken(String username);
+    Boolean ifUsernameIsTaken(String username) throws NotFoundException;
+
+    Boolean ifEmailIsTaken(String email) throws NotFoundException;
 }
