@@ -121,7 +121,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period) {
         log.debug("Finding all reservations in period: {}", period);
-        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromAfterAndDateToBefore(period.getFrom(), period.getTo()));
+        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromAfterAndDateToBefore(period.getFrom().minusMinutes(1L) , period.getTo().plusMinutes(1L)));
     }
 
     private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations) {

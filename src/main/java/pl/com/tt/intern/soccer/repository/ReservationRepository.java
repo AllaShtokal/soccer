@@ -13,6 +13,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     List<Reservation> findAllByDateToAfterAndDateFromBefore(LocalDateTime from, LocalDateTime to);
+
     List<Reservation> findAllByDateFromAfterAndDateToBefore(LocalDateTime from, LocalDateTime to);
 
     boolean existsByIdAndUserId(Long id, Long userId);
