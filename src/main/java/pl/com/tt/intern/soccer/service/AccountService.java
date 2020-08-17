@@ -8,6 +8,7 @@ import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.response.AccountInfoDataResponse;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
 import pl.com.tt.intern.soccer.payload.response.PasswordChangeKeyResponse;
@@ -31,5 +32,7 @@ public interface AccountService {
     ChangeDataAccountResponse changeUserInfo(UserPrincipal user, ChangeAccountDataRequest request) throws NotFoundException;
 
     void changeEmail(UserPrincipal user, String changeEmailKey, EmailRequest request) throws Exception;
+
+    AccountInfoDataResponse getBasicInfoByUserInfoId(Long id) throws NotFoundException;
 }
 
