@@ -13,6 +13,7 @@ import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
 import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.response.AccountInfoDataResponse;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
 import pl.com.tt.intern.soccer.payload.response.PasswordChangeKeyResponse;
@@ -87,5 +88,11 @@ public class AccountController {
     public ResponseEntity<ChangeDataAccountResponse> changeBasicAccountData(@CurrentUser UserPrincipal user,
                                                                             @Valid @RequestBody ChangeAccountDataRequest request) throws NotFoundException {
         return ok(accountService.changeUserInfo(user, request));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/info")
+    public ResponseEntity<AccountInfoDataResponse> getBasicInfo(@CurrentUser UserPrincipal user) throws NotFoundException {
+        return ok(accountService.getBasicInfoByUserInfoId(user.getId()));
     }
 }
