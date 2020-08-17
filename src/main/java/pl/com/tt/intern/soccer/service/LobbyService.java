@@ -10,5 +10,5 @@ public interface LobbyService {
 
     Lobby getByName(String name);
 
-    List<LobbyResponse>  findAll();
+    List<LobbyResponse> findAllAvailable();
 }

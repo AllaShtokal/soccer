@@ -92,6 +92,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setLobby(my_first_lobby);
         User user = userService.findById(userId);
         reservation.setUser(user);
+        reservation.setConfirmed(true);
         Reservation savedEntity = reservationRepository.save(reservation);
         confirmationService.createAndSaveConfirmationReservation(savedEntity);
         return mapper.map(savedEntity, ReservationPersistedResponse.class);

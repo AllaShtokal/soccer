@@ -25,7 +25,7 @@ public class LobbyController {
 
     @GetMapping
     public ResponseEntity<List<LobbyResponse>> findAll() {
-        return ok(lobbyService.findAll());
+        return ok(lobbyService.findAllAvailable());
     }
 
 

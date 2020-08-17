@@ -24,7 +24,7 @@ public class LobbyServiceImpl implements LobbyService {
     }
 
     @Override
-    public List<LobbyResponse> findAll() {
+    public List<LobbyResponse> findAllAvailable() {
         //dostać tylko dostępne
         List<Lobby> lobbies = lobbyRepository.findAll();
         List<LobbyResponse> lobbyResponses = new ArrayList<>();
