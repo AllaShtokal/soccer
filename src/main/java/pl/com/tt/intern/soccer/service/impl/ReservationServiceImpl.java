@@ -52,6 +52,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
 
+    private  ModelMapper modelMapper;
+
 
 
     @Override
@@ -85,7 +87,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby my_first_lobby;
         try {
-            my_first_lobby = lobbyService.getByName(reservationPersistRequest.getLobbyName());
+            my_first_lobby = modelMapper.map(lobbyService.findByName(reservationPersistRequest.getLobbyName()), Lobby.class);
         } catch (NullPointerException e) {
             throw new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName());
         }
@@ -121,7 +123,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period) {
         log.debug("Finding all reservations in period: {}", period);
-        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromAfterAndDateToBefore(period.getFrom().minusMinutes(1L) , period.getTo().plusMinutes(1L)));
+        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()));
     }
 
     private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations) {
@@ -199,7 +201,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby lobby;
         try {
-            lobby = lobbyService.getByName(requestObject.getLobbyName());
+            lobby = modelMapper.map(lobbyService.findByName(requestObject.getLobbyName()), Lobby.class);
         } catch (NullPointerException e) {
             throw new NotFoundLobbyByIdException(requestObject.getLobbyName());
         }

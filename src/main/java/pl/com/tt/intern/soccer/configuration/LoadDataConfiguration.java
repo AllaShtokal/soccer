@@ -39,10 +39,11 @@ public class LoadDataConfiguration {
 
     @EventListener(ApplicationReadyEvent.class)
     public void addConfirmationsToList() {
-        if(isEnabled){
-        confirmationReservationService.findAllByEmailSend(false).stream()
-                .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
-                .forEach(cr -> timer.schedule(getNewTimerTask(cr), CustomDateUtil.toDate(cr.getTimeToMailSend())));}
+        if (isEnabled) {
+            confirmationReservationService.findAllByEmailSend(false).stream()
+                    .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
+                    .forEach(cr -> timer.schedule(getNewTimerTask(cr), CustomDateUtil.toDate(cr.getTimeToMailSend())));
+        }
     }
 
     private TimerTask getNewTimerTask(ConfirmationReservation cr) {
@@ -78,19 +79,26 @@ public class LoadDataConfiguration {
 
     @EventListener(ApplicationReadyEvent.class)
     public void removeFromDataBaseExpiredConfirmationReservations() {
-        confirmationReservationService.findAll().stream()
-                .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
-                .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()), CustomDateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
+        if (isEnabled) {
+            confirmationReservationService.findAll().stream()
+                    .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
+                    .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()),
+                            CustomDateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
+        }
     }
 
     private TimerTask getNewTimerTaskForRemoveExpiredConfirmationKeys(Reservation reservation) {
+
         return new TimerTask() {
             @Override
             public void run() {
-                if (!reservation.getConfirmed()) {
-                    reservationService.deleteById(reservation.getId());
+                if (isEnabled) {
+                    if (!reservation.getConfirmed()) {
+                        reservationService.deleteById(reservation.getId());
+                    }
                 }
             }
         };
+
     }
 }

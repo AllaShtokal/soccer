@@ -25,6 +25,8 @@ public class ReservationShortInfoResponse {
         this.dateFrom = reservation.getDateFrom();
         this.dateTo = reservation.getDateTo();
         this.confirmed = reservation.getConfirmed();
+        this.lobbyName = reservation.getLobby().getName();
+
         this.LimitTaken = reservation.getLobby().getLimit()
                 + "/"
                 + reservation.getUserReservationEvents().size();

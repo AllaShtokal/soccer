@@ -51,13 +51,12 @@ public class Reservation implements Serializable {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<UserReservationEvent> userReservationEvents;
 
-    @OneToMany(mappedBy="reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="reservation", cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
     private Set<Match> matches = new HashSet<>();
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
         this.userReservationEvents.add(userReservationEvent);
         userReservationEvent.setReservation(this);
-
     }
 
     public void addMatch(Match match) {

@@ -28,21 +28,21 @@ public class UserReservationEventController {
     private final ReservationService reservationService;
     private final UserReservationService userReservationService;
 
-    @GetMapping("/add/{id}")
-    public ResponseEntity<ReservationResponse> AddUserReservation(@CurrentUser UserPrincipal user,
-                                                     @PathVariable("id") Long id) throws NotFoundException {
+    @GetMapping("/add/{reservation_id}")
+    public ResponseEntity<ReservationResponse> addUserReservation(@CurrentUser UserPrincipal user,
+                                                     @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
 
-        userReservationService.add(id, user.getId());
-        ReservationResponse reservationResponse = reservationService.findById(id);
+        userReservationService.add(reservation_id, user.getId());
+        ReservationResponse reservationResponse = reservationService.findById(reservation_id);
 
         return ok(reservationResponse);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<BasicUserInfoResponse>> FindAllUsersByUserReservationId(
-                                                                  @PathVariable("id") Long id) throws NotFoundException {
+    @GetMapping("/{reservation_id}")
+    public ResponseEntity<List<BasicUserInfoResponse>> findAllUsersByUserReservationId(
+                                                                  @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
 
-        List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(id);
+        List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(reservation_id);
 
         return ok(usersList);
     }
