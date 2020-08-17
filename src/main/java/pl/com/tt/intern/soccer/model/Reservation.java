@@ -48,15 +48,19 @@ public class Reservation implements Serializable {
     @Column(name = "confirmed", nullable = false)
     private Boolean confirmed;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     Set<UserReservationEvent> userReservationEvents;
 
-    @OneToMany(mappedBy="reservation", cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Match> matches = new HashSet<>();
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
         this.userReservationEvents.add(userReservationEvent);
         userReservationEvent.setReservation(this);
+    }
+    public void removeUserReservationEvent(UserReservationEvent userReservationEvent) {
+        this.userReservationEvents.remove(userReservationEvent);
+        userReservationEvent.setReservation(null);
     }
 
     public void addMatch(Match match) {
@@ -64,6 +68,7 @@ public class Reservation implements Serializable {
         match.setReservation(this);
 
     }
+
 
 
 }

@@ -121,16 +121,16 @@ public class ReservationServiceImpl implements ReservationService {
         return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()));
     }
     @Override
-    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period) {
+    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id) {
         log.debug("Finding all reservations in period: {}", period);
-        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()));
+        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()), user_id);
     }
 
-    private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations) {
+    private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations, Long user_id) {
         List<ReservationShortInfoResponse> responseList = new ArrayList<>();
         for(Reservation r: reservations)
         {
-            responseList.add(new ReservationShortInfoResponse(r));
+            responseList.add(new ReservationShortInfoResponse(r,user_id));
         }
         return responseList;
     }

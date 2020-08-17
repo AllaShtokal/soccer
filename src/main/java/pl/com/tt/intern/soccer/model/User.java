@@ -73,12 +73,17 @@ public class User extends DateAudit implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<ConfirmationKey> confirmationKeys;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, orphanRemoval = true)
     Set<UserReservationEvent> userReservationEvents;
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
         this.userReservationEvents.add(userReservationEvent);
         userReservationEvent.setUser(this);
+
+    }
+    public void removeUserReservationEvent(UserReservationEvent userReservationEvent) {
+        this.userReservationEvents.remove(userReservationEvent);
+        userReservationEvent.setUser(null);
 
     }
 

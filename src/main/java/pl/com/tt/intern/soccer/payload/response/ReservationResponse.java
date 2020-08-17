@@ -1,9 +1,17 @@
 package pl.com.tt.intern.soccer.payload.response;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.model.UserReservationEvent;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class ReservationResponse {
@@ -23,6 +31,10 @@ public class ReservationResponse {
         this.dateTo = reservation.getDateTo();
         this.confirmed = reservation.getConfirmed();
         this.lobbyName = reservation.getLobby().getName();
+
+
+
     }
+
 
 }

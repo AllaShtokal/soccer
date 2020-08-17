@@ -49,8 +49,8 @@ public class ReservationController {
     }
 
     @PostMapping("/period/shortinfo")
-    public ResponseEntity<List<ReservationShortInfoResponse>> findShortInfoByPeriod(@RequestBody ReservationSimpleDateRequest period) {
-        return ok(reservationService.findShortByPeriod(period));
+    public ResponseEntity<List<ReservationShortInfoResponse>> findShortInfoByPeriod(@CurrentUser UserPrincipal user,@RequestBody ReservationSimpleDateRequest period) {
+        return ok(reservationService.findShortByPeriod(period, user.getId()));
     }
 
     @GetMapping(params = "day")

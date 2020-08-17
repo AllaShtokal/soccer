@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserReservationService {
     void add(Long reservation_id, Long id) throws NotFoundException;
     List<BasicUserInfoResponse> findAllUsersByReservationID (Long reservation_id);
+
+    void remove(Long reservation_id, Long id);
 }

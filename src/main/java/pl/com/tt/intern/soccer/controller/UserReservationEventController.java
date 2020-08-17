@@ -34,7 +34,6 @@ public class UserReservationEventController {
 
         userReservationService.add(reservation_id, user.getId());
         ReservationResponse reservationResponse = reservationService.findById(reservation_id);
-
         return ok(reservationResponse);
     }
 
@@ -45,5 +44,14 @@ public class UserReservationEventController {
         List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(reservation_id);
 
         return ok(usersList);
+    }
+
+    @GetMapping("/remove/{reservation_id}")
+    public ResponseEntity<ReservationResponse> removeUserReservation(@CurrentUser UserPrincipal user,
+                                                                  @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
+
+        userReservationService.remove(reservation_id, user.getId());
+        ReservationResponse reservationResponse = reservationService.findById(reservation_id);
+        return ok(reservationResponse);
     }
 }

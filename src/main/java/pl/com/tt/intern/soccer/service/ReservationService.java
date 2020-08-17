@@ -36,7 +36,7 @@ public interface ReservationService {
 
     List<ReservationResponse> findByPeriod(ReservationPeriod period);
 
-    List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period);
+    List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id);
 
     List<ReservationResponse> findByDay(DayOfWeek day);
 

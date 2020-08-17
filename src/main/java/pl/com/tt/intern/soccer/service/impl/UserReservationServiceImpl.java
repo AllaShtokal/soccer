@@ -50,6 +50,22 @@ public class UserReservationServiceImpl implements UserReservationService {
     }
 
     @Override
+    @Transactional
+    public void remove(Long reservation_id, Long user_id) {
+
+        List<UserReservationEvent> allEvents = userReservationRepository.findAll();
+        for (UserReservationEvent e : allEvents) {
+            if (e.getUser().getId().equals(user_id) && e.getReservation().getId().equals(reservation_id)) {
+
+                reservationRepository.findById(reservation_id).get().removeUserReservationEvent(e);
+                userRepo.findById(user_id).get().removeUserReservationEvent(e);
+                //userReservationRepository.deleteByid(e.getId());
+                break;
+            }
+        }
+    }
+
+    @Override
     public List<BasicUserInfoResponse> findAllUsersByReservationID(Long reservation_id) {
         Reservation reservation = reservationRepository.findById(reservation_id).get();
         Set<UserReservationEvent> userReservationEvents = reservation.getUserReservationEvents();
@@ -67,4 +83,5 @@ public class UserReservationServiceImpl implements UserReservationService {
         return responseList;
 
     }
+
 }
