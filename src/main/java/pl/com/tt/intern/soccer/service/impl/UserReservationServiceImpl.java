@@ -3,23 +3,19 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserReservationEvent;
 import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.repository.UserReservationRepository;
-import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserReservationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -33,8 +29,14 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     @Transactional
     @Override
-    public void add(Long reservation_id, Long user_id) {
+    public Exception add(Long reservation_id, Long user_id) {
 
+
+        //if user is attached
+        List<UserReservationEvent> allByUser_idAndReservation_id = userReservationRepository.findAllByUser_IdAndReservation_Id(user_id, reservation_id);
+        if (allByUser_idAndReservation_id.size() > 0) {
+          return new Exception("User already is attached!");
+        }
         Reservation reservation = reservationRepository.findById(reservation_id).get();
         User user = userRepo.getOne(user_id);
 
@@ -47,6 +49,7 @@ public class UserReservationServiceImpl implements UserReservationService {
 
         userReservationRepository.save(userReservationEvent);
 
+        return null;
     }
 
     @Override

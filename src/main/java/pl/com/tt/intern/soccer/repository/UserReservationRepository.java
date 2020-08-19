@@ -7,10 +7,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserReservationEvent;
+
+import java.util.List;
+
 @Repository
 public interface UserReservationRepository extends JpaRepository<UserReservationEvent, Long> {
 
     @Modifying
     @Query("delete from UserReservationEvent b where b.id=:id")
     void deleteByid (Long id);
+
+    List<UserReservationEvent> findAllByUser_IdAndReservation_Id (Long user_id, Long reservation_id);
+
 }
