@@ -60,4 +60,6 @@ public interface ReservationService {
     boolean isDateOrderOk(ReservationPersistRequest reservationPersistRequest);
 
     boolean isDate15MinuteRounded(LocalDateTime time);
+
+    TeamResponse getWinnerTeamByMatch(Long match_id);
 }

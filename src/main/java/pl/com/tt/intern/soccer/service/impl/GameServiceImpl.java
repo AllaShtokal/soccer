@@ -88,4 +88,19 @@ public class GameServiceImpl implements GameService {
 
     }
 
+    @Override
+    public GameResponse getlastGameInMatch(Long match_id) {
+        Match matchById  = matchRepository.findById(match_id).get();
+        Set<Game> games  = matchById.getGames();
+        Long tmp=0L;
+        for(Game g: games){
+
+            if(g.getId()>tmp)
+            tmp = g.getId();}
+        GameResponse gameResponse = new GameResponse();
+        gameResponse.setGameId(tmp);
+        gameResponse.setButtles(buttleService.getAllButtlesByGameID(tmp));
+        return gameResponse;
+    }
+
 }

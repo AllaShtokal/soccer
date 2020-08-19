@@ -5,6 +5,7 @@ import pl.com.tt.intern.soccer.model.Match;
 import pl.com.tt.intern.soccer.model.Team;
 import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
+import pl.com.tt.intern.soccer.payload.response.MatchResultsResponse;
 
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ public interface MatchService {
 
     MatchResponseRequest play(Long reservation_id) throws Exception;
     List<MatchFullResponse> findAllByReservationId(Long reservation_id);
+    MatchResultsResponse getMatchResult(Long match_id);
     Boolean saveResults(MatchResponseRequest matchResponseRequest);
     int getNumberOfActiveTeamsByMatchId(Match activeMatch);
     Set<Team> getActiveTeamsFromMatch(Match match);

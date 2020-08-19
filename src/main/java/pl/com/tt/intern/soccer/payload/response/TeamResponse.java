@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.payload.response;
 
 import lombok.Data;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.security.UserPrincipal;
 
 import java.util.Set;
 
@@ -10,5 +11,5 @@ public class TeamResponse {
 
     private  Long team_id;
     private String name;
-    private Set<User> users;
+    private Set<BasicUserInfoResponse> users;
 }

@@ -6,31 +6,23 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.tt.intern.soccer.exception.*;
-import pl.com.tt.intern.soccer.model.ConfirmationReservation;
-import pl.com.tt.intern.soccer.model.Lobby;
-import pl.com.tt.intern.soccer.model.Reservation;
-import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.model.*;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
-import pl.com.tt.intern.soccer.payload.response.MyReservationResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
+import pl.com.tt.intern.soccer.payload.response.*;
 import pl.com.tt.intern.soccer.repository.LobbyRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.repository.UserRepository;
-import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
-import pl.com.tt.intern.soccer.service.LobbyService;
-import pl.com.tt.intern.soccer.service.ReservationService;
-import pl.com.tt.intern.soccer.service.UserService;
+import pl.com.tt.intern.soccer.service.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
@@ -54,6 +46,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final LobbyRepository lobbyRepository;
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
+    private final GameService gameService;
+    private final ButtleService buttleService;
 
 
 
@@ -274,6 +268,16 @@ public class ReservationServiceImpl implements ReservationService {
         if (time.getNano() != 0) return false;
         if (time.getSecond() != 0) return false;
         return time.getMinute() % TIME_ROUNDING_IN_MINUTES == 0;
+    }
+
+    @Override
+    public TeamResponse getWinnerTeamByMatch(Long match_id) {
+
+        GameResponse gameResponse = gameService.getlastGameInMatch(match_id);
+        List<ButtleResponse> buttles = gameResponse.getButtles();
+        return buttleService.getTeamWinner(buttles.get(0));
+
+
     }
 
     @Override

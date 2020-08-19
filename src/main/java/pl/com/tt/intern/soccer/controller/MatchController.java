@@ -13,6 +13,7 @@ import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
+import pl.com.tt.intern.soccer.payload.response.MatchResultsResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.MatchService;
@@ -40,6 +41,13 @@ public class MatchController {
 
         MatchResponseRequest matchResponse = matchService.play(reservation_id);
         return ok(matchResponse);
+    }
+
+    @GetMapping("/results/{match_id}")
+    public ResponseEntity<MatchResultsResponse> getMatchResults(@PathVariable("match_id") Long match_id) throws Exception {
+
+        MatchResultsResponse matchResultsResponse = matchService.getMatchResult(match_id);
+        return ok(matchResultsResponse);
     }
 
     @PostMapping("/confirm")

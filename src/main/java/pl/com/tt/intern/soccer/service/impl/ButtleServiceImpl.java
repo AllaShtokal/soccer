@@ -11,6 +11,7 @@ import pl.com.tt.intern.soccer.model.Game;
 import pl.com.tt.intern.soccer.model.Match;
 import pl.com.tt.intern.soccer.model.Team;
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
+import pl.com.tt.intern.soccer.payload.response.TeamResponse;
 import pl.com.tt.intern.soccer.repository.GameRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
 import pl.com.tt.intern.soccer.service.MatchService;
@@ -23,6 +24,7 @@ public class ButtleServiceImpl implements ButtleService {
 
     private final GameRepository gameRepository;
     private final ModelMapper modelMapper;
+    private final TeamService teamService;
 
     @Override
     public Set<String> getSetOfNamesOfTeamWinners(Set<Buttle> buttles) {
@@ -39,6 +41,26 @@ public class ButtleServiceImpl implements ButtleService {
             return buttle.getTeamName1();
             //if first and second is the same?????! for now it also returns second team
         else return buttle.getTeamName2();
+    }
+    @Override
+    public TeamResponse getTeamWinner(ButtleResponse buttle) {
+
+        TeamResponse teamResponse = new TeamResponse();
+        if (buttle.getScoreTeam1() > buttle.getScoreTeam2()){
+            teamResponse.setTeam_id(teamService.getTeamIdByTeamName(buttle.getTeamName1()));
+            teamResponse.setName(buttle.getTeamName1());
+            teamResponse.setUsers(teamService.getUsersByTeamName(buttle.getTeamName1()));
+        }
+
+        //if first and second is the same?????! for now it also returns second team
+        else {
+            teamResponse.setTeam_id(teamService.getTeamIdByTeamName(buttle.getTeamName2()));
+            teamResponse.setName(buttle.getTeamName2());
+            teamResponse.setUsers(teamService.getUsersByTeamName(buttle.getTeamName2()));
+        }
+
+
+        return teamResponse;
     }
 
     @Override

@@ -17,4 +17,5 @@ public interface GameService {
     Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teamList) throws Exception;
     Game getActiveGameFromMatch(Match match);
     List<GameResponse> getAllGamesFromMatch(Long match_id);
+    GameResponse getlastGameInMatch(Long match_id);
 }

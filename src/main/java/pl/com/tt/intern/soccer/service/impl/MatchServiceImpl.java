@@ -9,11 +9,13 @@ import pl.com.tt.intern.soccer.model.*;
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
+import pl.com.tt.intern.soccer.payload.response.MatchResultsResponse;
 import pl.com.tt.intern.soccer.repository.MatchRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
 import pl.com.tt.intern.soccer.service.GameService;
 import pl.com.tt.intern.soccer.service.MatchService;
+import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -31,6 +33,7 @@ public class MatchServiceImpl implements MatchService {
     private final ReservationRepository reservationRepository;
     private final RandomString randomString;
     private final MatchRepository matchRepository;
+    private final ReservationService reservationService;
 
 
     @Transactional
@@ -78,6 +81,17 @@ public class MatchServiceImpl implements MatchService {
         }
 
         return matchFullResponses;
+    }
+
+    @Override
+    public MatchResultsResponse getMatchResult(Long match_id) {
+        Match matchById = matchRepository.findById(match_id).get();
+        MatchResultsResponse matchResultsResponse = new MatchResultsResponse();
+        matchResultsResponse.setMatchId(matchById.getId());
+        matchResultsResponse.setGameResponses(gameService.getAllGamesFromMatch(matchById.getId()));
+        matchResultsResponse.setTeamWinner(reservationService.getWinnerTeamByMatch(match_id));
+        return matchResultsResponse;
+
     }
 
 
