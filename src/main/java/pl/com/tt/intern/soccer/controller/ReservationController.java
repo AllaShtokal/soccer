@@ -54,7 +54,7 @@ public class ReservationController {
         return ok(reservationService.findShortByPeriod(period, user.getId()));
     }
 
-    @GetMapping("/period/my")
+    @GetMapping("/my")
     public ResponseEntity<List<MyReservationResponse>> findMy(@CurrentUser UserPrincipal user) {
         return ok(reservationService.findByCreatorId( user.getId()));
     }

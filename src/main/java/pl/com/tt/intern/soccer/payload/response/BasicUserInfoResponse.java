@@ -8,6 +8,7 @@ public class BasicUserInfoResponse {
     private String username;
     private String email;
 
+
     public BasicUserInfoResponse() {
     }
 
