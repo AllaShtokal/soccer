@@ -3,6 +3,7 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.NotFoundReservationException;
 import pl.com.tt.intern.soccer.exception.service.RandomString;
 import pl.com.tt.intern.soccer.model.*;
@@ -19,7 +20,10 @@ import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,19 +42,19 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public MatchResponseRequest play(Long reservation_id) throws Exception {
-        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundReservationException::new);
+    public MatchResponseRequest play(Long reservationId) throws Exception {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundReservationException::new);
 
-        if (getActiveMatch(reservation_id) == null) {
+        if (getActiveMatch(reservationId) == null) {
             Match m = creteMatch();
-            setGamesToMatch(setTeamsToMatch(reservation_id, m), m);
+            setGamesToMatch(setTeamsToMatch(reservationId, m), m);
             reservation.addMatch(m);
             reservationRepository.save(reservation);
         } else {
 
-            Match activeMatch = getActiveMatch(reservation_id);
+            Match activeMatch = getActiveMatch(reservationId);
             if (gameService.getActiveGameFromMatch(activeMatch) == null) {
-                Set<Team> teams = setTeamsToMatch(reservation_id, activeMatch);
+                Set<Team> teams = setTeamsToMatch(reservationId, activeMatch);
                 setGamesToMatch(teams, activeMatch);
                 reservationRepository.save(reservation);
             }
@@ -59,7 +63,7 @@ public class MatchServiceImpl implements MatchService {
 
 
         //create response
-        Reservation reservationAfter = reservationRepository.findById(reservation_id).orElseThrow(NotFoundReservationException::new);
+        Reservation reservationAfter = reservationRepository.findById(reservationId).orElseThrow(NotFoundReservationException::new);
         Match activeMatch1 = getActiveMatch(reservationAfter.getId());
         MatchResponseRequest matchResponse = new MatchResponseRequest();
         matchResponse.setMatchId(activeMatch1.getId());
@@ -69,7 +73,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<MatchFullResponse> findAllByReservationId(Long reservation_id) {
+    public List<MatchFullResponse> findAllByReservationId(Long reservation_id) throws NotFoundException {
         Set<Match> matches = getAllMatches(reservation_id);
         List<MatchFullResponse> matchFullResponses = new ArrayList<>();
         for(Match m: matches)
@@ -84,19 +88,19 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public MatchResultsResponse getMatchResult(Long match_id) {
-        Match matchById = matchRepository.findById(match_id).get();
+    public MatchResultsResponse getMatchResult(Long matchId) throws NotFoundException {
+        Match matchById = matchRepository.findById(matchId).orElseThrow(NotFoundException::new);
         MatchResultsResponse matchResultsResponse = new MatchResultsResponse();
         matchResultsResponse.setMatchId(matchById.getId());
         matchResultsResponse.setGameResponses(gameService.getAllGamesFromMatch(matchById.getId()));
-        matchResultsResponse.setTeamWinner(reservationService.getWinnerTeamByMatch(match_id));
+        matchResultsResponse.setTeamWinner(reservationService.getWinnerTeamByMatch(matchId));
         return matchResultsResponse;
 
     }
 
 
-    public Set<Match> getAllMatches(Long reservation_id) {
-        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundReservationException::new);
+    public Set<Match> getAllMatches(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundReservationException::new);
         return reservation.getMatches();
     }
 
@@ -106,10 +110,10 @@ public class MatchServiceImpl implements MatchService {
 
 
     @Override
-    public Match getActiveMatch(Long reservation_id) {
-        Set<Match> allMatches = getAllMatches(reservation_id);
+    public Match getActiveMatch(Long reservationId) {
+        Set<Match> allMatches = getAllMatches(reservationId);
         for (Match m : allMatches) {
-            if (m.getIsActive())
+            if (Boolean.TRUE.equals(m.getIsActive()))
                 return m;
         }
         return null;
@@ -120,7 +124,7 @@ public class MatchServiceImpl implements MatchService {
         Set<Team> teams = match.getTeams();
         Set<Team> activeTeams = new HashSet<>();
         for (Team t : teams) {
-            if (t.getActive()) {
+            if (Boolean.TRUE.equals(t.getActive())) {
                 activeTeams.add(t);
             }
         }
@@ -130,9 +134,9 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public Boolean saveResults(MatchResponseRequest matchResponseRequest) {
+    public Boolean saveResults(MatchResponseRequest matchResponseRequest) throws NotFoundException {
 
-        Match matchById = matchRepository.findById(matchResponseRequest.getMatchId()).get();
+        Match matchById = matchRepository.findById(matchResponseRequest.getMatchId()).orElseThrow(NotFoundException::new);
         Game game = gameService.getActiveGameFromMatch(matchById);
         game.setIsActive(false);
         //set not active teams
@@ -183,15 +187,13 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private void setGamesToMatch(Set<Team> teams, Match match) throws Exception {
-        //if there is no active game
         Game game = createGame(teams);
         match.addGame(game);
     }
 
-    private Set<Team> setTeamsToMatch(Long reservation_id, Match match) {
-        //if match has no teams then generate teams and return them
-        if (match.getTeams().size() == 0) {
-            Set<Team> teams = generateTeams(reservation_id);
+    private Set<Team> setTeamsToMatch(Long reservationId, Match match) throws NotFoundException {
+        if (match.getTeams().isEmpty()) {
+            Set<Team> teams = generateTeams(reservationId);
             for (Team team : teams) {
                 match.addTeam(team);
             }
@@ -212,10 +214,10 @@ public class MatchServiceImpl implements MatchService {
         return game;
     }
 
-    private Set<Team> generateTeams(Long reservation_id) {
+    private Set<Team> generateTeams(Long reservationId) throws NotFoundException {
 
         List<User> users = new ArrayList<>();
-        Set<UserReservationEvent> userReservationEvents = reservationRepository.findById(reservation_id).get().getUserReservationEvents();
+        Set<UserReservationEvent> userReservationEvents = reservationRepository.findById(reservationId).orElseThrow(NotFoundException::new).getUserReservationEvents();
         for (UserReservationEvent userReservationEvent : userReservationEvents) {
             users.add(userReservationEvent.getUser());
         }

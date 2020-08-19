@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
 import pl.com.tt.intern.soccer.repository.TeamRepository;
+import pl.com.tt.intern.soccer.service.TeamService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,8 +27,8 @@ public class TeamServiceImpl implements TeamService {
         Set<User> users = teamRepository.findByName(teamName).getUsers();
         Set<BasicUserInfoResponse> usersResponse = new HashSet<>();
         for (User u : users) {
-            BasicUserInfoResponse bu = new BasicUserInfoResponse();
-            bu = modelMapper.map(u, BasicUserInfoResponse.class);
+
+            BasicUserInfoResponse bu = modelMapper.map(u, BasicUserInfoResponse.class);
             usersResponse.add(bu);
         }
         return usersResponse;

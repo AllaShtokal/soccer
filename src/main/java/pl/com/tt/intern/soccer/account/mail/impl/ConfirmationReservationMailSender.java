@@ -2,7 +2,6 @@ package pl.com.tt.intern.soccer.account.mail.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.mail.PerAccountTypeMailSender;

@@ -1,6 +1,6 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -19,6 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "game")
 
 public class Game implements Serializable {
+       private static final long serialVersionUID = 9114226883488912345L;
 
        @Id
        @GeneratedValue(strategy = IDENTITY)

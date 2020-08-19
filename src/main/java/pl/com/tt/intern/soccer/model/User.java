@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;

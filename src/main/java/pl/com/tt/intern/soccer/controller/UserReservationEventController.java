@@ -39,7 +39,7 @@ public class UserReservationEventController {
 
     @GetMapping("/{reservation_id}")
     public ResponseEntity<List<BasicUserInfoResponse>> findAllUsersByUserReservationId(
-                                                                  @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
+                                                                  @PathVariable("reservation_id") Long reservation_id) {
 
         List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(reservation_id);
 

@@ -35,7 +35,7 @@ public class SignUpServiceImpl implements SignUpService {
     @Value("${mail.config.enabled}")
     private Boolean mailEnabled;
 
-    private final String SUCCESSFUL_SIGN_UP_MSG = "User registered successfully";
+    private static final String SUCCESSFUL_SIGN_UP_MSG = "User registered successfully";
     private final UserService userService;
     private final RoleService roleService;
     private final ModelMapper mapper;

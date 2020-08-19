@@ -1,11 +1,9 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import static javax.persistence.GenerationType.IDENTITY;

@@ -1,7 +1,6 @@
 package pl.com.tt.intern.soccer.account.factory.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;

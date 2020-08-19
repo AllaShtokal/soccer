@@ -1,9 +1,9 @@
 package pl.com.tt.intern.soccer.configuration;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.toList;
 
 @Configuration
 @AllArgsConstructor
+@Slf4j
 public class ConfirmationReservationConfiguration {
 
     private final ConfirmationReservationService service;
@@ -38,7 +39,7 @@ public class ConfirmationReservationConfiguration {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    System.out.println(time);
+                   log.debug("time: " + time);
                 }
             }, DateUtil.toDate(time));
         });

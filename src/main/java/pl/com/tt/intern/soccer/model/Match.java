@@ -1,19 +1,16 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -22,6 +19,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "matchh")
 public class Match implements Serializable {
+
+    private static final long serialVersionUID = 1234526883488956491L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -42,7 +41,7 @@ public class Match implements Serializable {
     private Boolean isActive ;
 
     @OneToMany(mappedBy="matchh", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Game> games = new HashSet<>();;
+    private Set<Game> games = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name="reservation_id", nullable=false)

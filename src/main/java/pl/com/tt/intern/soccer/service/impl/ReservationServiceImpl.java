@@ -6,7 +6,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.tt.intern.soccer.exception.*;
-import pl.com.tt.intern.soccer.model.*;
+import pl.com.tt.intern.soccer.model.ConfirmationReservation;
+import pl.com.tt.intern.soccer.model.Lobby;
+import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
@@ -14,7 +17,6 @@ import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
 import pl.com.tt.intern.soccer.payload.response.*;
 import pl.com.tt.intern.soccer.repository.LobbyRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
-import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.*;
 
 import java.time.DayOfWeek;
@@ -22,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
@@ -41,8 +42,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final LobbyService lobbyService;
     private final LobbyRepository lobbyRepository;
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
@@ -82,7 +81,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby my_first_lobby;
         try {
-            my_first_lobby = lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()).get();
+            my_first_lobby = lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()).orElseThrow(NotFoundException::new);
         } catch (NullPointerException e) {
             throw new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName());
         }
@@ -212,7 +211,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby lobby;
         try {
-            lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()).get();
+            lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()) .orElseThrow(NotFoundException::new);
         } catch (NullPointerException e) {
             throw new NotFoundLobbyByIdException(requestObject.getLobbyName());
         }
@@ -271,7 +270,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public TeamResponse getWinnerTeamByMatch(Long match_id) {
+    public TeamResponse getWinnerTeamByMatch(Long match_id) throws NotFoundException {
 
         GameResponse gameResponse = gameService.getlastGameInMatch(match_id);
         List<ButtleResponse> buttles = gameResponse.getButtles();

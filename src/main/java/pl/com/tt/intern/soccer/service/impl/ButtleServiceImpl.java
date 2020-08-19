@@ -1,20 +1,17 @@
 package pl.com.tt.intern.soccer.service.impl;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import lombok.RequiredArgsConstructor;
-import org.junit.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Buttle;
 import pl.com.tt.intern.soccer.model.Game;
-import pl.com.tt.intern.soccer.model.Match;
 import pl.com.tt.intern.soccer.model.Team;
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
 import pl.com.tt.intern.soccer.payload.response.TeamResponse;
 import pl.com.tt.intern.soccer.repository.GameRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
-import pl.com.tt.intern.soccer.service.MatchService;
+import pl.com.tt.intern.soccer.service.TeamService;
 
 import java.util.*;
 
@@ -39,7 +36,6 @@ public class ButtleServiceImpl implements ButtleService {
     private String getTeamNameWinner(Buttle buttle) {
         if (buttle.getScoreTeam1() > buttle.getScoreTeam2())
             return buttle.getTeamName1();
-            //if first and second is the same?????! for now it also returns second team
         else return buttle.getTeamName2();
     }
     @Override
@@ -51,8 +47,6 @@ public class ButtleServiceImpl implements ButtleService {
             teamResponse.setName(buttle.getTeamName1());
             teamResponse.setUsers(teamService.getUsersByTeamName(buttle.getTeamName1()));
         }
-
-        //if first and second is the same?????! for now it also returns second team
         else {
             teamResponse.setTeam_id(teamService.getTeamIdByTeamName(buttle.getTeamName2()));
             teamResponse.setName(buttle.getTeamName2());
@@ -76,8 +70,8 @@ public class ButtleServiceImpl implements ButtleService {
     }
 
     @Override
-    public List<ButtleResponse> getAllButtlesByGameID(Long game_id) {
-        Game gameById = gameRepository.findById(game_id).get();
+    public List<ButtleResponse> getAllButtlesByGameID(Long gameId) throws NotFoundException {
+        Game gameById = gameRepository.findById(gameId).orElseThrow(NotFoundException::new);
         Set<Buttle> buttles = gameById.getButtles();
         List<ButtleResponse> buttleResponses = new ArrayList<>();
         for(Buttle b: buttles)

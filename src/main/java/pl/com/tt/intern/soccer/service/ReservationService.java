@@ -9,7 +9,6 @@ import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
-import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 
 import java.time.DayOfWeek;
@@ -61,5 +60,5 @@ public interface ReservationService {
 
     boolean isDate15MinuteRounded(LocalDateTime time);
 
-    TeamResponse getWinnerTeamByMatch(Long match_id);
+    TeamResponse getWinnerTeamByMatch(Long match_id) throws NotFoundException;
 }

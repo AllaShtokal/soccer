@@ -28,7 +28,7 @@ import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.CONFIRMATION_RE
 public class LoadDataConfiguration {
 
     @Value("${mail.config.enabled}")
-    private Boolean isEnabled;
+    private Boolean isEmail;
 
     private final ConfirmationReservationService confirmationReservationService;
     private final Timer timer;
@@ -39,7 +39,7 @@ public class LoadDataConfiguration {
 
     @EventListener(ApplicationReadyEvent.class)
     public void addConfirmationsToList() {
-        if (isEnabled) {
+        if (Boolean.TRUE.equals(isEmail)) {
             confirmationReservationService.findAllByEmailSend(false).stream()
                     .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
                     .forEach(cr -> timer.schedule(getNewTimerTask(cr), CustomDateUtil.toDate(cr.getTimeToMailSend())));
@@ -79,7 +79,7 @@ public class LoadDataConfiguration {
 
     @EventListener(ApplicationReadyEvent.class)
     public void removeFromDataBaseExpiredConfirmationReservations() {
-        if (isEnabled) {
+        if (isEmail) {
             confirmationReservationService.findAll().stream()
                     .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
                     .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()),
@@ -92,7 +92,7 @@ public class LoadDataConfiguration {
         return new TimerTask() {
             @Override
             public void run() {
-                if (isEnabled) {
+                if (isEmail) {
                     if (!reservation.getConfirmed()) {
                         reservationService.deleteById(reservation.getId());
                     }

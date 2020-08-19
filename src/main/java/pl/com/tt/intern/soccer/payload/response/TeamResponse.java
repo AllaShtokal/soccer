@@ -1,8 +1,6 @@
 package pl.com.tt.intern.soccer.payload.response;
 
 import lombok.Data;
-import pl.com.tt.intern.soccer.model.User;
-import pl.com.tt.intern.soccer.security.UserPrincipal;
 
 import java.util.Set;
 

@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.service;
 
-import pl.com.tt.intern.soccer.model.Game;
+
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Match;
 import pl.com.tt.intern.soccer.model.Team;
 import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
@@ -12,13 +13,13 @@ import java.util.Set;
 
 public interface MatchService {
 
-    MatchResponseRequest play(Long reservation_id) throws Exception;
-    List<MatchFullResponse> findAllByReservationId(Long reservation_id);
-    MatchResultsResponse getMatchResult(Long match_id);
-    Boolean saveResults(MatchResponseRequest matchResponseRequest);
+    MatchResponseRequest play(Long reservationId) throws Exception;
+    List<MatchFullResponse> findAllByReservationId(Long reservationId) throws NotFoundException;
+    MatchResultsResponse getMatchResult(Long matchId) throws NotFoundException;
+    Boolean saveResults(MatchResponseRequest matchResponseRequest) throws NotFoundException;
     int getNumberOfActiveTeamsByMatchId(Match activeMatch);
     Set<Team> getActiveTeamsFromMatch(Match match);
-    Match getActiveMatch(Long reservation_id);
+    Match getActiveMatch(Long reservationId);
 
 
 }

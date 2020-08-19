@@ -3,6 +3,7 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserReservationEvent;
@@ -34,10 +35,10 @@ public class UserReservationServiceImpl implements UserReservationService {
 
         //if user is attached
         List<UserReservationEvent> allByUser_idAndReservation_id = userReservationRepository.findAllByUser_IdAndReservation_Id(user_id, reservation_id);
-        if (allByUser_idAndReservation_id.size() > 0) {
+        if (!allByUser_idAndReservation_id.isEmpty()) {
           throw new Exception("User already is attached!");
         }
-        Reservation reservation = reservationRepository.findById(reservation_id).get();
+        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundException::new);
         User user = userRepo.getOne(user_id);
 
         UserReservationEvent userReservationEvent = new UserReservationEvent();
@@ -54,22 +55,22 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     @Override
     @Transactional
-    public void remove(Long reservation_id, Long user_id) {
+    public void remove(Long reservation_id, Long user_id) throws NotFoundException {
 
         List<UserReservationEvent> allEvents = userReservationRepository.findAll();
         for (UserReservationEvent e : allEvents) {
             if (e.getUser().getId().equals(user_id) && e.getReservation().getId().equals(reservation_id)) {
 
-                reservationRepository.findById(reservation_id).get().removeUserReservationEvent(e);
-                userRepo.findById(user_id).get().removeUserReservationEvent(e);
+                reservationRepository.findById(reservation_id).orElseThrow(NotFoundException::new).removeUserReservationEvent(e);
+                userRepo.findById(user_id).orElseThrow(NotFoundException::new).removeUserReservationEvent(e);
                 break;
             }
         }
     }
 
     @Override
-    public List<BasicUserInfoResponse> findAllUsersByReservationID(Long reservation_id) {
-        Reservation reservation = reservationRepository.findById(reservation_id).get();
+    public List<BasicUserInfoResponse> findAllUsersByReservationID(Long reservation_id) throws NotFoundException {
+        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundException::new);
         Set<UserReservationEvent> userReservationEvents = reservation.getUserReservationEvents();
         List<User> users = new ArrayList<>();
 

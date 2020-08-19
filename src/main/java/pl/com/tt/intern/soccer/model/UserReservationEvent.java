@@ -1,15 +1,13 @@
 package pl.com.tt.intern.soccer.model;
 
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -17,7 +15,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 @RequiredArgsConstructor
 @Table(name = "user_reservation")
-public class UserReservationEvent {
+public class UserReservationEvent implements Serializable {
+
+    private static final long serialVersionUID = 911422688348896791L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

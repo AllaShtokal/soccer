@@ -2,7 +2,6 @@ package pl.com.tt.intern.soccer.account.mail.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.AccountChangeType;
 import pl.com.tt.intern.soccer.account.mail.PerAccountTypeMailSender;
@@ -16,14 +15,14 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGG
 @RequiredArgsConstructor
 public class ChangeAccountPasswordMailSender implements PerAccountTypeMailSender {
 
-    private final String FILE_NAME = "change_password";
+    private static final String fileName = "change_password";
     private final MessageSource messageSource;
     private final CustomizedSenderImpl sender;
 
     @Override
     public void send(String email, String url) {
         String subject = messageSource.getMessage("account.change.password.mail.subject", null, Locale.US);
-        sender.insertLinkToMsgAndSendMail(email, FILE_NAME, subject, url);
+        sender.insertLinkToMsgAndSendMail(email, fileName, subject, url);
     }
 
     @Override

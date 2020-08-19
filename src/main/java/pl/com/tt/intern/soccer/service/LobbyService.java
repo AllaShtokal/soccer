@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.service;
 
-import pl.com.tt.intern.soccer.model.Lobby;
 import pl.com.tt.intern.soccer.payload.request.LobbyChangeRequest;
 import pl.com.tt.intern.soccer.payload.request.LobbyRequest;
 import pl.com.tt.intern.soccer.payload.response.LobbyResponse;

@@ -1,26 +1,20 @@
 package pl.com.tt.intern.soccer.service.impl;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Buttle;
 import pl.com.tt.intern.soccer.model.Game;
 import pl.com.tt.intern.soccer.model.Match;
 import pl.com.tt.intern.soccer.model.Team;
-import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
 import pl.com.tt.intern.soccer.payload.response.GameResponse;
-import pl.com.tt.intern.soccer.payload.response.TeamResponse;
-import pl.com.tt.intern.soccer.repository.GameRepository;
 import pl.com.tt.intern.soccer.repository.MatchRepository;
-import pl.com.tt.intern.soccer.repository.TeamRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
 import pl.com.tt.intern.soccer.service.GameService;
 
 import java.util.*;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +32,7 @@ public class GameServiceImpl implements GameService {
 
         Set<Team> activeTeams = new HashSet<>();
         for(Team team: teams){
-            if(team.getActive())
+            if(Boolean.TRUE.equals(team.getActive()))
                 activeTeams.add(team);
         }
         Set<Buttle> buttles = new HashSet<>();
@@ -61,9 +55,9 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game getActiveGameFromMatch(Match match) {
         Set<Game> games = match.getGames();
-        Game activeGame = new Game();
+        Game activeGame;
         for (Game game : games) {
-            if (game.getIsActive())
+            if (Boolean.TRUE.equals(game.getIsActive()))
             { activeGame = game;
                 return activeGame;}
         }
@@ -71,8 +65,8 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<GameResponse> getAllGamesFromMatch(Long match_id) {
-        Match matchById  = matchRepository.findById(match_id).get();
+    public List<GameResponse> getAllGamesFromMatch(Long match_id) throws NotFoundException {
+        Match matchById  = matchRepository.findById(match_id).orElseThrow(NotFoundException::new);
         Set<Game> games  = matchById.getGames();
         List<GameResponse>  gameResponses= new ArrayList<>();
 
@@ -89,8 +83,8 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameResponse getlastGameInMatch(Long match_id) {
-        Match matchById  = matchRepository.findById(match_id).get();
+    public GameResponse getlastGameInMatch(Long match_id) throws NotFoundException {
+        Match matchById  = matchRepository.findById(match_id).orElseThrow(NotFoundException::new);
         Set<Game> games  = matchById.getGames();
         Long tmp=0L;
         for(Game g: games){
