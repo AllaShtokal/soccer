@@ -6,7 +6,7 @@ import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
 import java.util.List;
 
 public interface UserReservationService {
-    Exception add(Long reservation_id, Long id) throws NotFoundException;
+    void add(Long reservation_id, Long id) throws Exception;
     List<BasicUserInfoResponse> findAllUsersByReservationID (Long reservation_id);
 
     void remove(Long reservation_id, Long id);

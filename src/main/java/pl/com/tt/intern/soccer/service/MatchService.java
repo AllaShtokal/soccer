@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface MatchService {
 
-    MatchResponseRequest play(Long reservation_id);
+    MatchResponseRequest play(Long reservation_id) throws Exception;
     List<MatchFullResponse> findAllByReservationId(Long reservation_id);
     Boolean saveResults(MatchResponseRequest matchResponseRequest);
     int getNumberOfActiveTeamsByMatchId(Match activeMatch);

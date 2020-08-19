@@ -29,13 +29,13 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     @Transactional
     @Override
-    public Exception add(Long reservation_id, Long user_id) {
+    public void add(Long reservation_id, Long user_id) throws Exception {
 
 
         //if user is attached
         List<UserReservationEvent> allByUser_idAndReservation_id = userReservationRepository.findAllByUser_IdAndReservation_Id(user_id, reservation_id);
         if (allByUser_idAndReservation_id.size() > 0) {
-          return new Exception("User already is attached!");
+          throw new Exception("User already is attached!");
         }
         Reservation reservation = reservationRepository.findById(reservation_id).get();
         User user = userRepo.getOne(user_id);
@@ -49,7 +49,7 @@ public class UserReservationServiceImpl implements UserReservationService {
 
         userReservationRepository.save(userReservationEvent);
 
-        return null;
+
     }
 
     @Override
@@ -62,7 +62,6 @@ public class UserReservationServiceImpl implements UserReservationService {
 
                 reservationRepository.findById(reservation_id).get().removeUserReservationEvent(e);
                 userRepo.findById(user_id).get().removeUserReservationEvent(e);
-                //userReservationRepository.deleteByid(e.getId());
                 break;
             }
         }

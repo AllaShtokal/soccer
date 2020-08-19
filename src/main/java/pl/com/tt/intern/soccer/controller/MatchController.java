@@ -36,7 +36,7 @@ public class MatchController {
 
 
     @GetMapping("/start/{reservation_id}")
-    public ResponseEntity<MatchResponseRequest> playByReservationId(@PathVariable("reservation_id") Long reservation_id) {
+    public ResponseEntity<MatchResponseRequest> playByReservationId(@PathVariable("reservation_id") Long reservation_id) throws Exception {
 
         MatchResponseRequest matchResponse = matchService.play(reservation_id);
         return ok(matchResponse);

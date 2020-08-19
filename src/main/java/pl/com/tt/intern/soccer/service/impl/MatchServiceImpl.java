@@ -35,7 +35,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public MatchResponseRequest play(Long reservation_id) {
+    public MatchResponseRequest play(Long reservation_id) throws Exception {
         Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundReservationException::new);
 
         if (getActiveMatch(reservation_id) == null) {
@@ -168,7 +168,7 @@ public class MatchServiceImpl implements MatchService {
         return match;
     }
 
-    private void setGamesToMatch(Set<Team> teams, Match match) {
+    private void setGamesToMatch(Set<Team> teams, Match match) throws Exception {
         //if there is no active game
         Game game = createGame(teams);
         match.addGame(game);
@@ -188,7 +188,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
 
-    private Game createGame(Set<Team> teams) {
+    private Game createGame(Set<Team> teams) throws Exception {
         Game game = new Game();
         game.setIsActive(true);
         Set<Buttle> buttles = gameService.generateListOfButtlesFromListOfTeams(teams);
