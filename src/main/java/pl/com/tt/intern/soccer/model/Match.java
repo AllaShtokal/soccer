@@ -35,13 +35,13 @@ public class Match implements Serializable {
     @Column(name = "date_to", nullable = true)
     private LocalDateTime dateTo;
 
-    @OneToMany(mappedBy="matchm", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="matchm", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Team> teams = new HashSet<>();
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive ;
 
-    @OneToMany(mappedBy="matchh", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="matchh", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Game> games = new HashSet<>();;
 
     @ManyToOne

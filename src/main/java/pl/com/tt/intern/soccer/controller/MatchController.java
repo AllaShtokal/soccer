@@ -11,12 +11,15 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.MatchService;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -32,8 +35,8 @@ public class MatchController {
     private final MatchService matchService;
 
 
-    @GetMapping("/start/{id}")
-    public ResponseEntity<MatchResponseRequest> createNewMatchByReservationId(@PathVariable("id") Long reservation_id) {
+    @GetMapping("/start/{reservation_id}")
+    public ResponseEntity<MatchResponseRequest> playByReservationId(@PathVariable("reservation_id") Long reservation_id) {
 
         MatchResponseRequest matchResponse = matchService.play(reservation_id);
         return ok(matchResponse);
@@ -47,6 +50,11 @@ public class MatchController {
         return ResponseEntity
                 .status(OK)
                 .body(isContinued);
+    }
+
+    @GetMapping("/{reservation_id}")
+    public ResponseEntity<List<MatchFullResponse>> findAll(@PathVariable("reservation_id") Long reservation_id) {
+        return ok(matchService.findAllByReservationId(reservation_id));
     }
 
 }

@@ -30,23 +30,21 @@ public class LobbyController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<LobbyResponse>findByName(@PathVariable String name ){
+    public ResponseEntity<LobbyResponse> findByName(@PathVariable String name) {
         return ok(lobbyService.findByName(name));
     }
 
-
     @PostMapping
-    public ResponseEntity<LobbyRequest> create(@Valid @RequestBody LobbyRequest lobbyRequest){
+    public ResponseEntity<LobbyRequest> create(@Valid @RequestBody LobbyRequest lobbyRequest) {
 
         return ResponseEntity
                 .status(CREATED)
                 .body(lobbyService.save(lobbyRequest));
     }
 
-
     @PostMapping("/{name}")
     public ResponseEntity<LobbyChangeRequest> update(@Valid @RequestBody LobbyChangeRequest lobbyRequest,
-                                                     @PathVariable String name){
+                                                     @PathVariable String name) {
 
         return ResponseEntity
                 .status(CREATED)

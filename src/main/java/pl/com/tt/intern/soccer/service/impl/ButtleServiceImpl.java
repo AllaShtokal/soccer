@@ -1,21 +1,28 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import lombok.RequiredArgsConstructor;
 import org.junit.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.model.Buttle;
+import pl.com.tt.intern.soccer.model.Game;
 import pl.com.tt.intern.soccer.model.Match;
 import pl.com.tt.intern.soccer.model.Team;
+import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
+import pl.com.tt.intern.soccer.repository.GameRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
 import pl.com.tt.intern.soccer.service.MatchService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ButtleServiceImpl implements ButtleService {
+
+    private final GameRepository gameRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Set<String> getSetOfNamesOfTeamWinners(Set<Buttle> buttles) {
@@ -35,7 +42,7 @@ public class ButtleServiceImpl implements ButtleService {
     }
 
     @Override
-    public void setActiveTeams(Set<Team> teams, Set<Buttle> buttles) {
+    public void setActiveTeamsByListOfButtles(Set<Team> teams, Set<Buttle> buttles) {
 
         Set<String> activeTeamsNames = getSetOfNamesOfTeamWinners(buttles);
         for (Team t : teams) {
@@ -43,6 +50,22 @@ public class ButtleServiceImpl implements ButtleService {
                 t.setActive(false);
             }
         }
+
+    }
+
+    @Override
+    public List<ButtleResponse> getAllButtlesByGameID(Long game_id) {
+        Game gameById = gameRepository.findById(game_id).get();
+        Set<Buttle> buttles = gameById.getButtles();
+        List<ButtleResponse> buttleResponses = new ArrayList<>();
+        for(Buttle b: buttles)
+        {
+
+            ButtleResponse buttleResponse = modelMapper.map(b, ButtleResponse.class);
+            buttleResponses.add(buttleResponse);
+        }
+        return buttleResponses;
+
 
     }
 

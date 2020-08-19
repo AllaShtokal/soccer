@@ -41,7 +41,7 @@ public class Team implements Serializable {
     @JoinColumn(name="matchh_id", nullable=false)
     private Match matchm;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER )
     private Set<User> users = new HashSet<>();
 
     public void addUser(User user) {

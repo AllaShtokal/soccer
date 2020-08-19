@@ -4,15 +4,13 @@ import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
-import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.payload.response.*;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -37,6 +35,8 @@ public interface ReservationService {
     List<ReservationResponse> findByPeriod(ReservationPeriod period);
 
     List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id);
+
+    List<MyReservationResponse> findByCreatorId(Long user_id);
 
     List<ReservationResponse> findByDay(DayOfWeek day);
 

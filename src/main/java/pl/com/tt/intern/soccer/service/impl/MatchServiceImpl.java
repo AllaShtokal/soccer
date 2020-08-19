@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.service.impl;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -8,10 +7,12 @@ import pl.com.tt.intern.soccer.exception.NotFoundReservationException;
 import pl.com.tt.intern.soccer.exception.service.RandomString;
 import pl.com.tt.intern.soccer.model.*;
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
+import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
 import pl.com.tt.intern.soccer.repository.MatchRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
+import pl.com.tt.intern.soccer.service.GameService;
 import pl.com.tt.intern.soccer.service.MatchService;
 
 import javax.transaction.Transactional;
@@ -24,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
 
-    private final GameServiceImpl gameService;
+    private final GameService gameService;
     private final ButtleService buttleService;
     private final ModelMapper modelMapper;
     private final ReservationRepository reservationRepository;
@@ -38,18 +39,18 @@ public class MatchServiceImpl implements MatchService {
         Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundReservationException::new);
 
         if (getActiveMatch(reservation_id) == null) {
-            //then create new match and all stuff
             Match m = creteMatch();
             setGamesToMatch(setTeamsToMatch(reservation_id, m), m);
             reservation.addMatch(m);
             reservationRepository.save(reservation);
-        } else
-            {
+        } else {
 
             Match activeMatch = getActiveMatch(reservation_id);
-            if(getActiveGameFromMatch(activeMatch)==null)
-            {setGamesToMatch(setTeamsToMatch(reservation_id, activeMatch), activeMatch);
-           reservationRepository.save(reservation);}
+            if (gameService.getActiveGameFromMatch(activeMatch) == null) {
+                Set<Team> teams = setTeamsToMatch(reservation_id, activeMatch);
+                setGamesToMatch(teams, activeMatch);
+                reservationRepository.save(reservation);
+            }
 
         }
 
@@ -59,37 +60,43 @@ public class MatchServiceImpl implements MatchService {
         Match activeMatch1 = getActiveMatch(reservationAfter.getId());
         MatchResponseRequest matchResponse = new MatchResponseRequest();
         matchResponse.setMatchId(activeMatch1.getId());
-        matchResponse.setActiveButtles(mapToResponse(getActiveGameFromMatch(activeMatch1).getButtles()));
+        matchResponse.setActiveButtles(mapToResponse(gameService.getActiveGameFromMatch(activeMatch1).getButtles()));
 
         return matchResponse;
     }
 
-    //getAllMatches
+    @Override
+    public List<MatchFullResponse> findAllByReservationId(Long reservation_id) {
+        Set<Match> matches = getAllMatches(reservation_id);
+        List<MatchFullResponse> matchFullResponses = new ArrayList<>();
+        for(Match m: matches)
+        {
+            MatchFullResponse matchFullResponse = new MatchFullResponse();
+            matchFullResponse.setMatchId(m.getId());
+            matchFullResponse.setGameResponses(gameService.getAllGamesFromMatch(m.getId()));
+            matchFullResponses.add(matchFullResponse);
+        }
 
-    public Set<Match> findAll(Long reservation_id) {
+        return matchFullResponses;
+    }
+
+
+    public Set<Match> getAllMatches(Long reservation_id) {
         Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundReservationException::new);
         return reservation.getMatches();
     }
 
-    private Match getActiveMatch(Long reservation_id) {
-        Set<Match> allMatches = findAll(reservation_id);
-        for (Match m : allMatches) {
-            if (m.getIsActive())
-                return m;
 
-        }
-        return null;
-    }
+
+
 
 
     @Override
-    public Game getActiveGameFromMatch(Match match) {
-        Set<Game> games = match.getGames();
-        Game activeGame = new Game();
-        for (Game game : games) {
-            if (game.getIsActive())
-            { activeGame = game;
-            return activeGame;}
+    public Match getActiveMatch(Long reservation_id) {
+        Set<Match> allMatches = getAllMatches(reservation_id);
+        for (Match m : allMatches) {
+            if (m.getIsActive())
+                return m;
         }
         return null;
     }
@@ -112,38 +119,39 @@ public class MatchServiceImpl implements MatchService {
     public Boolean saveResults(MatchResponseRequest matchResponseRequest) {
 
         Match matchById = matchRepository.findById(matchResponseRequest.getMatchId()).get();
-        Game game = getActiveGameFromMatch(matchById);
+        Game game = gameService.getActiveGameFromMatch(matchById);
         game.setIsActive(false);
         //set not active teams
-        buttleService.setActiveTeams(matchById.getTeams(),
+        buttleService.setActiveTeamsByListOfButtles(matchById.getTeams(),
                 updateButtlesInfo(matchResponseRequest.getActiveButtles(), game.getButtles()));
         boolean result = false;
         //chek number of active teams if it is more then 1 bool set as true
-        if (getNumberOfActiveTeams(matchById) > 1) {
+        if (getNumberOfActiveTeamsByMatchId(matchById) > 1) {
             result = true;
         }
 
-        if(!result)
-        {matchById.setIsActive(false);
-        matchById.setDateTo(LocalDateTime.now());
+        if (!result) {
+            matchById.setIsActive(false);
+            LocalDateTime matchEndTime = LocalDateTime.now();
+            matchById.setDateTo(matchEndTime);
+
         }
         matchRepository.save(matchById);
         return result;
     }
 
-    public int getNumberOfActiveTeams(Match activeMatch) {
-        int num = 0;
-        num = getActiveTeamsFromMatch(activeMatch).size();
-        return num;
+    @Override
+    public int getNumberOfActiveTeamsByMatchId(Match activeMatch) {
+        return getActiveTeamsFromMatch(activeMatch).size();
     }
 
     private Set<Buttle> updateButtlesInfo(List<ButtleResponse> requestButtles, Set<Buttle> buttles) {
 
-        for (int i = 0; i < requestButtles.size(); i++)
+        for (ButtleResponse requestButtle : requestButtles)
             for (Buttle b : buttles) {
-                if (requestButtles.get(i).getId().equals(b.getId())) {
-                    b.setScoreTeam1(requestButtles.get(i).getScoreTeam1());
-                    b.setScoreTeam2(requestButtles.get(i).getScoreTeam2());
+                if (requestButtle.getId().equals(b.getId())) {
+                    b.setScoreTeam1(requestButtle.getScoreTeam1());
+                    b.setScoreTeam2(requestButtle.getScoreTeam2());
                     break;
                 }
 
@@ -168,13 +176,13 @@ public class MatchServiceImpl implements MatchService {
 
     private Set<Team> setTeamsToMatch(Long reservation_id, Match match) {
         //if match has no teams then generate teams and return them
-        if(match.getTeams().size()==0)
-        {Set<Team> teams = generateTeams(reservation_id);
-        for (Team team : teams) {
-            match.addTeam(team);
-        }
-        return teams;}
-        else return getActiveTeamsFromMatch(match);
+        if (match.getTeams().size() == 0) {
+            Set<Team> teams = generateTeams(reservation_id);
+            for (Team team : teams) {
+                match.addTeam(team);
+            }
+            return teams;
+        } else return getActiveTeamsFromMatch(match);
 
 
     }

@@ -14,9 +14,11 @@ import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
+import pl.com.tt.intern.soccer.payload.response.MyReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
+import pl.com.tt.intern.soccer.repository.LobbyRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
@@ -49,10 +51,9 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final LobbyService lobbyService;
+    private final LobbyRepository lobbyRepository;
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
-
-    private  ModelMapper modelMapper;
 
 
 
@@ -87,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby my_first_lobby;
         try {
-            my_first_lobby = modelMapper.map(lobbyService.findByName(reservationPersistRequest.getLobbyName()), Lobby.class);
+            my_first_lobby = lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()).get();
         } catch (NullPointerException e) {
             throw new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName());
         }
@@ -124,6 +125,22 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id) {
         log.debug("Finding all reservations in period: {}", period);
         return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()), user_id);
+    }
+
+    @Override
+    public List<MyReservationResponse> findByCreatorId(Long user_id) {
+        log.debug("Finding all created by this user: {}", user_id);
+        List<Reservation> allByUser_id = reservationRepository.findAllByUser_Id(user_id);
+        return mapToMyReservationResponse(allByUser_id,user_id);
+    }
+
+    private List<MyReservationResponse> mapToMyReservationResponse(List<Reservation> reservations,  Long user_id) {
+        List<MyReservationResponse> responseList = new ArrayList<>();
+        for(Reservation r: reservations)
+        {
+            responseList.add(new MyReservationResponse(r,user_id));
+        }
+        return responseList;
     }
 
     private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations, Long user_id) {
@@ -201,7 +218,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby lobby;
         try {
-            lobby = modelMapper.map(lobbyService.findByName(requestObject.getLobbyName()), Lobby.class);
+            lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()).get();
         } catch (NullPointerException e) {
             throw new NotFoundLobbyByIdException(requestObject.getLobbyName());
         }
