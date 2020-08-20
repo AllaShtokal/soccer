@@ -30,15 +30,16 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     @Transactional
     @Override
-    public void add(Long reservation_id, Long user_id) throws Exception {
+    public void add(Long reservationId, Long userId) throws Exception {
 
 
-        List<UserReservationEvent> allByUser_idAndReservation_id = userReservationRepository.findAllByUser_IdAndReservation_Id(user_id, reservation_id);
+        List<UserReservationEvent> allByUser_idAndReservation_id =
+                userReservationRepository.findAllByUser_IdAndReservation_Id(userId, reservationId);
         if (!allByUser_idAndReservation_id.isEmpty()) {
           throw new Exception("User already is attached!");
         }
-        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundException::new);
-        User user = userRepo.getOne(user_id);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundException::new);
+        User user = userRepo.getOne(userId);
 
         UserReservationEvent userReservationEvent = new UserReservationEvent();
 
@@ -54,25 +55,25 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     @Override
     @Transactional
-    public void remove(Long reservation_id, Long user_id) throws NotFoundException {
+    public void remove(Long reservationId, Long userId) throws NotFoundException {
 
         List<UserReservationEvent> allEvents = userReservationRepository.findAll();
         for (UserReservationEvent e : allEvents) {
-            if (e.getUser().getId().equals(user_id) && e.getReservation().getId().equals(reservation_id)) {
+            if (e.getUser().getId().equals(userId) && e.getReservation().getId().equals(reservationId)) {
 
-                reservationRepository.findById(reservation_id).orElseThrow(NotFoundException::new).removeUserReservationEvent(e);
-                userRepo.findById(user_id).orElseThrow(NotFoundException::new).removeUserReservationEvent(e);
+                reservationRepository.findById(reservationId).orElseThrow(NotFoundException::new).removeUserReservationEvent(e);
+                userRepo.findById(userId).orElseThrow(NotFoundException::new).removeUserReservationEvent(e);
                 break;
             }
         }
     }
 
     @Override
-    public List<BasicUserInfoResponse> findAllUsersByReservationID(Long reservation_id) throws NotFoundException {
-        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(NotFoundException::new);
+    public List<BasicUserInfoResponse> findAllUsersByReservationID(Long reservationId) throws NotFoundException {
+        reservationRepository.findAll();
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundException::new);
         Set<UserReservationEvent> userReservationEvents = reservation.getUserReservationEvents();
         List<User> users = new ArrayList<>();
-
 
         for (UserReservationEvent e : userReservationEvents) {
             users.add(e.getUser());
