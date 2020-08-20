@@ -26,12 +26,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="reservation_id"
-                                 baseTableName="confirmation_reservation"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="confirmation_reservation_constrain"
-                                 referencedColumnNames="id"
-                                 referencedTableName="reservation"/>
+
     </changeSet>
 </databaseChangeLog>

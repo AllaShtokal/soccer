@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
+import pl.com.tt.intern.soccer.payload.response.MyReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
@@ -15,6 +17,7 @@ import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
@@ -44,6 +47,16 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponse>> findByPeriod(@RequestParam ReservationPeriod period) {
         log.debug("GET /reservations?period={}", period);
         return ok(reservationService.findByPeriod(period));
+    }
+
+    @PostMapping("/period/all")
+    public ResponseEntity<List<ReservationShortInfoResponse>> findAllByPeriod(@CurrentUser UserPrincipal user,@RequestBody ReservationSimpleDateRequest period) {
+        return ok(reservationService.findShortByPeriod(period, user.getId()));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<MyReservationResponse>> findMy(@CurrentUser UserPrincipal user) {
+        return ok(reservationService.findByCreatorId( user.getId()));
     }
 
     @GetMapping(params = "day")

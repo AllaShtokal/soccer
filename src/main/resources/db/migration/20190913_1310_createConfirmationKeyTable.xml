@@ -20,12 +20,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="confirmation_key"
-                                 onUpdate="CASCADE"
-                                 onDelete="CASCADE"
-                                 constraintName="confirmationKey_user_constraint"
-                                 referencedColumnNames="id"
-                                 referencedTableName="user"/>
+
     </changeSet>
 </databaseChangeLog>

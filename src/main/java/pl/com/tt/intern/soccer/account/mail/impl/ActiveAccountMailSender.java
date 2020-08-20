@@ -15,7 +15,7 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_A
 @RequiredArgsConstructor
 public class ActiveAccountMailSender implements PerAccountTypeMailSender {
 
-    private final String FILE_NAME = "active";
+    private static final String FILE_NAME = "active";
     private final MessageSource messageSource;
     private final CustomizedSenderImpl sender;
 

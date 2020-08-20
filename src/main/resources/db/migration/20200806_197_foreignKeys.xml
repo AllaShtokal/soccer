@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="shtokala" id="6568201920678454">
+
+        <addForeignKeyConstraint baseColumnNames="matchh_id"
+                                 baseTableName="team"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="team_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="matchh"/>
+        <addForeignKeyConstraint baseColumnNames="reservation_id"
+                                 baseTableName="matchh"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="matchh_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="reservation"/>
+        <addForeignKeyConstraint baseColumnNames="matchh_id"
+                                 baseTableName="game"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="game_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="matchh"/>
+        <addForeignKeyConstraint baseColumnNames="game_id"
+                                 baseTableName="buttle"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="buttle_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="game"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_reservation"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="user_id_reservation_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="reservation_id"
+                                 baseTableName="user_reservation"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="user_reservation_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="reservation"/>
+        <addForeignKeyConstraint baseColumnNames="reservation_id"
+                                 baseTableName="confirmation_reservation"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="confirmation_reservation_constrain"
+                                 referencedColumnNames="id"
+                                 referencedTableName="reservation"/>
+        <addForeignKeyConstraint baseColumnNames="lobby_id"
+                                 baseTableName="reservation"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="reservation_lobby_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="lobby"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="reservation"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="reservation_user_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="team_id"
+                                 baseTableName="user"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="team_user_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="team"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_role"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="user_role_reservation_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="confirmation_key"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"
+                                 constraintName="confirmation_key_constraint"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+
+
+
+    </changeSet>
+</databaseChangeLog>

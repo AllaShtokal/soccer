@@ -14,4 +14,7 @@ public class ReservationPersistRequest {
     @NotNull
     private LocalDateTime dateTo;
 
+    @NotNull
+    private String lobbyName;
+
 }

@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountMailFactory;
 import pl.com.tt.intern.soccer.account.factory.ChangeAccountUrlGeneratorFactory;
@@ -23,6 +24,9 @@ import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.CONFIRMATION_RE
 @RequiredArgsConstructor
 @Slf4j
 public class ConfirmationReservationServiceImpl implements ConfirmationReservationService {
+
+    @Value("${mail.config.enabled}")
+    private Boolean mailEnabled;
 
     private final ConfirmationReservationRepository repository;
     private final Timer timer;
@@ -55,8 +59,10 @@ public class ConfirmationReservationServiceImpl implements ConfirmationReservati
     public void createAndSaveConfirmationReservation(Reservation reservation) {
         ConfirmationReservation confirmationReservation = generateConfirmationReservation(reservation);
         repository.save(confirmationReservation);
-        addTaskToTimerTask(confirmationReservation);
-        addRemoveReservationTaskToTimerTask(confirmationReservation);
+        if (mailEnabled) {
+            addTaskToTimerTask(confirmationReservation);
+            addRemoveReservationTaskToTimerTask(confirmationReservation);
+        }
     }
 
     private ConfirmationReservation generateConfirmationReservation(Reservation reservation) {

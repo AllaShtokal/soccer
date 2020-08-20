@@ -1,7 +1,6 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
@@ -12,12 +11,13 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "user")
 @EqualsAndHashCode(callSuper = true)
@@ -58,7 +58,8 @@ public class User extends DateAudit implements Serializable {
             nullable = false)
     private boolean enabled;
 
-    @OneToOne(mappedBy = "user", cascade = PERSIST)
+
+     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = LAZY)
     private UserInfo userInfo;
 
     @ManyToMany(fetch = EAGER)
@@ -68,10 +69,25 @@ public class User extends DateAudit implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ElementCollection(fetch = LAZY)
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<ConfirmationKey> confirmationKeys;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Reservation> reservations;
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, orphanRemoval = true)
+    Set<UserReservationEvent> userReservationEvents;
+
+    public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
+        this.userReservationEvents.add(userReservationEvent);
+        userReservationEvent.setUser(this);
+
+    }
+    public void removeUserReservationEvent(UserReservationEvent userReservationEvent) {
+        this.userReservationEvents.remove(userReservationEvent);
+        userReservationEvent.setUser(null);
+
+    }
+
+    @ManyToOne
+    @JoinColumn(name="team_id")
+    private Team team;
+
 }

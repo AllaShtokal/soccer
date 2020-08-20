@@ -1,8 +1,6 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,7 +11,8 @@ import static java.util.UUID.randomUUID;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "confirmation_key")
 @EqualsAndHashCode(exclude = "user")
@@ -32,7 +31,7 @@ public class ConfirmationKey implements Serializable {
     private User user;
 
     @NotNull
-    @Column(name = "uuid", unique = true)
+    @Column(name = "uuid", unique = true, length = 70)
     private String uuid;
 
     @NotNull

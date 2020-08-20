@@ -10,7 +10,8 @@ import java.io.Serializable;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 @AllArgsConstructor
@@ -48,7 +49,7 @@ public class UserInfo extends DateAudit implements Serializable {
             length = 30)
     private String skype;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 

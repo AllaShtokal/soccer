@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="shtokala" id="insert-lobby">
+        <insert tableName="lobby">
+            <column name="lobby_name" value="MY_FIRST_LOBBY"/>
+            <column name="available" valueBoolean="true"/>
+            <column name="limit_members" value="10"/>
+        </insert>
+        <insert tableName="lobby">
+            <column name="lobby_name" value="MY_SECOND_LOBBY"/>
+            <column name="available" valueBoolean="true"/>
+            <column name="limit_members" value="10"/>
+        </insert>
+        <insert tableName="lobby">
+            <column name="lobby_name" value="MY_THIRD_LOBBY"/>
+            <column name="available" valueBoolean="true"/>
+            <column name="limit_members" value="10"/>
+        </insert>
+        <insert tableName="lobby">
+            <column name="lobby_name" value="***LOBBY***"/>
+            <column name="available" valueBoolean="true"/>
+            <column name="limit_members" value="10"/>
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>

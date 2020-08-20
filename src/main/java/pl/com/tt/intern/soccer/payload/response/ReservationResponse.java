@@ -12,6 +12,7 @@ public class ReservationResponse {
     private LocalDateTime dateFrom;
     private LocalDateTime dateTo;
     private Boolean confirmed;
+    private String lobbyName;
 
     public ReservationResponse() {
     }
@@ -21,6 +22,11 @@ public class ReservationResponse {
         this.dateFrom = reservation.getDateFrom();
         this.dateTo = reservation.getDateTo();
         this.confirmed = reservation.getConfirmed();
+        this.lobbyName = reservation.getLobby().getName();
+
+
+
     }
+
 
 }

@@ -15,7 +15,7 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.NOT_LOGG
 @RequiredArgsConstructor
 public class ChangeAccountPasswordMailSender implements PerAccountTypeMailSender {
 
-    private final String FILE_NAME = "change_password";
+    private static final String FILE_NAME = "change_password";
     private final MessageSource messageSource;
     private final CustomizedSenderImpl sender;
 

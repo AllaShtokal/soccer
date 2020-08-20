@@ -1,23 +1,24 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "confirmation_reservation")
 @EqualsAndHashCode(exclude = "reservation")
-public class ConfirmationReservation {
+public class ConfirmationReservation implements Serializable {
+
+    private static final long serialVersionUID = 9114226883488956433L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -30,7 +31,7 @@ public class ConfirmationReservation {
     private Reservation reservation;
 
     @NotNull
-    @Column(name = "uuid", unique = true)
+    @Column(name = "uuid", unique = true, length = 70 ,nullable = false)
     private String uuid;
 
     @NotNull

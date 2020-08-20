@@ -35,7 +35,7 @@ public class SignUpServiceImpl implements SignUpService {
     @Value("${mail.config.enabled}")
     private Boolean mailEnabled;
 
-    private final String SUCCESSFUL_SIGN_UP_MSG = "User registered successfully";
+    private static final String SUCCESSFUL_SIGN_UP_MSG = "User registered successfully";
     private final UserService userService;
     private final RoleService roleService;
     private final ModelMapper mapper;
@@ -58,7 +58,6 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
 
-
     @Override
     public SuccessfulSignUpResponse signUp(SignUpRequest request) throws NotFoundException, PasswordsMismatchException {
         if (doPasswordsMatch(request)) {
@@ -75,6 +74,15 @@ public class SignUpServiceImpl implements SignUpService {
             throw new PasswordsMismatchException();
     }
 
+    @Override
+    public Boolean ifUsernameIsTaken(String username) throws NotFoundException {
+        return userService.findByUsername(username) != null;
+    }
+
+    @Override
+    public Boolean ifEmailIsTaken(String email) throws NotFoundException {
+        return userService.findByEmail(email) != null;
+    }
     private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) throws NotFoundException {
         if (mailEnabled) {
             setAndSendActivationMailMsg(user);

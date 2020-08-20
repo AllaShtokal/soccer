@@ -15,11 +15,15 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_A
 public class AccountActivationUrlGenerator extends AbstractAccountChangeUrlGenerator {
 
     @Getter
-    private final String urlSuffix = "login";
+    private static final String URL_SUFFIX = "login";
 
     @Override
     public boolean supports(AccountChangeType type) {
         return ACTIVE_ACCOUNT.equals(type);
     }
 
+    @Override
+    public String getUrlSuffix() {
+        return null;
+    }
 }

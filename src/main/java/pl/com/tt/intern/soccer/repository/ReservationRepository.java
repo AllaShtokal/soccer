@@ -14,6 +14,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByDateToAfterAndDateFromBefore(LocalDateTime from, LocalDateTime to);
 
+    List<Reservation> findAllByDateFromAfterAndDateToBefore(LocalDateTime from, LocalDateTime to);
+
+    List<Reservation> findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(LocalDateTime from, LocalDateTime to);
+    List<Reservation> findAllByUser_Id (Long user_id);
+
+
     boolean existsByIdAndUserId(Long id, Long userId);
 
     @Query(value = "SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM Reservation r WHERE " +

@@ -5,24 +5,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
-import pl.com.tt.intern.soccer.exception.NotFoundException;
-import pl.com.tt.intern.soccer.exception.ReservationClashException;
-import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.exception.*;
 import pl.com.tt.intern.soccer.model.ConfirmationReservation;
+import pl.com.tt.intern.soccer.model.Lobby;
 import pl.com.tt.intern.soccer.model.Reservation;
+import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
-import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
+import pl.com.tt.intern.soccer.payload.response.*;
+import pl.com.tt.intern.soccer.repository.LobbyRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
-import pl.com.tt.intern.soccer.service.ConfirmationReservationService;
-import pl.com.tt.intern.soccer.service.ReservationService;
-import pl.com.tt.intern.soccer.service.UserService;
+import pl.com.tt.intern.soccer.service.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,8 +42,11 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserService userService;
+    private final LobbyRepository lobbyRepository;
     private final ModelMapper mapper;
     private final ConfirmationReservationService confirmationService;
+    private final GameService gameService;
+    private final ButtleService buttleService;
 
 
 
@@ -54,6 +56,7 @@ public class ReservationServiceImpl implements ReservationService {
         return mapToResponse(reservationRepository.findAll());
     }
 
+    @Transactional
     @Override
     public ReservationResponse findById(Long id) throws NotFoundException {
         log.debug("Finding reservation by id: {}", id);
@@ -75,11 +78,22 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = mapper.map(reservationPersistRequest, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setId(null);
-        reservation.setUser(userService.findById(userId));
+
+        Lobby my_first_lobby;
+        try {
+            my_first_lobby = lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()).orElseThrow(NotFoundException::new);
+        } catch (NullPointerException e) {
+            throw new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName());
+        }
+        reservation.setLobby(my_first_lobby);
+        User user = userService.findById(userId);
+        reservation.setUser(user);
+        reservation.setConfirmed(true);
         Reservation savedEntity = reservationRepository.save(reservation);
         confirmationService.createAndSaveConfirmationReservation(savedEntity);
         return mapper.map(savedEntity, ReservationPersistedResponse.class);
     }
+
 
     @Override
     @Transactional
@@ -99,6 +113,36 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationResponse> findByPeriod(ReservationPeriod period) {
         log.debug("Finding all reservations in period: {}", period);
         return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()));
+    }
+    @Override
+    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id) {
+        log.debug("Finding all reservations in period: {}", period);
+        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()), user_id);
+    }
+
+    @Override
+    public List<MyReservationResponse> findByCreatorId(Long user_id) {
+        log.debug("Finding all created by this user: {}", user_id);
+        List<Reservation> allByUser_id = reservationRepository.findAllByUser_Id(user_id);
+        return mapToMyReservationResponse(allByUser_id,user_id);
+    }
+
+    private List<MyReservationResponse> mapToMyReservationResponse(List<Reservation> reservations,  Long user_id) {
+        List<MyReservationResponse> responseList = new ArrayList<>();
+        for(Reservation r: reservations)
+        {
+            responseList.add(new MyReservationResponse(r,user_id));
+        }
+        return responseList;
+    }
+
+    private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations, Long user_id) {
+        List<ReservationShortInfoResponse> responseList = new ArrayList<>();
+        for(Reservation r: reservations)
+        {
+            responseList.add(new ReservationShortInfoResponse(r,user_id));
+        }
+        return responseList;
     }
 
     @Override
@@ -164,6 +208,14 @@ public class ReservationServiceImpl implements ReservationService {
         verifyEditedReservation(requestObject, reservation);
         reservation.setDateFrom(requestObject.getDateFrom());
         reservation.setDateTo(requestObject.getDateTo());
+
+        Lobby lobby;
+        try {
+            lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()) .orElseThrow(NotFoundException::new);
+        } catch (NullPointerException e) {
+            throw new NotFoundLobbyByIdException(requestObject.getLobbyName());
+        }
+        reservation.setLobby(lobby);
         Reservation savedReservation = reservationRepository.save(reservation);
         return mapper.map(savedReservation, ReservationPersistedResponse.class);
     }
@@ -215,6 +267,16 @@ public class ReservationServiceImpl implements ReservationService {
         if (time.getNano() != 0) return false;
         if (time.getSecond() != 0) return false;
         return time.getMinute() % TIME_ROUNDING_IN_MINUTES == 0;
+    }
+
+    @Override
+    public TeamResponse getWinnerTeamByMatch(Long match_id) throws NotFoundException {
+
+        GameResponse gameResponse = gameService.getlastGameInMatch(match_id);
+        List<ButtleResponse> buttles = gameResponse.getButtles();
+        return buttleService.getTeamWinner(buttles.get(0));
+
+
     }
 
     @Override

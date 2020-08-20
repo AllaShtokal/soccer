@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.configuration;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
@@ -23,8 +24,11 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.CONFIRM_
 import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.CONFIRMATION_RESERVATION_KEY;
 
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoadDataConfiguration {
+
+    @Value("${mail.config.enabled}")
+    private Boolean isEmail;
 
     private final ConfirmationReservationService confirmationReservationService;
     private final Timer timer;
@@ -32,11 +36,14 @@ public class LoadDataConfiguration {
     private final ChangeAccountMailFactory mailFactory;
     private final ChangeAccountUrlGeneratorFactory urlFactory;
 
+
     @EventListener(ApplicationReadyEvent.class)
     public void addConfirmationsToList() {
-        confirmationReservationService.findAllByEmailSend(false).stream()
-                .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
-                .forEach(cr -> timer.schedule(getNewTimerTask(cr), CustomDateUtil.toDate(cr.getTimeToMailSend())));
+        if (Boolean.TRUE.equals(isEmail)) {
+            confirmationReservationService.findAllByEmailSend(false).stream()
+                    .filter(cr -> cr.getTimeToMailSend().isAfter(LocalDateTime.now()))
+                    .forEach(cr -> timer.schedule(getNewTimerTask(cr), CustomDateUtil.toDate(cr.getTimeToMailSend())));
+        }
     }
 
     private TimerTask getNewTimerTask(ConfirmationReservation cr) {
@@ -72,19 +79,26 @@ public class LoadDataConfiguration {
 
     @EventListener(ApplicationReadyEvent.class)
     public void removeFromDataBaseExpiredConfirmationReservations() {
-        confirmationReservationService.findAll().stream()
-                .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
-                .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()), CustomDateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
+        if (isEmail) {
+            confirmationReservationService.findAll().stream()
+                    .filter(cr -> cr.getExpirationTime().isBefore(LocalDateTime.now().plusHours(2)))
+                    .forEach(cr -> timer.schedule(getNewTimerTaskForRemoveExpiredConfirmationKeys(cr.getReservation()),
+                            CustomDateUtil.toDate(cr.getExpirationTime().plusMinutes(1))));
+        }
     }
 
     private TimerTask getNewTimerTaskForRemoveExpiredConfirmationKeys(Reservation reservation) {
+
         return new TimerTask() {
             @Override
             public void run() {
-                if (!reservation.getConfirmed()) {
-                    reservationService.deleteById(reservation.getId());
+                if (isEmail) {
+                    if (!reservation.getConfirmed()) {
+                        reservationService.deleteById(reservation.getId());
+                    }
                 }
             }
         };
+
     }
 }
