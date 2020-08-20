@@ -40,7 +40,6 @@ public class MatchServiceImpl implements MatchService {
     private final UserRepository userRepository;
 
 
-
     @Transactional
     @Override
     public MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws Exception {
@@ -79,24 +78,37 @@ public class MatchServiceImpl implements MatchService {
 
     private Set<Team> getTeamsFromTeamRequest(List<TeamRequest> teamRequests, Match match) throws NotFoundException {
         Set<Team> teams = new HashSet<>();
-        teamRequests.forEach(t -> {
+        List<User> users = userRepository.findAll();
+
+        for (TeamRequest t : teamRequests) {
             Team team = new Team();
             team.setName(t.getTeamName());
             team.setActive(true);
             Set<String> usernames = t.getUsernames();
-            List<User> users = userRepository.findByUsernameIn(usernames);
-            users.forEach(team::addUser);
+
+            for (String n : usernames) {
+                for (User u : users)
+                    if (n.equals(u.getUsername())) {
+                        team.addUser(u);
+                        break;
+                    }
+
+            }
+
             teams.add(team);
-        });
+        }
 
         teams.forEach(match::addTeam);
         return teams;
     }
+
     private Set<Team> setTeamsToMatch(Long reservationId, Match match) throws NotFoundException {
         if (match.getTeams().isEmpty()) {
             Set<Team> teams = generateTeams(reservationId);
 
-            teams.forEach(match::addTeam);
+            for (Team team : teams) {
+                match.addTeam(team);
+            }
             return teams;
         } else return getActiveTeamsFromMatch(match);
 
@@ -217,8 +229,6 @@ public class MatchServiceImpl implements MatchService {
         Game game = createGame(teams);
         match.addGame(game);
     }
-
-
 
 
     private Game createGame(Set<Team> teams) throws Exception {
