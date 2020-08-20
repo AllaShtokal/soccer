@@ -33,7 +33,6 @@ public class UserReservationServiceImpl implements UserReservationService {
     public void add(Long reservation_id, Long user_id) throws Exception {
 
 
-        //if user is attached
         List<UserReservationEvent> allByUser_idAndReservation_id = userReservationRepository.findAllByUser_IdAndReservation_Id(user_id, reservation_id);
         if (!allByUser_idAndReservation_id.isEmpty()) {
           throw new Exception("User already is attached!");

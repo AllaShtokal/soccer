@@ -15,14 +15,14 @@ import static pl.com.tt.intern.soccer.account.factory.AccountChangeType.ACTIVE_A
 @RequiredArgsConstructor
 public class ActiveAccountMailSender implements PerAccountTypeMailSender {
 
-    private static final String fileName = "active";
+    private static final String FILE_NAME = "active";
     private final MessageSource messageSource;
     private final CustomizedSenderImpl sender;
 
     @Override
     public void send(String email, String url) {
         String subject = messageSource.getMessage("account.active.mail.subject", null, Locale.US);
-        sender.insertLinkToMsgAndSendMail(email, fileName, subject, url);
+        sender.insertLinkToMsgAndSendMail(email, FILE_NAME, subject, url);
     }
 
     @Override
