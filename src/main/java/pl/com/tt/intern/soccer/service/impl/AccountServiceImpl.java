@@ -137,8 +137,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) {
-        UserInfo userInfo = mapper.map(userPrincipal, User.class).getUserInfo();
+    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) throws NotFoundException {
+        UserInfo userInfo = userPrincipal.getUserInfo();
         userInfo.setFirstName(request.getFirstName());
         userInfo.setLastName(request.getLastName());
         userInfo.setPhone(request.getPhone());

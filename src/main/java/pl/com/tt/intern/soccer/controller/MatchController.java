@@ -52,7 +52,7 @@ public class MatchController {
     }
 
     @GetMapping("/{reservation_id}")
-    public ResponseEntity<List<MatchFullResponse>> findAll(@PathVariable("reservation_id") Long reservation_id) {
+    public ResponseEntity<List<MatchFullResponse>> findAll(@PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
         return ok(matchService.findAllByReservationId(reservation_id));
     }
 
