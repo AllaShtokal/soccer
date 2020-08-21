@@ -64,6 +64,9 @@ public class User extends DateAudit implements Serializable {
      @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = LAZY)
     private UserInfo userInfo;
 
+     @OneToMany (mappedBy="user")
+     private Set<Reservation> reservation;
+
     @ManyToMany
     @JoinTable(
             name = "user_role",

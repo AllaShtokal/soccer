@@ -40,7 +40,7 @@ public class MatchServiceImpl implements MatchService {
     private final UserRepository userRepository;
 
 
-    @Transactional
+
     @Override
     public MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws Exception {
 
@@ -54,7 +54,9 @@ public class MatchServiceImpl implements MatchService {
 
                 setGamesToMatch(getTeamsFromTeamRequest(teamRequests, m), m);
             }
-            reservation.addMatch(m);
+
+            Match save = matchRepository.save(m);
+            reservation.addMatch(save);
             reservationRepository.save(reservation);
         } else {
 
@@ -78,14 +80,14 @@ public class MatchServiceImpl implements MatchService {
 
     private Set<Team> getTeamsFromTeamRequest(List<TeamRequest> teamRequests, Match match) throws NotFoundException {
         Set<Team> teams = new HashSet<>();
-        List<User> users = userRepository.findAll();
+
 
         for (TeamRequest t : teamRequests) {
             Team team = new Team();
             team.setName(t.getTeamName());
             team.setActive(true);
             Set<String> usernames = t.getUsernames();
-
+            List<User> users = userRepository.findByUsernameIn(usernames);
             for (String n : usernames) {
                 for (User u : users)
                     if (n.equals(u.getUsername())) {
@@ -99,6 +101,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         teams.forEach(match::addTeam);
+
         return teams;
     }
 
