@@ -7,6 +7,8 @@ public class BasicUserInfoResponse {
 
     private String username;
     private String email;
+    private String won;
+    private String lost;
 
 
     public BasicUserInfoResponse() {

@@ -12,7 +12,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="team_name" type="VARCHAR(20)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false" />
             </column>
             <column name="matchh_id" type="BIGINT">
                 <constraints nullable="true"/>

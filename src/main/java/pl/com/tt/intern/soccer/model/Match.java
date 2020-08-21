@@ -43,7 +43,8 @@ public class Match implements Serializable {
     @OneToMany(mappedBy="matchh", cascade = CascadeType.ALL)
     private Set<Game> games = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="reservation_id", nullable=false)
     private Reservation reservation;
 

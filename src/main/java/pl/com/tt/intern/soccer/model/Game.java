@@ -29,7 +29,7 @@ public class Game implements Serializable {
        @Column(name = "is_active", nullable = false)
        private Boolean isActive;
 
-       @ManyToOne
+       @ManyToOne(cascade = CascadeType.ALL)
        @JoinColumn(name="matchh_id", nullable=false)
        private Match matchh;
 

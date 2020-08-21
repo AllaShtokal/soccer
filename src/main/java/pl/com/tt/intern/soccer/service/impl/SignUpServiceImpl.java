@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -66,6 +65,7 @@ public class SignUpServiceImpl implements SignUpService {
 
             userInfo.setUser(user);
             user.setUserInfo(userInfo);
+            user.setEnabled(true);
             user.setRoles(singleton(roleService.findByType(ROLE_USER)));
             User result = userService.save(user);
 

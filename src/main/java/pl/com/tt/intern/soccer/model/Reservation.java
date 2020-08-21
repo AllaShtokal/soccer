@@ -51,7 +51,8 @@ public class Reservation implements Serializable {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserReservationEvent> userReservationEvents;
 
-    @OneToMany(mappedBy="reservation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="reservation", cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Match> matches = new HashSet<>();
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {

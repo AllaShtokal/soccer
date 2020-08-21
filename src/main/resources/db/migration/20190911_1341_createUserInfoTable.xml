@@ -25,6 +25,9 @@
             <column name="phone" type="VARCHAR(12)"/>
             <column name="skype" type="VARCHAR(30)"/>
 
+            <column name="won" type="BIGINT"/>
+            <column name="lost" type="BIGINT"/>
+
             <column name="user_id" type="BIGINT"/>
         </createTable>
     </changeSet>

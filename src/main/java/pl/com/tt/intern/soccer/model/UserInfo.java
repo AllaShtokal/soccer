@@ -53,6 +53,12 @@ public class UserInfo extends DateAudit implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "won")
+    private Long won;
+
+    @Column(name = "lost")
+    private Long lost;
+
     public UserInfo(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;

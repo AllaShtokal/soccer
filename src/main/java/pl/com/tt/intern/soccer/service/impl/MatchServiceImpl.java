@@ -14,15 +14,13 @@ import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
 import pl.com.tt.intern.soccer.payload.response.MatchResultsResponse;
 import pl.com.tt.intern.soccer.repository.MatchRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
+import pl.com.tt.intern.soccer.repository.TeamRepository;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,14 +36,14 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
     private final ReservationService reservationService;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
 
-
+    @Transactional
     @Override
     public MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws Exception {
 
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundReservationException::new);
-
         if (getActiveMatch(reservationId) == null) {
             Match m = creteMatch();
             if (teamRequests == null) {
@@ -54,23 +52,18 @@ public class MatchServiceImpl implements MatchService {
 
                 setGamesToMatch(getTeamsFromTeamRequest(teamRequests, m), m);
             }
+            reservation.addMatch(m);
 
-            Match save = matchRepository.save(m);
-            reservation.addMatch(save);
-            reservationRepository.save(reservation);
+
         } else {
-
             Match activeMatch = getActiveMatch(reservationId);
             if (gameService.getActiveGameFromMatch(activeMatch) == null) {
                 Set<Team> teams = setTeamsToMatch(reservationId, activeMatch);
                 setGamesToMatch(teams, activeMatch);
-                reservationRepository.save(reservation);
             }
-
         }
-        //create response
-        Reservation reservationAfter = reservationRepository.findById(reservationId).orElseThrow(NotFoundReservationException::new);
-        Match activeMatch1 = getActiveMatch(reservationAfter.getId());
+
+        Match activeMatch1 = getActiveMatch(reservation.getId());
         MatchResponseRequest matchResponse = new MatchResponseRequest();
         matchResponse.setMatchId(activeMatch1.getId());
         matchResponse.setActiveButtles(mapToResponse(gameService.getActiveGameFromMatch(activeMatch1).getButtles()));
@@ -78,16 +71,25 @@ public class MatchServiceImpl implements MatchService {
         return matchResponse;
     }
 
-    private Set<Team> getTeamsFromTeamRequest(List<TeamRequest> teamRequests, Match match) throws NotFoundException {
+
+
+    private Set<Team> getTeamsFromTeamRequest(List<TeamRequest> teamRequests, Match match) throws Exception {
         Set<Team> teams = new HashSet<>();
+        int requestSize = teamRequests.size();
+        Set<String> teamnames = new HashSet<>();
+        for (TeamRequest t : teamRequests){
+            teamnames.add(t.getTeamName());
+        }
+        if(requestSize!=teamnames.size()){
+            throw new Exception("names are not unique!");}
 
-
-        for (TeamRequest t : teamRequests) {
+            for (TeamRequest t : teamRequests) {
             Team team = new Team();
             team.setName(t.getTeamName());
             team.setActive(true);
             Set<String> usernames = t.getUsernames();
-            List<User> users = userRepository.findByUsernameIn(usernames);
+            List<User> users = new ArrayList<>();
+            users = userRepository.findByUsernameIn(usernames);
             for (String n : usernames) {
                 for (User u : users)
                     if (n.equals(u.getUsername())) {

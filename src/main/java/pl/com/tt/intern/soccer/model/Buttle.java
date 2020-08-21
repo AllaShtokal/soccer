@@ -46,7 +46,7 @@ public class Buttle implements Serializable {
             nullable = false)
     private int scoreTeam2;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="game_id", nullable=false)
     private Game game;
 

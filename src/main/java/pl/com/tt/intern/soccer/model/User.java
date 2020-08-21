@@ -91,7 +91,7 @@ public class User extends DateAudit implements Serializable {
 
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="team_id")
     private Team team;
 

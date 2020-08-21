@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.payload.response.UserRankingResponse;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.UserService;
 
@@ -104,5 +105,12 @@ public class UserServiceImpl implements UserService {
     public void changeEmail(User user, String email) {
         user.setEmail(email);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserRankingResponse showRankingByUserId(Long userId) {
+        List<User> all = userRepository.findAll();
+        return null;
+
     }
 }
