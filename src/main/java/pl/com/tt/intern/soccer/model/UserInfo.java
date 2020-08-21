@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
@@ -54,9 +55,11 @@ public class UserInfo extends DateAudit implements Serializable {
     private User user;
 
     @Column(name = "won")
+    @ColumnDefault("0")
     private Long won;
 
     @Column(name = "lost")
+    @ColumnDefault("0")
     private Long lost;
 
     public UserInfo(String firstName, String lastName) {
