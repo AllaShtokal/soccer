@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.NotFoundReservationException;
+import pl.com.tt.intern.soccer.exception.UserAlreadyExistException;
 import pl.com.tt.intern.soccer.model.Reservation;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.model.UserReservationEvent;
@@ -30,15 +32,15 @@ public class UserReservationServiceImpl implements UserReservationService {
 
     @Transactional
     @Override
-    public void add(Long reservationId, Long userId) throws Exception {
+    public void add(Long reservationId, Long userId) {
 
 
-        List<UserReservationEvent> allByUser_idAndReservation_id =
+        List<UserReservationEvent> allByUserIdAndReservationId =
                 userReservationRepository.findAllByUser_IdAndReservation_Id(userId, reservationId);
-        if (!allByUser_idAndReservation_id.isEmpty()) {
-          throw new Exception("User already is attached!");
+        if (!allByUserIdAndReservationId.isEmpty()) {
+          throw new UserAlreadyExistException(userId, reservationId);
         }
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundException::new);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundReservationException::new);
         User user = userRepo.getOne(userId);
 
         UserReservationEvent userReservationEvent = new UserReservationEvent();
