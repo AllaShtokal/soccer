@@ -2,15 +2,19 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
 import pl.com.tt.intern.soccer.payload.response.UserRankingResponse;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -108,9 +112,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRankingResponse showRankingByUserId(Long userId) {
-        List<User> all = userRepository.findAll();
-        return null;
+    public UserRankingResponse showRankingByUserId(Long userId, int page, int size) throws NotFoundException {
+        UserRankingResponse userRankingResponse = new UserRankingResponse();
+        List<User> all1 = userRepository.findAll();
+
+        User byId = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+
+        int index = all1.indexOf(byId);
+        page = index / size ;
+
+
+        BasicUserInfoResponse currentUser = new BasicUserInfoResponse();
+        currentUser.setUsername(byId.getUsername());
+        currentUser.setEmail(byId.getEmail());
+        currentUser.setLost(byId.getUserInfo().getLost().toString());
+        currentUser.setWon(byId.getUserInfo().getWon().toString());
+
+        userRankingResponse.setCurrent(currentUser);
+
+        userRankingResponse.setSize(size);
+        userRankingResponse.setPage(page);
+
+        Page<User> all = userRepository.findAll(PageRequest.of(page, size));
+        List<User> content = all.getContent();
+        List<BasicUserInfoResponse> users = new ArrayList<>();
+        for (User u : content) {
+            BasicUserInfoResponse userInfoResponse = new BasicUserInfoResponse();
+            userInfoResponse.setUsername(u.getUsername());
+            userInfoResponse.setEmail(u.getEmail());
+            userInfoResponse.setWon(u.getUserInfo().getWon().toString());
+            userInfoResponse.setLost(u.getUserInfo().getLost().toString());
+            users.add(userInfoResponse);
+        }
+
+        userRankingResponse.setUsers(users);
+
+
+        return userRankingResponse;
 
     }
 }

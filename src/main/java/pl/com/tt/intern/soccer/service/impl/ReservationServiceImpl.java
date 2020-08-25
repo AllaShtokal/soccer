@@ -209,6 +209,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setDateTo(requestObject.getDateTo());
 
         Lobby lobby;
+
         try {
             lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()).orElseThrow(NotFoundException::new);
         } catch (NullPointerException e) {

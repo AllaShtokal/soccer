@@ -10,6 +10,8 @@ public class UserRankingResponse {
 
     private BasicUserInfoResponse current;
     private List<BasicUserInfoResponse> users;
+    private int page;
+    private int size;
 
 
 }
