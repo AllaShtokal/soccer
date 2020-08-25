@@ -5,25 +5,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
-import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
-import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
-import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
-import pl.com.tt.intern.soccer.payload.response.MyReservationResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
+import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
+import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
+import pl.com.tt.intern.soccer.payload.response.MyReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.validation.Valid;
 import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -69,13 +68,7 @@ public class ReservationController {
     @GetMapping("/attached")
     public ResponseEntity<List<MyReservationResponse>> findMyAttached(@CurrentUser UserPrincipal user, ReservationSimpleDateRequest period) {
         List<MyReservationResponse> allAttachedToMeByUserId = reservationService.findAllAttachedToMeByUserId(user.getId());
-        List<MyReservationResponse> reservations = new ArrayList<>();
-        allAttachedToMeByUserId.forEach(myReservationResponse -> {
-            if (myReservationResponse.getIsAttached().equals(Boolean.TRUE)) {
-                reservations.add(myReservationResponse);
-            }
-        });
-        return ok(reservations);
+        return ok(allAttachedToMeByUserId);
     }
 
     @GetMapping(params = "day")

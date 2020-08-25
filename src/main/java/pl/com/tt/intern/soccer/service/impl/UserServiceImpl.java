@@ -114,21 +114,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRankingResponse showRankingByUserId(Long userId, int page, int size) throws NotFoundException {
         UserRankingResponse userRankingResponse = new UserRankingResponse();
-        List<User> all1 = userRepository.findAll();
 
         User byId = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        Long index = userRepository.findAllAttachedToMeByUserId(userId);
+        page = (int) (index / size);
 
-        int index = all1.indexOf(byId);
-        page = index / size ;
-
-
-        BasicUserInfoResponse currentUser = new BasicUserInfoResponse();
-        currentUser.setUsername(byId.getUsername());
-        currentUser.setEmail(byId.getEmail());
-        currentUser.setLost(byId.getUserInfo().getLost().toString());
-        currentUser.setWon(byId.getUserInfo().getWon().toString());
-
-        userRankingResponse.setCurrent(currentUser);
+        userRankingResponse.setUsername(byId.getUsername());
 
         userRankingResponse.setSize(size);
         userRankingResponse.setPage(page);
@@ -146,6 +137,7 @@ public class UserServiceImpl implements UserService {
         }
 
         userRankingResponse.setUsers(users);
+        userRankingResponse.setTotalSize(all.getTotalElements());
 
 
         return userRankingResponse;

@@ -8,10 +8,11 @@ import java.util.List;
 @Data
 public class UserRankingResponse {
 
-    private BasicUserInfoResponse current;
+    private String Username;
     private List<BasicUserInfoResponse> users;
     private int page;
     private int size;
+    private Long totalSize;
 
 
 }
