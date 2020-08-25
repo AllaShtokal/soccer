@@ -23,6 +23,7 @@ import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.validation.Valid;
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -37,10 +38,16 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
         log.debug("GET /reservations");
         return ok(reservationService.findAll());
+    }
+
+    @GetMapping("/isactive/{id}")
+    public ResponseEntity<Boolean> isAnyActiveMatch(@PathVariable("id") Long reservationId) {
+        return ok(reservationService.isAnyActiveMatch(reservationId));
     }
 
     @GetMapping(params = "period")
@@ -50,13 +57,25 @@ public class ReservationController {
     }
 
     @PostMapping("/period/all")
-    public ResponseEntity<List<ReservationShortInfoResponse>> findAllByPeriod(@CurrentUser UserPrincipal user,@RequestBody ReservationSimpleDateRequest period) {
+    public ResponseEntity<List<ReservationShortInfoResponse>> findAllByPeriod(@CurrentUser UserPrincipal user, @RequestBody ReservationSimpleDateRequest period) {
         return ok(reservationService.findShortByPeriod(period, user.getId()));
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<MyReservationResponse>> findMy(@CurrentUser UserPrincipal user) {
-        return ok(reservationService.findByCreatorId( user.getId()));
+        return ok(reservationService.findByCreatorId(user.getId()));
+    }
+
+    @GetMapping("/attached")
+    public ResponseEntity<List<MyReservationResponse>> findMyAttached(@CurrentUser UserPrincipal user, ReservationSimpleDateRequest period) {
+        List<MyReservationResponse> allAttachedToMeByUserId = reservationService.findAllAttachedToMeByUserId(user.getId());
+        List<MyReservationResponse> reservations = new ArrayList<>();
+        allAttachedToMeByUserId.forEach(myReservationResponse -> {
+            if (myReservationResponse.getIsAttached().equals(Boolean.TRUE)) {
+                reservations.add(myReservationResponse);
+            }
+        });
+        return ok(reservations);
     }
 
     @GetMapping(params = "day")

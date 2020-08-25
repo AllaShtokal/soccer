@@ -134,6 +134,7 @@ public class MatchServiceImpl implements MatchService {
         for (Match m : matches) {
             MatchFullResponse matchFullResponse = new MatchFullResponse();
             matchFullResponse.setMatchId(m.getId());
+            matchFullResponse.setIsActive(m.getIsActive());
             matchFullResponse.setGameResponses(gameService.getAllGamesFromMatch(m.getId()));
             matchFullResponses.add(matchFullResponse);
         }

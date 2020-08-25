@@ -55,15 +55,23 @@ public class UserInfo extends DateAudit implements Serializable {
     private User user;
 
     @Column(name = "won")
-    @ColumnDefault("0")
-    private Long won;
+    private Long won = 0L;
 
     @Column(name = "lost")
     @ColumnDefault("0")
-    private Long lost;
+    private Long lost = 0L;
 
     public UserInfo(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public void addWon() {
+        this.won++;
+    }
+
+    public void addLost() {
+        this.lost++;
+    }
+
 }

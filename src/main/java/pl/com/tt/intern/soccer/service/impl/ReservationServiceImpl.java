@@ -116,12 +116,23 @@ public class ReservationServiceImpl implements ReservationService {
         return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()), userId);
     }
 
+
+
     @Override
     public List<MyReservationResponse> findByCreatorId(Long userId) {
         log.debug("Finding all created by this user: {}", userId);
         List<Reservation> allByUserId = reservationRepository.findAllByUser_Id(userId);
         return mapToMyReservationResponse(allByUserId, userId);
     }
+
+    @Override
+    public List<MyReservationResponse> findAllAttachedToMeByUserId(Long userId) {
+        log.debug("Finding all I am attached to: {}", userId);
+        List<Reservation> allIAmAttachedTo= reservationRepository.findAllAttachedToMeByUserId(userId);
+        return mapToMyReservationResponse(allIAmAttachedTo, userId);
+    }
+
+
 
     private List<MyReservationResponse> mapToMyReservationResponse(List<Reservation> reservations, Long userId) {
         List<MyReservationResponse> responseList = new ArrayList<>();
@@ -267,6 +278,12 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     }
+
+    @Override
+    public boolean isAnyActiveMatch(Long reservationId) {
+        return reservationRepository.isExistActiveMatchByReservationId(reservationId);
+    }
+
 
     @Override
     public boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo) {
