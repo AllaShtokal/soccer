@@ -18,7 +18,7 @@ public class ReservationShortInfoResponse {
     private LocalDateTime dateTo;
     private Boolean confirmed;
     private String lobbyName;
-    private String LimitTaken;
+    private String LimitTaken; //todo correct
     private Boolean isAttached;
     private List<BasicUserInfoResponse> users = new ArrayList<>();
 

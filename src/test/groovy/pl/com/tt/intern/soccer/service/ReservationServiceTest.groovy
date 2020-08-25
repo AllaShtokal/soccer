@@ -1,14 +1,20 @@
 package pl.com.tt.intern.soccer.service
 
-
 import org.modelmapper.ModelMapper
 import pl.com.tt.intern.soccer.exception.NotFoundException
 import pl.com.tt.intern.soccer.exception.ReservationClashException
 import pl.com.tt.intern.soccer.exception.ReservationFormatException
+import pl.com.tt.intern.soccer.model.Lobby
 import pl.com.tt.intern.soccer.model.Reservation
+import pl.com.tt.intern.soccer.model.User
+import pl.com.tt.intern.soccer.model.UserReservationEvent
 import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest
+import pl.com.tt.intern.soccer.payload.response.ButtleResponse
+import pl.com.tt.intern.soccer.payload.response.GameResponse
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse
+import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse
 import pl.com.tt.intern.soccer.repository.LobbyRepository
 import pl.com.tt.intern.soccer.repository.ReservationRepository
 import pl.com.tt.intern.soccer.service.impl.ReservationServiceImpl
@@ -26,17 +32,22 @@ class ReservationServiceTest extends Specification {
 
     ReservationRepository repository = Mock()
     UserService userService = Mock()
+    GameService gameService = Mock()
+    ButtleService buttleService = Mock()
     ModelMapper mapper = Mock()
+    LobbyRepository lobbyRepository = Mock()
     ReservationPersistRequest reservationPersistRequest = Mock()
     ConfirmationReservationService confirmationService = Mock()
 
     ReservationService service
     ReservationResponse response
+    ReservationShortInfoResponse reservationShortInfoResponse
+    Reservation reservationMock
     Reservation reservation
+    Lobby lobby
+    User user
+    UserReservationEvent userReservationEvent
 
-    LobbyRepository lobbyRepository
-    GameService gameService
-    ButtleService buttleService
 
     def ID = 1
     static LocalDateTime timeNow = LocalDateTime.now()
@@ -45,10 +56,28 @@ class ReservationServiceTest extends Specification {
         service = new ReservationServiceImpl(repository, userService, lobbyRepository, mapper,
                 confirmationService, gameService, buttleService)
         response = Mock()
-        reservation = Mock()
-        lobbyRepository = Mock()
-        gameService = Mock()
-        buttleService = Mock()
+        reservationShortInfoResponse = Mock()
+        reservationMock = Mock()
+
+        lobby = new Lobby()
+        lobby.setId(10L)
+        lobby.setName("ROOM")
+        lobby.setLimit(10)
+        user = new User()
+        user.setId(10L)
+        user.setUsername('user')
+        userReservationEvent = new UserReservationEvent()
+        userReservationEvent.setUser(user)
+        user.addUserReservationEvent(userReservationEvent)
+
+        reservation = new Reservation()
+        reservation.setId(10L)
+        reservation.setUser(user)
+        reservation.setUserReservationEvents(asList(userReservationEvent).toSet())
+        reservation.setLobby(lobby)
+        reservation.setDateFrom(now())
+        reservation.setDateTo(now())
+        reservation.setConfirmed(_ as Boolean)
     }
 
     def "deleteById should invoke ReservationRepository.deleteById"() {
@@ -162,12 +191,12 @@ class ReservationServiceTest extends Specification {
 
     def "'findAll' method should return list of ReservationResponse"() {
         given:
-        def list = asList(reservation)
+        def list = asList(reservationMock)
         when:
         def result = service.findAll()
         then:
         1 * repository.findAll() >> list
-        1 * mapper.map(reservation, ReservationResponse) >> response
+        1 * mapper.map(reservationMock, ReservationResponse) >> response
         result.size() == 1
         result.get(0) == response
     }
@@ -176,8 +205,8 @@ class ReservationServiceTest extends Specification {
         when:
         def result = service.findById(ID)
         then:
-        1 * repository.findById(ID) >> Optional.of(reservation)
-        1 * mapper.map(reservation, ReservationResponse) >> response
+        1 * repository.findById(ID) >> Optional.of(reservationMock)
+        1 * mapper.map(reservationMock, ReservationResponse) >> response
         result == response
     }
 
@@ -191,43 +220,88 @@ class ReservationServiceTest extends Specification {
 
     def "'save' method should return ReservationResponse after save"() {
         when:
-        def result = service.save(reservation)
+        def result = service.save(reservationMock)
         then:
-        1 * repository.save(reservation) >> reservation
-        1 * mapper.map(reservation, ReservationResponse) >> response
+        1 * repository.save(reservationMock) >> reservationMock
+        1 * mapper.map(reservationMock, ReservationResponse) >> response
         result == response
     }
 
     def "'findByDateBetween' method should return a list of ReservationResponse"() {
         given:
         ReservationDateRequest request = Mock()
-        def list = asList(reservation)
+        def list = asList(reservationMock)
         def responses = asList(response)
         when:
         def result = service.findByDateBetween(request)
         then:
         1 * repository.findAllByDateToAfterAndDateFromBefore(request.getFrom(), request.getTo()) >> list
-        mapper.map(reservation, ReservationResponse) >> response
+        mapper.map(reservationMock, ReservationResponse) >> response
         result == responses
     }
 
     def "'findByPeriod' method should return a list of ReservationResponse"() {
         given:
         def period = TODAY
-        def list = asList(reservation)
+        def list = asList(reservationMock)
         def responses = asList(response)
         when:
         def result = service.findByPeriod(period)
         then:
         1 * repository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()) >> list
-        mapper.map(reservation, ReservationResponse) >> response
+        mapper.map(reservationMock, ReservationResponse) >> response
         result == responses
+    }
+
+    def "'findShortByPeriod' method should return a list of ReservationShortInfoResponse"() {
+        given:
+        def period = new ReservationSimpleDateRequest()
+        period.setFrom(now())
+        period.setTo(now().plusMinutes(30))
+        def userId = 10L
+
+        def list = asList(reservation)
+
+        when:
+        def result = service.findShortByPeriod(period, userId)
+        then:
+        1 * repository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(_, _) >> list
+        mapper.map(reservationMock, ReservationShortInfoResponse) >> response
+        result.size() == 1
+    }
+
+    def "'findByCreatorId' method should return a list of MyReservationResponse"() {
+        given:
+        def period = new ReservationSimpleDateRequest()
+        period.setFrom(now())
+        period.setTo(now().plusMinutes(30))
+        def userId = 10L
+
+        def list = asList(reservation)
+
+        when:
+        def result = service.findByCreatorId(userId)
+        then:
+        1 * repository.findAllByUser_Id(userId) >> list
+        mapper.map(reservationMock, ReservationShortInfoResponse) >> response
+        result.size() == 1
+    }
+
+    def "'changeConfirmationReservationStatus' method should change status reservation"() {
+        given:
+        def confirmed = true
+
+        when:
+        service.changeConfirmationReservationStatus(reservationMock, confirmed)
+        then:
+        1 * repository.save(reservationMock)
+
     }
 
     def "'findByDay' method should return a list of ReservationResponse"() {
         given:
         def day = MONDAY
-        def list = asList(reservation)
+        def list = asList(reservationMock)
         def responses = asList(response)
         def from = now().with(day)
                 .withHour(0).withMinute(0).withSecond(0).withNano(0)
@@ -237,7 +311,7 @@ class ReservationServiceTest extends Specification {
         def result = service.findByDay(day)
         then:
         1 * repository.findAllByDateToAfterAndDateFromBefore(from, to) >> list
-        mapper.map(reservation, ReservationResponse) >> response
+        mapper.map(reservationMock, ReservationResponse) >> response
         result == responses
     }
 
@@ -259,7 +333,7 @@ class ReservationServiceTest extends Specification {
         when:
         service.update(ID, reservationPersistRequest)
         then:
-        1 * repository.findById(ID) >> Optional.of(reservation)
+        1 * repository.findById(ID) >> Optional.of(reservationMock)
         thrown(ReservationFormatException)
         where:
         year1            | day1 | hour1 | min1 | year2            | day2 | hour2 | min2
@@ -274,13 +348,13 @@ class ReservationServiceTest extends Specification {
         def reservationID = 540293812
         LocalDateTime timeFrom = LocalDateTime.of(timeNow.year + 1, Month.MAY, 11, 2, 15, 0, 0)
         LocalDateTime timeTo = LocalDateTime.of(timeNow.year + 1, Month.MAY, 11, 2, 30, 0, 0)
-        reservation.getId() >> reservationID
+        reservationMock.getId() >> reservationID
         reservationPersistRequest.getDateFrom() >> timeFrom
         reservationPersistRequest.getDateTo() >> timeTo
         when:
         service.update(ID, reservationPersistRequest)
         then:
-        1 * repository.findById(ID) >> Optional.of(reservation)
+        1 * repository.findById(ID) >> Optional.of(reservationMock)
         1 * repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> true
         thrown(ReservationClashException)
     }
@@ -290,13 +364,13 @@ class ReservationServiceTest extends Specification {
         def reservationID = 540293812
         LocalDateTime timeFrom = LocalDateTime.of(timeNow.year + 1, Month.MAY, 11, 2, 15, 0, 0)
         LocalDateTime timeTo = LocalDateTime.of(timeNow.year + 1, Month.MAY, 11, 2, 30, 0, 0)
-        reservation.getId() >> reservationID
+        reservationMock.getId() >> reservationID
         reservationPersistRequest.getDateFrom() >> timeFrom
         reservationPersistRequest.getDateTo() >> timeTo
         when:
         service.update(ID, reservationPersistRequest)
         then:
-        1 * repository.findById(ID) >> Optional.of(reservation)
+        1 * repository.findById(ID) >> Optional.of(reservationMock)
         1 * repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> false
         1 * repository.save(_ as Reservation)
     }
@@ -320,11 +394,11 @@ class ReservationServiceTest extends Specification {
     def "save(ReservationPersistRequest, userID) should invoke repository->save(Reservation)"() {
         given:
         def userID = 1212121
-        mapper.map(reservationPersistRequest, Reservation) >> reservation
+        mapper.map(reservationPersistRequest, Reservation) >> reservationMock
         when:
         service.save(reservationPersistRequest, userID)
         then:
-        1 * repository.save(reservation)
+        1 * repository.save(reservationMock)
 
     }
 
@@ -370,5 +444,20 @@ class ReservationServiceTest extends Specification {
         then:
         1 * repository.datesCollide(timeFrom, timeTo) >> false
         noExceptionThrown()
+    }
+
+    def "'getWinnerTeamByMatch' method should return TeamResponse"() {
+        given:
+        def matchId = 10L
+        def buttles = new ButtleResponse()
+        List<ButtleResponse> buttlesList = asList(buttles)
+        def gameResponse = new GameResponse()
+        gameResponse.setButtles(buttlesList)
+
+        when:
+        def result = service.getWinnerTeamByMatch(matchId)
+        then:
+        1 * gameService.getlastGameInMatch(matchId) >> gameResponse
+        1 * buttleService.getTeamWinner(_)
     }
 }
