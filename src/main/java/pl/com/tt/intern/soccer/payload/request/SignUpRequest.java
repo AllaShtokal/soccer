@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.payload.request;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.com.tt.intern.soccer.annotation.Password;
 
 import javax.validation.constraints.Email;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
 import static pl.com.tt.intern.soccer.util.Messages.VALID_USERNAME;
 
 @Data
+@NoArgsConstructor
 public class SignUpRequest {
 
     @NotBlank

@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.service
 
 import org.modelmapper.ModelMapper
 import pl.com.tt.intern.soccer.exception.NotFoundException
+import pl.com.tt.intern.soccer.exception.NotFoundLobbyByIdException
 import pl.com.tt.intern.soccer.exception.ReservationClashException
 import pl.com.tt.intern.soccer.exception.ReservationFormatException
 import pl.com.tt.intern.soccer.model.Lobby
@@ -13,6 +14,7 @@ import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest
 import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse
 import pl.com.tt.intern.soccer.payload.response.GameResponse
+import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse
 import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse
 import pl.com.tt.intern.soccer.repository.LobbyRepository
@@ -282,7 +284,7 @@ class ReservationServiceTest extends Specification {
         when:
         def result = service.findByCreatorId(userId)
         then:
-        1 * repository.findAllByUserId(userId) >> list
+        1 * repository.findAllByUser_Id(userId) >> list
         mapper.map(reservationMock, ReservationShortInfoResponse) >> response
         result.size() == 1
     }
@@ -362,18 +364,29 @@ class ReservationServiceTest extends Specification {
     def "update should invoke repository.save method if reservation validation passes"() {
         given:
         def reservationID = 540293812
+        reservationPersistRequest.setLobbyName("room")
+        def reservation = new Reservation()
+        reservation.setId(1)
+        reservation.setConfirmed(true)
+
         LocalDateTime timeFrom = LocalDateTime.of(timeNow.year + 1, Month.MAY, 11, 2, 15, 0, 0)
         LocalDateTime timeTo = LocalDateTime.of(timeNow.year + 1, Month.MAY, 11, 2, 30, 0, 0)
         reservationMock.getId() >> reservationID
         reservationPersistRequest.getDateFrom() >> timeFrom
         reservationPersistRequest.getDateTo() >> timeTo
+
         when:
-        service.update(ID, reservationPersistRequest)
+        def update = service.update(ID, reservationPersistRequest)
+
         then:
         1 * repository.findById(ID) >> Optional.of(reservationMock)
         1 * repository.datesCollideExcludingCurrent(timeFrom, timeTo, reservationID) >> false
-        1 * repository.save(_ as Reservation)
+        1 * lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()) >> Optional.of(lobby)
+        1 * repository.save(_) >> reservationMock
+        1 * mapper.map(reservationMock, ReservationPersistedResponse.class) >> { new ReservationPersistedResponse() }
+        update instanceof ReservationPersistedResponse
     }
+
 
     def "existsById should invoke repository->existsById"() {
         when:
@@ -394,12 +407,43 @@ class ReservationServiceTest extends Specification {
     def "save(ReservationPersistRequest, userID) should invoke repository->save(Reservation)"() {
         given:
         def userID = 1212121
+        reservationPersistRequest.setLobbyName("room")
+        def reservation = new Reservation()
+        reservation.setId(1)
+        reservation.setConfirmed(true)
+
         mapper.map(reservationPersistRequest, Reservation) >> reservationMock
         when:
         service.save(reservationPersistRequest, userID)
         then:
-        1 * repository.save(reservationMock)
+        1 * mapper.map(reservationPersistRequest, Reservation.class) >> { reservation }
+        1 * lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()) >> Optional.of(lobby)
+        1 * userService.findById(userID) >> user
+        1 * repository.save(reservation) >> reservation
+        1 * confirmationService.createAndSaveConfirmationReservation(reservation)
+        1 * mapper.map(reservation, ReservationPersistedResponse.class)
 
+    }
+
+    def "save(ReservationPersistRequest, userID) should throw NotFoundException if lobby name not found"() {
+        given:
+        def userID = 1212121
+        reservationPersistRequest.setLobbyName("room")
+        def reservation = new Reservation()
+        reservation.setId(1)
+        reservation.setConfirmed(true)
+
+        mapper.map(reservationPersistRequest, Reservation) >> reservationMock
+        when:
+        service.save(reservationPersistRequest, userID)
+        then:
+        1 * mapper.map(reservationPersistRequest, Reservation.class) >> { reservation }
+        1 * lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()) >> Optional.ofNullable(null)
+        0 * userService.findById(userID) >> user
+        0 * repository.save(reservation) >> reservation
+        0 * confirmationService.createAndSaveConfirmationReservation(reservation)
+        0 * mapper.map(reservation, ReservationPersistedResponse.class)
+        thrown(NotFoundLobbyByIdException)
     }
 
     def "verifyPersistedObject should throw ReservationFormatException"() {

@@ -61,11 +61,11 @@ public class User extends DateAudit implements Serializable {
     private boolean enabled;
 
 
-     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = LAZY)
     private UserInfo userInfo;
 
-     @OneToMany (mappedBy="user")
-     private Set<Reservation> reservation;
+    @OneToMany(mappedBy = "user")
+    private Set<Reservation> reservation = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -75,16 +75,17 @@ public class User extends DateAudit implements Serializable {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<ConfirmationKey> confirmationKeys;
+    private Set<ConfirmationKey> confirmationKeys = new HashSet<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private Set<UserReservationEvent> userReservationEvents;
+    private Set<UserReservationEvent> userReservationEvents = new HashSet<>();
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
         this.userReservationEvents.add(userReservationEvent);
         userReservationEvent.setUser(this);
 
     }
+
     public void removeUserReservationEvent(UserReservationEvent userReservationEvent) {
         this.userReservationEvents.remove(userReservationEvent);
         userReservationEvent.setUser(null);
@@ -92,7 +93,7 @@ public class User extends DateAudit implements Serializable {
     }
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="team_id")
+    @JoinColumn(name = "team_id")
     private Team team;
 
 }
