@@ -12,7 +12,7 @@ public class UserRankingResponse {
     private List<BasicUserInfoResponse> users;
     private int page;
     private int size;
-    private Long totalSize;
+    private int totalSize;
 
 
 }

@@ -27,10 +27,17 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<UserRankingResponse> showRanking(@CurrentUser UserPrincipal user,
-                                                           @RequestParam(value = "size",required = false, defaultValue = "3" ) Integer size,
+                                                           @RequestParam(value = "size", required = false, defaultValue = "3") Integer size,
                                                            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page) throws NotFoundException {
-
-        UserRankingResponse userRankingResponse = userService.showRankingByUserId(user.getId(), page, size);
+        UserRankingResponse userRankingResponse = userService.showRankingByUserId(user.getId(),
+                page,
+                size,
+                "ui.won",
+                " DESC",
+                "ui.lost",
+                "ASC");
         return ok(userRankingResponse);
     }
+
+
 }
