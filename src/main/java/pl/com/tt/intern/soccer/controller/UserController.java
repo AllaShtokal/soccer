@@ -29,10 +29,10 @@ public class UserController {
     public ResponseEntity<UserRankingResponse> showRanking(@CurrentUser UserPrincipal user,
                                                            @RequestParam(value = "size", required = false, defaultValue = "3") Integer size,
                                                            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                                                           @RequestParam(value = "page", required = false, defaultValue = "ui.won") String field1,
-                                                           @RequestParam(value = "page", required = false, defaultValue = "DESC") String order1,
-                                                           @RequestParam(value = "page", required = false, defaultValue = "ui.lost") String field2,
-                                                           @RequestParam(value = "page", required = false, defaultValue = "ASC") String order2
+                                                           @RequestParam(value = "field1", required = false, defaultValue = "ui.won") String field1,
+                                                           @RequestParam(value = "order1", required = false, defaultValue = "DESC") String order1,
+                                                           @RequestParam(value = "field2", required = false, defaultValue = "ui.lost") String field2,
+                                                           @RequestParam(value = "order2", required = false, defaultValue = "ASC") String order2
                                                            ) throws NotFoundException {
         UserRankingResponse userRankingResponse = userService.showRankingByUserId(user.getId(),
                 page,
