@@ -1,5 +1,6 @@
 package pl.com.tt.intern.soccer.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,6 +30,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsername(String username);
 
     @Query(value = "SELECT COUNT(u)  FROM User u WHERE u.id <=:id")
-    Long findAllAttachedToMeByUserId(@Param("id") Long id);
+    int findAllAttachedToMeByUserId(@Param("id") Long id);
 
+
+    @Query(nativeQuery = true, value = "SELECT u.username, u.email, ui.lost, ui.won, DENSE_RANK() OVER (\n" +
+            "    ORDER BY :firstField :order1, :SecondField :order2 , u.username ASC\n" +
+            "    ) ranking\n" +
+            "FROM soccer.user u\n" +
+            "         INNER JOIN soccer.user_info ui ON u.id = ui.user_id")
+    List<String[]> mySelect(Pageable pageable, String firstField, String order1, String SecondField, String order2);
+
+    @Query(value = "SELECT COUNT(u)  FROM User u ")
+    int getTotalNumber();
 }

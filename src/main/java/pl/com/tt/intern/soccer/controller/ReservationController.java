@@ -37,7 +37,6 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
         log.debug("GET /reservations");
@@ -61,8 +60,8 @@ public class ReservationController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<MyReservationResponse>> findMy(@CurrentUser UserPrincipal user) {
-        return ok(reservationService.findByCreatorId(user.getId()));
+    public ResponseEntity<List<MyReservationResponse>> findMy(@CurrentUser UserPrincipal userCreator) {
+        return ok(reservationService.findByCreatorId(userCreator.getId()));
     }
 
     @GetMapping("/attached")
@@ -108,7 +107,6 @@ public class ReservationController {
                 .status(CREATED)
                 .body(reservationService.save(reservationPersistDTO, user.getId()));
     }
-
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
     public ResponseEntity<ReservationPersistedResponse> editOwnReservation(

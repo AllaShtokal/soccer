@@ -1,8 +1,8 @@
 package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<User> findAll() {
@@ -111,36 +112,44 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+
     @Override
-    public UserRankingResponse showRankingByUserId(Long userId, int page, int size) throws NotFoundException {
+    public UserRankingResponse showRankingByUserId(Long userId, int page, int size,String s1, String s2, String s3, String s4) throws NotFoundException {
         UserRankingResponse userRankingResponse = new UserRankingResponse();
-
         User byId = userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        Long index = userRepository.findAllAttachedToMeByUserId(userId);
-        page = (int) (index / size);
-
+        int index = userRepository.findAllAttachedToMeByUserId(userId);
+        page = (index / size);
         userRankingResponse.setUsername(byId.getUsername());
-
         userRankingResponse.setSize(size);
         userRankingResponse.setPage(page);
 
-        Page<User> all = userRepository.findAll(PageRequest.of(page, size));
-        List<User> content = all.getContent();
-        List<BasicUserInfoResponse> users = new ArrayList<>();
-        for (User u : content) {
-            BasicUserInfoResponse userInfoResponse = new BasicUserInfoResponse();
-            userInfoResponse.setUsername(u.getUsername());
-            userInfoResponse.setEmail(u.getEmail());
-            userInfoResponse.setWon(u.getUserInfo().getWon().toString());
-            userInfoResponse.setLost(u.getUserInfo().getLost().toString());
-            users.add(userInfoResponse);
-        }
+        List<BasicUserInfoResponse> users = getUsers(page,size,s1,s2,s3,s4);
 
         userRankingResponse.setUsers(users);
-        userRankingResponse.setTotalSize(all.getTotalElements());
-
-
+        userRankingResponse.setTotalSize(userRepository.getTotalNumber());
         return userRankingResponse;
+
+    }
+
+
+    public List<BasicUserInfoResponse> getUsers(int page, int size,String s1, String s2, String s3, String s4) {
+        List<String[]> objects =
+                userRepository.mySelect(PageRequest.of(page, size), s1, s2, s3, s4);
+        List<BasicUserInfoResponse> users = new ArrayList<>();
+
+        for (String[] o : objects) {
+
+            BasicUserInfoResponse b = new BasicUserInfoResponse();
+            b.setUsername(o[0]);
+            b.setEmail(o[1]);
+            b.setLost(o[2]);
+            b.setWon(o[3]);
+            b.setRanking(o[4]);
+            users.add(b);
+
+        }
+
+        return users;
 
     }
 }
