@@ -50,7 +50,7 @@ class ReservationServiceTest extends Specification {
 
 
     def ID = 1
-    static LocalDateTime timeNow = LocalDateTime.now()
+    static LocalDateTime timeNow = now()
 
     def setup() {
         service = new ReservationServiceImpl(repository, userService, lobbyRepository, mapper,
@@ -90,15 +90,15 @@ class ReservationServiceTest extends Specification {
 
     def "isDateRangeAvailable should return true if there are no date collisions"() {
         given:
-        LocalDateTime timeFrom = LocalDateTime.now()
-        LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
+        LocalDateTime timeFrom = now()
+        LocalDateTime timeTo = now().plusDays(1)
         Reservation reservation = Mock(Reservation)
 
         ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
         when:
         boolean collides = service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
         then:
-        collides == true
+        collides
         1 * reservation.getId() >> ID
         1 * reservationPersistRequest.getDateFrom() >> timeFrom
         1 * reservationPersistRequest.getDateTo() >> timeTo
@@ -107,14 +107,14 @@ class ReservationServiceTest extends Specification {
 
     def "isDateRangeAvailable should return false if there are date collisions"() {
         given:
-        LocalDateTime timeFrom = LocalDateTime.now()
-        LocalDateTime timeTo = LocalDateTime.now().plusDays(1)
+        LocalDateTime timeFrom = now()
+        LocalDateTime timeTo = now().plusDays(1)
         Reservation reservation = Mock(Reservation)
         ReservationPersistRequest reservationPersistRequest = Mock(ReservationPersistRequest)
         when:
         boolean collides = service.datesCollideWithExistingReservationsExcludingEditedOne(reservationPersistRequest, reservation)
         then:
-        collides == false
+        !collides
         1 * reservation.getId() >> ID
         1 * reservationPersistRequest.getDateFrom() >> timeFrom
         1 * reservationPersistRequest.getDateTo() >> timeTo
@@ -123,13 +123,13 @@ class ReservationServiceTest extends Specification {
 
     def "isDateRangeAvailable should return false if there is any date collision"() {
         given:
-        LocalDateTime time1 = LocalDateTime.now()
-        LocalDateTime time2 = LocalDateTime.now().plusDays(1)
+        LocalDateTime time1 = now()
+        LocalDateTime time2 = now().plusDays(1)
         when:
         boolean collides = service.datesCollideWithExistingReservations(time1, time2)
         then:
         1 * repository.datesCollide(time1, time2) >> true
-        collides == true
+        collides
     }
 
     def "isDate15MinuteRounded should consider minutes, seconds and nanoseconds"() {
@@ -177,14 +177,14 @@ class ReservationServiceTest extends Specification {
 
     def "isInFuture should return true if persisted dto has future date"() {
         given:
-        reservationPersistRequest.getDateFrom() >> LocalDateTime.now().plusDays(1L)
+        reservationPersistRequest.getDateFrom() >> now().plusDays(1L)
         expect:
         service.isInFuture(reservationPersistRequest)
     }
 
     def "isInFuture should return false if persisted dto has past date"() {
         given:
-        reservationPersistRequest.getDateFrom() >> LocalDateTime.now().minusDays(1L)
+        reservationPersistRequest.getDateFrom() >> now().minusDays(1L)
         expect:
         !service.isInFuture(reservationPersistRequest)
     }
@@ -282,7 +282,7 @@ class ReservationServiceTest extends Specification {
         when:
         def result = service.findByCreatorId(userId)
         then:
-        1 * repository.findAllByUser_Id(userId) >> list
+        1 * repository.findAllByUserId(userId) >> list
         mapper.map(reservationMock, ReservationShortInfoResponse) >> response
         result.size() == 1
     }
@@ -455,7 +455,7 @@ class ReservationServiceTest extends Specification {
         gameResponse.setButtles(buttlesList)
 
         when:
-        def result = service.getWinnerTeamByMatch(matchId)
+        service.getWinnerTeamByMatch(matchId)
         then:
         1 * gameService.getlastGameInMatch(matchId) >> gameResponse
         1 * buttleService.getTeamWinner(_)

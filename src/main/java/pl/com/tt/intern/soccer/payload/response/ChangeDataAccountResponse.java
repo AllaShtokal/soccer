@@ -1,7 +1,7 @@
 package pl.com.tt.intern.soccer.payload.response;
 
 import lombok.Data;
-import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.model.UserInfo;
 
 @Data
 public class ChangeDataAccountResponse {
@@ -12,12 +12,12 @@ public class ChangeDataAccountResponse {
     private String skype;
     private String email;
 
-    public ChangeDataAccountResponse(User user) {
-        this.firstName = user.getUserInfo().getFirstName();
-        this.lastName = user.getUserInfo().getLastName();
-        this.phone = user.getUserInfo().getPhone();
-        this.skype = user.getUserInfo().getSkype();
-        this.email = user.getEmail();
+    public ChangeDataAccountResponse(UserInfo userInfo) {
+        this.firstName = userInfo.getFirstName();
+        this.lastName = userInfo.getLastName();
+        this.phone = userInfo.getPhone();
+        this.skype = userInfo.getSkype();
+        this.email = userInfo.getUser().getEmail();
     }
 
 }

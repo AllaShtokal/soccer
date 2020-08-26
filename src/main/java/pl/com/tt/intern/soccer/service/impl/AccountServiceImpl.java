@@ -20,7 +20,7 @@ import pl.com.tt.intern.soccer.model.UserInfo;
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
-import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.NewPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.AccountInfoDataResponse;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
@@ -32,7 +32,7 @@ import pl.com.tt.intern.soccer.service.UserInfoService;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import static java.time.LocalDateTime.now;
@@ -46,7 +46,7 @@ import static pl.com.tt.intern.soccer.account.url.enums.UrlParam.*;
 public class AccountServiceImpl implements AccountService {
 
     @Value("${mail.config.enabled}")
-    private Boolean enabledMail;
+    private boolean enabledMail;
     private final ConfirmationKeyService confirmationKeyService;
     private final UserService userService;
     private final ChangeAccountMailFactory accountMailFactory;
@@ -59,7 +59,6 @@ public class AccountServiceImpl implements AccountService {
     public void activateAccountByConfirmationKey(String activationKey) throws IncorrectConfirmationKeyException {
         try {
             ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(activationKey);
-
             checkIfExpired(confirmationKey.getExpirationTime());
             confirmationKey.setExpirationTime(now());
             userService.changeEnabledAccount(confirmationKey.getUser(), true);
@@ -70,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) throws NotFoundException {
-        Map<UrlParam, String> params = new HashMap<>();
+        Map<UrlParam, String> params = new EnumMap<>(UrlParam.class);
         String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
 
         if (!enabledMail) return new PasswordChangeKeyResponse(uuid);
@@ -87,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) throws NotFoundException {
-        Map<UrlParam, String> params = new HashMap<>();
+        Map<UrlParam, String> params = new EnumMap<>(UrlParam.class);
         String uuid = confirmationKeyService.createAndAssignToUserByEmail(email).getUuid();
 
         if (!enabledMail) return new EmailChangeKeyResponse(uuid, newEmail);
@@ -104,10 +103,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request)
+    public void changePasswordNotLoggedInUser(String confirmationKeyUUID, NewPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException {
         try {
-            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changePasswordKey);
+            ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(confirmationKeyUUID);
             checkIfExpired(confirmationKey.getExpirationTime());
 
             if (request.getPassword().equals(request.getPasswordConfirmation())) {
@@ -137,19 +136,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) throws NotFoundException {
+    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) {
         UserInfo userInfo = userPrincipal.getUserInfo();
         userInfo.setFirstName(request.getFirstName());
         userInfo.setLastName(request.getLastName());
         userInfo.setPhone(request.getPhone());
         userInfo.setSkype(request.getSkype());
-        return new ChangeDataAccountResponse(userInfoService.update(userInfo).getUser());
+        return new ChangeDataAccountResponse(userInfoService.update(userInfo));
     }
 
     @SneakyThrows
     @Override
-    public void changeEmail(UserPrincipal user, String changeEmailKey, EmailRequest request) {
-        ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(changeEmailKey);
+    public void changeEmail(UserPrincipal user, String confirmationKeyUUID, EmailRequest request) {
+        ConfirmationKey confirmationKey = confirmationKeyService.findConfirmationKeyByUuid(confirmationKeyUUID);
         checkIfExpired(confirmationKey.getExpirationTime());
 
         if (confirmationKey.getUser().getId().equals(
@@ -177,5 +176,9 @@ public class AccountServiceImpl implements AccountService {
         boolean matchesNewPassword = request.getNewPassword().equals(request.getNewPasswordConfirmation());
         boolean matchesOldPassword = encoder.matches(request.getOldPassword(), oldPassword);
         return matchesOldPassword && matchesNewPassword;
+    }
+
+    public void setEnabledMail(boolean enabledMail) {
+        this.enabledMail = enabledMail;
     }
 }

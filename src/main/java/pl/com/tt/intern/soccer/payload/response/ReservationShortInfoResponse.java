@@ -18,7 +18,7 @@ public class ReservationShortInfoResponse {
     private LocalDateTime dateTo;
     private Boolean confirmed;
     private String lobbyName;
-    private String LimitTaken; //todo correct
+    private String limitTaken;
     private Boolean isAttached;
     private List<BasicUserInfoResponse> users = new ArrayList<>();
 
@@ -33,7 +33,7 @@ public class ReservationShortInfoResponse {
         this.confirmed = reservation.getConfirmed();
         this.lobbyName = reservation.getLobby().getName();
 
-        this.LimitTaken = reservation.getLobby().getLimit()
+        this.limitTaken = reservation.getLobby().getLimit()
                 + "/"
                 + reservation.getUserReservationEvents().size();
 

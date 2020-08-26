@@ -7,7 +7,7 @@ import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
-import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.NewPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.AccountInfoDataResponse;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
@@ -20,7 +20,7 @@ public interface AccountService {
 
     PasswordChangeKeyResponse setAndSendMailToChangePassword(String email) throws NotFoundException;
 
-    void changePasswordNotLoggedInUser(String changePasswordKey, ForgottenPasswordRequest request)
+    void changePasswordNotLoggedInUser(String changePasswordKey, NewPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException;
 
     EmailChangeKeyResponse setAndSendMailToChangeEmail(String email, String newEmail) throws NotFoundException;

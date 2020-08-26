@@ -3,7 +3,7 @@ package pl.com.tt.intern.soccer.controller
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest
 import pl.com.tt.intern.soccer.payload.request.EmailRequest
-import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest
+import pl.com.tt.intern.soccer.payload.request.NewPasswordRequest
 import pl.com.tt.intern.soccer.payload.response.AccountInfoDataResponse
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse
 import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse
@@ -102,7 +102,7 @@ class AccountControllerTests extends Specification {
     def "changePasswordNotLoggedInUser method should return OK status"() {
         given:
         String key = new String()
-        ForgottenPasswordRequest request = Mock()
+        NewPasswordRequest request = Mock()
         when:
         def result = controller
                 .changePasswordNotLoggedInUser(key, request)
@@ -115,7 +115,7 @@ class AccountControllerTests extends Specification {
     def "changePasswordNotLoggedInUser method should invoke AccountService.setAndSendMailToChangePassword"() {
         given:
         String key = new String()
-        ForgottenPasswordRequest request = Mock()
+        NewPasswordRequest request = Mock()
         when:
         controller.changePasswordNotLoggedInUser(key, request)
         then:

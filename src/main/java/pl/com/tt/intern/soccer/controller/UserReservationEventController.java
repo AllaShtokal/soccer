@@ -30,7 +30,7 @@ public class UserReservationEventController {
 
     @GetMapping("/add/{reservation_id}")
     public ResponseEntity<ReservationResponse> addUserReservation(@CurrentUser UserPrincipal user,
-                                                     @PathVariable("reservation_id") Long reservation_id) throws Exception {
+                                                     @PathVariable("reservation_id") Long reservation_id) throws Exception  { //todo correct exception
 
         userReservationService.add(reservation_id, user.getId());
         ReservationResponse reservationResponse = reservationService.findById(reservation_id);

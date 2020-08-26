@@ -12,7 +12,7 @@ import pl.com.tt.intern.soccer.exception.PasswordsMismatchException;
 import pl.com.tt.intern.soccer.payload.request.ChangeAccountDataRequest;
 import pl.com.tt.intern.soccer.payload.request.ChangePasswordRequest;
 import pl.com.tt.intern.soccer.payload.request.EmailRequest;
-import pl.com.tt.intern.soccer.payload.request.ForgottenPasswordRequest;
+import pl.com.tt.intern.soccer.payload.request.NewPasswordRequest;
 import pl.com.tt.intern.soccer.payload.response.AccountInfoDataResponse;
 import pl.com.tt.intern.soccer.payload.response.ChangeDataAccountResponse;
 import pl.com.tt.intern.soccer.payload.response.EmailChangeKeyResponse;
@@ -53,7 +53,7 @@ public class AccountController {
 
     @PatchMapping(value = "/change/password", params = "changePasswordKey")
     public ResponseEntity<String> changePasswordNotLoggedInUser(@RequestParam(name = "changePasswordKey") String changePasswordKey,
-                                                                @Valid @RequestBody ForgottenPasswordRequest request)
+                                                                @Valid @RequestBody NewPasswordRequest request)
             throws PasswordsMismatchException, IncorrectConfirmationKeyException {
         accountService.changePasswordNotLoggedInUser(changePasswordKey, request);
         return ok().build();

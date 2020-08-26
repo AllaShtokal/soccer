@@ -17,7 +17,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByDateFromAfterAndDateToBefore(LocalDateTime from, LocalDateTime to);
 
     List<Reservation> findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(LocalDateTime from, LocalDateTime to);
-    List<Reservation> findAllByUser_Id (Long user_id);
+    List<Reservation> findAllByUserId(Long user_id);
 
 
     boolean existsByIdAndUserId(Long id, Long userId);

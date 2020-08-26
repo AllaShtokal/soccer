@@ -123,7 +123,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<MyReservationResponse> findByCreatorId(Long user_id) {
         log.debug("Finding all created by this user: {}", user_id);
-        List<Reservation> allByUser_id = reservationRepository.findAllByUser_Id(user_id);//todo correct
+        List<Reservation> allByUser_id = reservationRepository.findAllByUserId(user_id);
         return mapToMyReservationResponse(allByUser_id, user_id);
     }
 
@@ -268,8 +268,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public TeamResponse getWinnerTeamByMatch(Long match_id) throws NotFoundException { //todo correct
-        GameResponse gameResponse = gameService.getlastGameInMatch(match_id);
+    public TeamResponse getWinnerTeamByMatch(Long matchId) throws NotFoundException {
+        GameResponse gameResponse = gameService.getlastGameInMatch(matchId);
         List<ButtleResponse> buttles = gameResponse.getButtles();
         return buttleService.getTeamWinner(buttles.get(0));
     }
