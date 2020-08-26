@@ -6,6 +6,7 @@ import pl.com.tt.intern.soccer.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -17,6 +18,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByIdIn(List<Long> userIds);
 
     Optional<User> findByUsername(String username);
+
+
+    List<User> findByUsernameIn(Set<String> list);
 
     Boolean existsByEmail(String email);
 

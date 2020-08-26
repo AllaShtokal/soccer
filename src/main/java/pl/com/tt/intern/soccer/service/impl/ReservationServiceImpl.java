@@ -49,7 +49,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final ButtleService buttleService;
 
 
-
     @Override
     public List<ReservationResponse> findAll() {
         log.debug("Finding all reservations...");
@@ -79,13 +78,13 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setConfirmed(false);
         reservation.setId(null);
 
-        Lobby my_first_lobby;
-        try {
-            my_first_lobby = lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()).orElseThrow(NotFoundException::new);
-        } catch (NullPointerException e) {
-            throw new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName());
-        }
-        reservation.setLobby(my_first_lobby);
+        Lobby lobby = lobbyRepository.
+                findFirstByName(
+                        reservationPersistRequest.
+                                getLobbyName())
+                .orElseThrow(() -> new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName()));
+
+        reservation.setLobby(lobby);
         User user = userService.findById(userId);
         reservation.setUser(user);
         reservation.setConfirmed(true);
@@ -114,9 +113,11 @@ public class ReservationServiceImpl implements ReservationService {
         log.debug("Finding all reservations in period: {}", period);
         return mapToResponse(reservationRepository.findAllByDateToAfterAndDateFromBefore(period.from(), period.to()));
     }
+
     @Override
     public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id) {
         log.debug("Finding all reservations in period: {}", period);
+
         return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()), user_id);
     }
 
@@ -124,23 +125,21 @@ public class ReservationServiceImpl implements ReservationService {
     public List<MyReservationResponse> findByCreatorId(Long user_id) {
         log.debug("Finding all created by this user: {}", user_id);
         List<Reservation> allByUser_id = reservationRepository.findAllByUser_Id(user_id);
-        return mapToMyReservationResponse(allByUser_id,user_id);
+        return mapToMyReservationResponse(allByUser_id, user_id);
     }
 
-    private List<MyReservationResponse> mapToMyReservationResponse(List<Reservation> reservations,  Long user_id) {
+    private List<MyReservationResponse> mapToMyReservationResponse(List<Reservation> reservations, Long user_id) {
         List<MyReservationResponse> responseList = new ArrayList<>();
-        for(Reservation r: reservations)
-        {
-            responseList.add(new MyReservationResponse(r,user_id));
+        for (Reservation r : reservations) {
+            responseList.add(new MyReservationResponse(r, user_id));
         }
         return responseList;
     }
 
     private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations, Long user_id) {
         List<ReservationShortInfoResponse> responseList = new ArrayList<>();
-        for(Reservation r: reservations)
-        {
-            responseList.add(new ReservationShortInfoResponse(r,user_id));
+        for (Reservation r : reservations) {
+            responseList.add(new ReservationShortInfoResponse(r, user_id));
         }
         return responseList;
     }
@@ -211,7 +210,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Lobby lobby;
         try {
-            lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()) .orElseThrow(NotFoundException::new);
+            lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()).orElseThrow(NotFoundException::new);
         } catch (NullPointerException e) {
             throw new NotFoundLobbyByIdException(requestObject.getLobbyName());
         }

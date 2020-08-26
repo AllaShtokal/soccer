@@ -137,7 +137,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) throws NotFoundException {
+    public ChangeDataAccountResponse changeUserInfo(UserPrincipal userPrincipal, ChangeAccountDataRequest request) {
         UserInfo userInfo = userPrincipal.getUserInfo();
         userInfo.setFirstName(request.getFirstName());
         userInfo.setLastName(request.getLastName());

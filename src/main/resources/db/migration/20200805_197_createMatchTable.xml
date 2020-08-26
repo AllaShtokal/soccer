@@ -17,7 +17,7 @@
                 <constraints nullable="true" unique="true"/>
             </column>
             <column name="reservation_id" type="BIGINT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="is_active" type="BOOLEAN">
                 <constraints nullable="false"/>

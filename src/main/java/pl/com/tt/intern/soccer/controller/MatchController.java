@@ -6,14 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.payload.request.TeamRequest;
 import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
 import pl.com.tt.intern.soccer.payload.response.MatchResultsResponse;
 import pl.com.tt.intern.soccer.service.MatchService;
 
 import javax.validation.Valid;
-
 import java.util.List;
+
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -27,17 +28,18 @@ public class MatchController {
     private final MatchService matchService;
 
 
-    @GetMapping("/start/{reservation_id}")
-    public ResponseEntity<MatchResponseRequest> playByReservationId(@PathVariable("reservation_id") Long reservation_id) throws Exception {
+    @PatchMapping("/start/{reservation_id}")
+    public ResponseEntity<MatchResponseRequest> playByReservationId(@PathVariable("reservation_id") Long reservationId,
+                                                                    @RequestBody(required = false) List<TeamRequest> teamRequests) throws Exception {
 
-        MatchResponseRequest matchResponse = matchService.play(reservation_id);
+          MatchResponseRequest matchResponse = matchService.play(reservationId, teamRequests);
         return ok(matchResponse);
     }
 
     @GetMapping("/results/{match_id}")
-    public ResponseEntity<MatchResultsResponse> getMatchResults(@PathVariable("match_id") Long match_id) throws NotFoundException {
+    public ResponseEntity<MatchResultsResponse> getMatchResults(@PathVariable("match_id") Long matchId) throws NotFoundException {
 
-        MatchResultsResponse matchResultsResponse = matchService.getMatchResult(match_id);
+        MatchResultsResponse matchResultsResponse = matchService.getMatchResult(matchId);
         return ok(matchResultsResponse);
     }
 
@@ -52,8 +54,8 @@ public class MatchController {
     }
 
     @GetMapping("/{reservation_id}")
-    public ResponseEntity<List<MatchFullResponse>> findAll(@PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
-        return ok(matchService.findAllByReservationId(reservation_id));
+    public ResponseEntity<List<MatchFullResponse>> findAll(@PathVariable("reservation_id") Long reservationId) throws NotFoundException {
+        return ok(matchService.findAllByReservationId(reservationId));
     }
 
 }

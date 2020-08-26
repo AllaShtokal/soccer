@@ -30,28 +30,27 @@ public class UserReservationEventController {
 
     @GetMapping("/add/{reservation_id}")
     public ResponseEntity<ReservationResponse> addUserReservation(@CurrentUser UserPrincipal user,
-                                                     @PathVariable("reservation_id") Long reservation_id) throws Exception {
+                                                     @PathVariable("reservation_id") Long reservationId) throws Exception {
 
-        userReservationService.add(reservation_id, user.getId());
-        ReservationResponse reservationResponse = reservationService.findById(reservation_id);
+        userReservationService.add(reservationId, user.getId());
+        ReservationResponse reservationResponse = reservationService.findById(reservationId);
         return ok(reservationResponse);
     }
 
     @GetMapping("/{reservation_id}")
     public ResponseEntity<List<BasicUserInfoResponse>> findAllUsersByUserReservationId(
-                                                                  @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
+                                                                  @PathVariable("reservation_id") Long reservationId) throws NotFoundException {
 
-        List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(reservation_id);
-
+        List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(reservationId);
         return ok(usersList);
     }
 
     @GetMapping("/remove/{reservation_id}")
     public ResponseEntity<ReservationResponse> removeUserReservation(@CurrentUser UserPrincipal user,
-                                                                  @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
+                                                                  @PathVariable("reservation_id") Long reservationId) throws NotFoundException {
 
-        userReservationService.remove(reservation_id, user.getId());
-        ReservationResponse reservationResponse = reservationService.findById(reservation_id);
+        userReservationService.remove(reservationId, user.getId());
+        ReservationResponse reservationResponse = reservationService.findById(reservationId);
         return ok(reservationResponse);
     }
 

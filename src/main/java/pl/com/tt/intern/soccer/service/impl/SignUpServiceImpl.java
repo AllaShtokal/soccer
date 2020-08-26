@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -75,14 +74,15 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     @Override
-    public Boolean ifUsernameIsTaken(String username) throws NotFoundException {
-        return userService.findByUsername(username) != null;
+    public Boolean ifUsernameIsTaken(String username) {
+        return userService.existsByUsername(username);
     }
 
     @Override
-    public Boolean ifEmailIsTaken(String email) throws NotFoundException {
-        return userService.findByEmail(email) != null;
+    public Boolean ifEmailIsTaken(String email) {
+        return userService.existsByEmail(email);
     }
+
     private SuccessfulSignUpResponse createKeyAndSendEmailIfIsEnabled(User user) throws NotFoundException {
         if (mailEnabled) {
             setAndSendActivationMailMsg(user);

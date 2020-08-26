@@ -72,4 +72,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Thrown Reservation Exception with message: {}", e.getMessage());
         return entity(e.getMessage(), BAD_REQUEST);
     }
+
+
+
+    @ExceptionHandler( NotFoundLobbyByIdException.class)
+    public ResponseEntity<ExceptionResponse> notFoundLobby(NotFoundException e) {
+        return entity(e.getMessage(), NOT_FOUND);}
 }

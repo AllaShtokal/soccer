@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
-import static javax.persistence.FetchType.LAZY;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -39,7 +38,7 @@ public class Lobby implements Serializable {
             nullable = false)
     private  Long limit;
 
-    @OneToMany(mappedBy = "lobby", cascade = CascadeType.ALL, fetch = LAZY)
+    @OneToMany(mappedBy = "lobby", cascade = CascadeType.ALL)
     private Set<Reservation> reservations;
 
 }
