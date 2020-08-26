@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import java.io.Serializable;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 
@@ -14,7 +16,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "buttle")
 @Getter
 @Setter
-public class Buttle {
+public class Buttle implements Serializable {
+
+
+    private static final long serialVersionUID = -6635819115001755604L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -41,12 +46,10 @@ public class Buttle {
             nullable = false)
     private int scoreTeam2;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="game_id", nullable=false)
     private Game game;
 
-    public Buttle(String teamName1,String teamName2) {
-    }
 
 
 

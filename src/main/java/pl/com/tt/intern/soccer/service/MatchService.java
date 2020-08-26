@@ -4,6 +4,7 @@ package pl.com.tt.intern.soccer.service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.Match;
 import pl.com.tt.intern.soccer.model.Team;
+import pl.com.tt.intern.soccer.payload.request.TeamRequest;
 import pl.com.tt.intern.soccer.payload.response.MatchFullResponse;
 import pl.com.tt.intern.soccer.payload.response.MatchResponseRequest;
 import pl.com.tt.intern.soccer.payload.response.MatchResultsResponse;
@@ -13,7 +14,7 @@ import java.util.Set;
 
 public interface MatchService {
 
-    MatchResponseRequest play(Long reservationId) throws Exception;
+    MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws Exception;
     List<MatchFullResponse> findAllByReservationId(Long reservationId) throws NotFoundException;
     MatchResultsResponse getMatchResult(Long matchId) throws NotFoundException;
     Boolean saveResults(MatchResponseRequest matchResponseRequest) throws NotFoundException;

@@ -2,14 +2,19 @@ package pl.com.tt.intern.soccer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
+import pl.com.tt.intern.soccer.payload.response.UserRankingResponse;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.UserService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -104,5 +109,38 @@ public class UserServiceImpl implements UserService {
     public void changeEmail(User user, String email) {
         user.setEmail(email);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserRankingResponse showRankingByUserId(Long userId, int page, int size) throws NotFoundException {
+        UserRankingResponse userRankingResponse = new UserRankingResponse();
+
+        User byId = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        Long index = userRepository.findAllAttachedToMeByUserId(userId);
+        page = (int) (index / size);
+
+        userRankingResponse.setUsername(byId.getUsername());
+
+        userRankingResponse.setSize(size);
+        userRankingResponse.setPage(page);
+
+        Page<User> all = userRepository.findAll(PageRequest.of(page, size));
+        List<User> content = all.getContent();
+        List<BasicUserInfoResponse> users = new ArrayList<>();
+        for (User u : content) {
+            BasicUserInfoResponse userInfoResponse = new BasicUserInfoResponse();
+            userInfoResponse.setUsername(u.getUsername());
+            userInfoResponse.setEmail(u.getEmail());
+            userInfoResponse.setWon(u.getUserInfo().getWon().toString());
+            userInfoResponse.setLost(u.getUserInfo().getLost().toString());
+            users.add(userInfoResponse);
+        }
+
+        userRankingResponse.setUsers(users);
+        userRankingResponse.setTotalSize(all.getTotalElements());
+
+
+        return userRankingResponse;
+
     }
 }

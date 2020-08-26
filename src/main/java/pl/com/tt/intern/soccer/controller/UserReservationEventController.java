@@ -8,8 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
+import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
 import pl.com.tt.intern.soccer.service.UserReservationService;
@@ -27,31 +29,41 @@ public class UserReservationEventController {
 
     private final ReservationService reservationService;
     private final UserReservationService userReservationService;
+    private final UserRepository userRepository;
 
     @GetMapping("/add/{reservation_id}")
     public ResponseEntity<ReservationResponse> addUserReservation(@CurrentUser UserPrincipal user,
-                                                     @PathVariable("reservation_id") Long reservation_id) throws Exception  { //todo correct exception
+                                                                  @PathVariable("reservation_id") Long reservationId) throws Exception {
 
-        userReservationService.add(reservation_id, user.getId());
-        ReservationResponse reservationResponse = reservationService.findById(reservation_id);
+        userReservationService.add(reservationId, user.getId());
+        ReservationResponse reservationResponse = reservationService.findById(reservationId);
+        return ok(reservationResponse);
+    }
+
+    @GetMapping("/add/test")
+    public ResponseEntity<ReservationResponse> addUserReservationForTests() throws Exception {
+        List<User> all = userRepository.findAll();
+        for (User u : all) {
+            userReservationService.add(1L,u.getId() );
+        }
+        ReservationResponse reservationResponse = reservationService.findById(1L);
         return ok(reservationResponse);
     }
 
     @GetMapping("/{reservation_id}")
     public ResponseEntity<List<BasicUserInfoResponse>> findAllUsersByUserReservationId(
-                                                                  @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
+            @PathVariable("reservation_id") Long reservationId) throws NotFoundException {
 
-        List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(reservation_id);
-
+        List<BasicUserInfoResponse> usersList = userReservationService.findAllUsersByReservationID(reservationId);
         return ok(usersList);
     }
 
     @GetMapping("/remove/{reservation_id}")
     public ResponseEntity<ReservationResponse> removeUserReservation(@CurrentUser UserPrincipal user,
-                                                                  @PathVariable("reservation_id") Long reservation_id) throws NotFoundException {
+                                                                     @PathVariable("reservation_id") Long reservationId) throws NotFoundException {
 
-        userReservationService.remove(reservation_id, user.getId());
-        ReservationResponse reservationResponse = reservationService.findById(reservation_id);
+        userReservationService.remove(reservationId, user.getId());
+        ReservationResponse reservationResponse = reservationService.findById(reservationId);
         return ok(reservationResponse);
     }
 

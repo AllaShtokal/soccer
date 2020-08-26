@@ -1,11 +1,14 @@
 package pl.com.tt.intern.soccer.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.com.tt.intern.soccer.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -18,8 +21,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
+
+    List<User> findByUsernameIn(Set<String> list);
+
     Boolean existsByEmail(String email);
 
     Boolean existsByUsername(String username);
+
+    @Query(value = "SELECT COUNT(u)  FROM User u WHERE u.id <=:id")
+    Long findAllAttachedToMeByUserId(@Param("id") Long id);
 
 }

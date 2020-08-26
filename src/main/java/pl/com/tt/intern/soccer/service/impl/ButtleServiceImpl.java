@@ -62,9 +62,12 @@ public class ButtleServiceImpl implements ButtleService {
 
         Set<String> activeTeamsNames = getSetOfNamesOfTeamWinners(buttles);
         for (Team t : teams) {
-            if (!activeTeamsNames.contains(t.getName())) {
-                t.setActive(false);
+            if (activeTeamsNames.contains(t.getName())) {
+                t.getUsers().forEach(user -> user.getUserInfo().addWon());
             }
+            else {
+                t.setActive(false);
+                t.getUsers().forEach(user -> user.getUserInfo().addLost());}
         }
 
     }

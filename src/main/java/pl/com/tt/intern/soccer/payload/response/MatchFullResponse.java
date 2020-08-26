@@ -9,6 +9,7 @@ import java.util.List;
 public class MatchFullResponse {
 
     private Long matchId;
+    private Boolean isActive;
     private List<GameResponse> gameResponses;
 
 }

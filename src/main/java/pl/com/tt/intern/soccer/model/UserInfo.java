@@ -1,6 +1,7 @@
 package pl.com.tt.intern.soccer.model;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
@@ -49,12 +50,28 @@ public class UserInfo extends DateAudit implements Serializable {
             length = 30)
     private String skype;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "won")
+    private Long won = 0L;
+
+    @Column(name = "lost")
+    @ColumnDefault("0")
+    private Long lost = 0L;
 
     public UserInfo(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public void addWon() {
+        this.won++;
+    }
+
+    public void addLost() {
+        this.lost++;
+    }
+
 }

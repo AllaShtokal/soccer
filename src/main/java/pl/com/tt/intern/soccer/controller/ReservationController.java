@@ -5,18 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
-import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
-import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
-import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
-import pl.com.tt.intern.soccer.payload.response.MyReservationResponse;
-import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.annotation.CurrentUser;
+import pl.com.tt.intern.soccer.exception.IncorrectConfirmationKeyException;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.ReservationClashException;
 import pl.com.tt.intern.soccer.exception.ReservationFormatException;
+import pl.com.tt.intern.soccer.model.enums.ReservationPeriod;
+import pl.com.tt.intern.soccer.payload.request.ReservationDateRequest;
 import pl.com.tt.intern.soccer.payload.request.ReservationPersistRequest;
+import pl.com.tt.intern.soccer.payload.request.ReservationSimpleDateRequest;
+import pl.com.tt.intern.soccer.payload.response.MyReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationPersistedResponse;
+import pl.com.tt.intern.soccer.payload.response.ReservationResponse;
 import pl.com.tt.intern.soccer.payload.response.ReservationShortInfoResponse;
 import pl.com.tt.intern.soccer.security.UserPrincipal;
 import pl.com.tt.intern.soccer.service.ReservationService;
@@ -37,10 +37,16 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
         log.debug("GET /reservations");
         return ok(reservationService.findAll());
+    }
+
+    @GetMapping("/isactive/{id}")
+    public ResponseEntity<Boolean> isAnyActiveMatch(@PathVariable("id") Long reservationId) {
+        return ok(reservationService.isAnyActiveMatch(reservationId));
     }
 
     @GetMapping(params = "period")
@@ -50,13 +56,19 @@ public class ReservationController {
     }
 
     @PostMapping("/period/all")
-    public ResponseEntity<List<ReservationShortInfoResponse>> findAllByPeriod(@CurrentUser UserPrincipal user,@RequestBody ReservationSimpleDateRequest period) {
+    public ResponseEntity<List<ReservationShortInfoResponse>> findAllByPeriod(@CurrentUser UserPrincipal user, @RequestBody ReservationSimpleDateRequest period) {
         return ok(reservationService.findShortByPeriod(period, user.getId()));
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<MyReservationResponse>> findMy(@CurrentUser UserPrincipal user) {
-        return ok(reservationService.findByCreatorId( user.getId()));
+        return ok(reservationService.findByCreatorId(user.getId()));
+    }
+
+    @GetMapping("/attached")
+    public ResponseEntity<List<MyReservationResponse>> findMyAttached(@CurrentUser UserPrincipal user, ReservationSimpleDateRequest period) {
+        List<MyReservationResponse> allAttachedToMeByUserId = reservationService.findAllAttachedToMeByUserId(user.getId());
+        return ok(allAttachedToMeByUserId);
     }
 
     @GetMapping(params = "day")

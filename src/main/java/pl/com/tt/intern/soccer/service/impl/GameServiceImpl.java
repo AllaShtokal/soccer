@@ -1,6 +1,5 @@
 package pl.com.tt.intern.soccer.service.impl;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -74,6 +73,7 @@ public class GameServiceImpl implements GameService {
         {
             GameResponse gameResponse = new GameResponse();
             gameResponse.setGameId(g.getId());
+            gameResponse.setIsActive(g.getIsActive());
             gameResponse.setButtles(buttleService.getAllButtlesByGameID(g.getId()));
             gameResponses.add(gameResponse);
         }

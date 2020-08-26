@@ -27,12 +27,12 @@ public class Reservation implements Serializable {
     private Long id;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST , fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "lobby_id", nullable = false)
     private Lobby lobby;
 
@@ -48,10 +48,11 @@ public class Reservation implements Serializable {
     @Column(name = "confirmed", nullable = false)
     private Boolean confirmed;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    Set<UserReservationEvent> userReservationEvents;
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserReservationEvent> userReservationEvents;
 
-    @OneToMany(mappedBy="reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="reservation", cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
     private Set<Match> matches = new HashSet<>();
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {

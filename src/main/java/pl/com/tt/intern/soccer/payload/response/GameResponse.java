@@ -8,5 +8,6 @@ import java.util.List;
 public class GameResponse {
 
     private Long gameId;
+    private Boolean isActive;
     private List<ButtleResponse> buttles;
 }

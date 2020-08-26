@@ -3,6 +3,7 @@ package pl.com.tt.intern.soccer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import pl.com.tt.intern.soccer.model.Team;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
 import pl.com.tt.intern.soccer.repository.TeamRepository;
@@ -17,9 +18,17 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final ModelMapper modelMapper;
 
+
     @Override
     public Long getTeamIdByTeamName(String teamName) {
         return teamRepository.findByName(teamName).getId();
+    }
+
+    @Override
+    public void save(Team team) {
+
+        teamRepository.save(team);
+
     }
 
     @Override

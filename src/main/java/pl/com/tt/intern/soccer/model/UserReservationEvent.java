@@ -22,18 +22,18 @@ public class UserReservationEvent implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
-    Long id;
+    private  Long id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "reservation_id")
-    Reservation reservation;
+    private Reservation reservation;
 
-    @Column(name = "registered_at", nullable = true)
-    LocalDateTime registeredAt;
+    @Column(name = "registered_at")
+    private LocalDateTime registeredAt;
 
 
 

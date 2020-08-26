@@ -40,13 +40,24 @@ public class AuthController {
         return ok(signUpService.signUp(request));
     }
 
+    @GetMapping("/signup/test")
+    public ResponseEntity<String> signUpForTests() throws PasswordsMismatchException, NotFoundException {
+        int num = 8;
+        for (int i = 0; i < num; i++) {
+
+            signUpService.signUp(new SignUpRequest("user" + i, "u@user" + i, "String1!", "String1!", "user" + i, "user" + i));
+        }
+
+        return ok("added " + num + " users!");
+    }
+
     @GetMapping("/username/{username}")
-    public ResponseEntity<Boolean> ifUsernameIsTaken(@RequestParam("username") String username) throws NotFoundException {
+    public ResponseEntity<Boolean> ifUsernameIsTaken(@PathVariable String username) throws NotFoundException {
         return ok(signUpService.ifUsernameIsTaken(username));
     }
 
-    @GetMapping("/username/{email}")
-    public ResponseEntity<Boolean> ifEmailIsTaken(@RequestParam("email") String email) throws NotFoundException {
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Boolean> ifEmailIsTaken(@PathVariable String email) throws NotFoundException {
         return ok(signUpService.ifEmailIsTaken(email));
     }
 }

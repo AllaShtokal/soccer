@@ -31,19 +31,20 @@ public class Match implements Serializable {
     @Column(name = "date_from", nullable = false)
     private LocalDateTime dateFrom;
 
-    @Column(name = "date_to", nullable = true)
+    @Column(name = "date_to")
     private LocalDateTime dateTo;
 
-    @OneToMany(mappedBy="matchm", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="matchm", cascade = CascadeType.ALL)
     private Set<Team> teams = new HashSet<>();
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive ;
 
-    @OneToMany(mappedBy="matchh", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="matchh", cascade = CascadeType.ALL)
     private Set<Game> games = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="reservation_id", nullable=false)
     private Reservation reservation;
 

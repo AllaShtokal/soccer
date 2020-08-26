@@ -33,9 +33,11 @@ public interface ReservationService {
 
     List<ReservationResponse> findByPeriod(ReservationPeriod period);
 
-    List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id);
+    List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long userId);
 
-    List<MyReservationResponse> findByCreatorId(Long user_id);
+    List<MyReservationResponse> findByCreatorId(Long userId);
+
+    List<MyReservationResponse> findAllAttachedToMeByUserId(Long userId);
 
     List<ReservationResponse> findByDay(DayOfWeek day);
 
@@ -61,4 +63,8 @@ public interface ReservationService {
     boolean isDate15MinuteRounded(LocalDateTime time);
 
     TeamResponse getWinnerTeamByMatch(Long match_id) throws NotFoundException;
+
+    boolean isAnyActiveMatch(Long reservationId);
+
+
 }

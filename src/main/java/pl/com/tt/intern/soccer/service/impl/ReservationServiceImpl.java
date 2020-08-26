@@ -77,14 +77,9 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = mapper.map(reservationPersistRequest, Reservation.class);
         reservation.setConfirmed(false);
         reservation.setId(null);
-
-        Lobby my_first_lobby;
-        try {
-            my_first_lobby = lobbyRepository.findFirstByName(reservationPersistRequest.getLobbyName()).orElseThrow(NotFoundException::new);
-        } catch (NullPointerException e) {
-            throw new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName());
-        }
-        reservation.setLobby(my_first_lobby);
+        Lobby lobby = lobbyRepository.findFirstByName(reservationPersistRequest.
+                getLobbyName()).orElseThrow(() -> new NotFoundLobbyByIdException(reservationPersistRequest.getLobbyName()));
+        reservation.setLobby(lobby);
         User user = userService.findById(userId);
         reservation.setUser(user);
         reservation.setConfirmed(true);
@@ -115,30 +110,42 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long user_id) {
+    public List<ReservationShortInfoResponse> findShortByPeriod(ReservationSimpleDateRequest period, Long userId) {
         log.debug("Finding all reservations in period: {}", period);
-        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()), user_id);
+
+        return mapToReservationShortInfoResponse(reservationRepository.findAllByDateFromGreaterThanEqualAndDateToLessThanEqual(period.getFrom(), period.getTo()), userId);
+    }
+
+
+
+    @Override
+    public List<MyReservationResponse> findByCreatorId(Long userId) {
+        log.debug("Finding all created by this user: {}", userId);
+        List<Reservation> allByUserId = reservationRepository.findAllByUser_Id(userId);
+        return mapToMyReservationResponse(allByUserId, userId);
     }
 
     @Override
-    public List<MyReservationResponse> findByCreatorId(Long user_id) {
-        log.debug("Finding all created by this user: {}", user_id);
-        List<Reservation> allByUser_id = reservationRepository.findAllByUserId(user_id);
-        return mapToMyReservationResponse(allByUser_id, user_id);
+    public List<MyReservationResponse> findAllAttachedToMeByUserId(Long userId) {
+        log.debug("Finding all I am attached to: {}", userId);
+        List<Reservation> allIAmAttachedTo= reservationRepository.findAllAttachedToMeByUserId(userId);
+        return mapToMyReservationResponse(allIAmAttachedTo, userId);
     }
 
-    private List<MyReservationResponse> mapToMyReservationResponse(List<Reservation> reservations, Long user_id) {
+
+
+    private List<MyReservationResponse> mapToMyReservationResponse(List<Reservation> reservations, Long userId) {
         List<MyReservationResponse> responseList = new ArrayList<>();
         for (Reservation r : reservations) {
-            responseList.add(new MyReservationResponse(r, user_id));
+            responseList.add(new MyReservationResponse(r, userId));
         }
         return responseList;
     }
 
-    private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations, Long user_id) {
+    private List<ReservationShortInfoResponse> mapToReservationShortInfoResponse(List<Reservation> reservations, Long userId) {
         List<ReservationShortInfoResponse> responseList = new ArrayList<>();
         for (Reservation r : reservations) {
-            responseList.add(new ReservationShortInfoResponse(r, user_id));
+            responseList.add(new ReservationShortInfoResponse(r, userId));
         }
         return responseList;
     }
@@ -206,13 +213,8 @@ public class ReservationServiceImpl implements ReservationService {
         verifyEditedReservation(requestObject, reservation);
         reservation.setDateFrom(requestObject.getDateFrom());
         reservation.setDateTo(requestObject.getDateTo());
-
-        Lobby lobby;
-        try {
-            lobby = lobbyRepository.findFirstByName(requestObject.getLobbyName()).orElseThrow(NotFoundException::new);
-        } catch (NullPointerException e) {
-            throw new NotFoundLobbyByIdException(requestObject.getLobbyName());
-        }
+        Lobby lobby= lobbyRepository.findFirstByName(requestObject.getLobbyName())
+                .orElseThrow(() -> new NotFoundLobbyByIdException(requestObject.getLobbyName()));
         reservation.setLobby(lobby);
         Reservation savedReservation = reservationRepository.save(reservation);
         return mapper.map(savedReservation, ReservationPersistedResponse.class);
@@ -268,11 +270,20 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public TeamResponse getWinnerTeamByMatch(Long matchId) throws NotFoundException {
-        GameResponse gameResponse = gameService.getlastGameInMatch(matchId);
+    public TeamResponse getWinnerTeamByMatch(Long match_id) throws NotFoundException {
+
+        GameResponse gameResponse = gameService.getlastGameInMatch(match_id);
         List<ButtleResponse> buttles = gameResponse.getButtles();
         return buttleService.getTeamWinner(buttles.get(0));
+
+
     }
+
+    @Override
+    public boolean isAnyActiveMatch(Long reservationId) {
+        return reservationRepository.isExistActiveMatchByReservationId(reservationId);
+    }
+
 
     @Override
     public boolean datesCollideWithExistingReservations(LocalDateTime dateFrom, LocalDateTime dateTo) {

@@ -1,13 +1,10 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +27,6 @@ public class Team implements Serializable {
     private  Long id;
 
     @Column(name = "team_name",
-            unique = true,
             nullable = false,
             length = 20)
     private String name;
@@ -39,13 +35,13 @@ public class Team implements Serializable {
             nullable = false)
     private Boolean active;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="matchh_id", nullable=false)
     private Match matchm;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER )
+    @OneToMany(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
     private Set<User> users = new HashSet<>();
-
     public void addUser(User user) {
         this.users.add(user);
         user.setTeam(this);

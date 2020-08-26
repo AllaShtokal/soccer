@@ -1,6 +1,9 @@
 package pl.com.tt.intern.soccer.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import pl.com.tt.intern.soccer.model.audit.DateAudit;
 
 import javax.persistence.*;
@@ -11,7 +14,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -62,18 +64,21 @@ public class User extends DateAudit implements Serializable {
      @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = LAZY)
     private UserInfo userInfo;
 
-    @ManyToMany(fetch = EAGER)
+     @OneToMany (mappedBy="user")
+     private Set<Reservation> reservation;
+
+    @ManyToMany
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     private Set<ConfirmationKey> confirmationKeys;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER, orphanRemoval = true)
-    Set<UserReservationEvent> userReservationEvents = new HashSet<>();
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<UserReservationEvent> userReservationEvents;
 
     public void addUserReservationEvent(UserReservationEvent userReservationEvent) {
         this.userReservationEvents.add(userReservationEvent);
@@ -86,7 +91,7 @@ public class User extends DateAudit implements Serializable {
 
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="team_id")
     private Team team;
 

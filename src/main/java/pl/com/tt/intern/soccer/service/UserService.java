@@ -2,6 +2,7 @@ package pl.com.tt.intern.soccer.service;
 
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.model.User;
+import pl.com.tt.intern.soccer.payload.response.UserRankingResponse;
 
 import java.util.List;
 
@@ -34,4 +35,6 @@ public interface UserService {
     User update(User user);
 
     void changeEmail(User user, String email);
+
+    UserRankingResponse showRankingByUserId(Long userId, int page, int size) throws NotFoundException;
 }
