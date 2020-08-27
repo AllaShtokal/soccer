@@ -188,6 +188,8 @@ public class MatchServiceImpl implements MatchService {
     @Transactional
     @Override
     public Boolean saveResults(MatchResponseRequest matchResponseRequest) throws NotFoundException {
+        List<Team> allByMatchm_id = teamRepository.findAllByMatchm_Id(matchResponseRequest.getMatchId());
+
         matchRepository.findAll();
         Match matchById = matchRepository.findById(matchResponseRequest.getMatchId()).orElseThrow(NotFoundException::new);
         Game game = gameService.getActiveGameFromMatch(matchById);
@@ -203,6 +205,7 @@ public class MatchServiceImpl implements MatchService {
 
         if (!result) {
             matchById.setIsActive(false);
+            allByMatchm_id.forEach(team -> team.setActive(false));
             LocalDateTime matchEndTime = LocalDateTime.now();
             matchById.setDateTo(matchEndTime);
 
