@@ -274,7 +274,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         GameResponse gameResponse = gameService.getlastGameInMatch(match_id);
         List<ButtleResponse> buttles = gameResponse.getButtles();
-        return buttleService.getTeamWinner(buttles.get(0));
+        return buttleService.getTeamWinner(buttles.get(0),match_id);
 
 
     }

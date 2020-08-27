@@ -14,7 +14,10 @@ import pl.com.tt.intern.soccer.repository.GameRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
 import pl.com.tt.intern.soccer.service.TeamService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -41,18 +44,18 @@ public class ButtleServiceImpl implements ButtleService {
         else return buttle.getTeamName2();
     }
     @Override
-    public TeamResponse getTeamWinner(ButtleResponse buttle) {
+    public TeamResponse getTeamWinner(ButtleResponse buttle, Long matchId) {
 
         TeamResponse teamResponse = new TeamResponse();
         if (buttle.getScoreTeam1() > buttle.getScoreTeam2()){
-            teamResponse.setTeam_id(teamService.getTeamIdByTeamName(buttle.getTeamName1()));
+            teamResponse.setTeam_id(teamService.getTeamIdByTeamNameAndMatchId(buttle.getTeamName1(), matchId));
             teamResponse.setName(buttle.getTeamName1());
-            teamResponse.setUsers(teamService.getUsersByTeamName(buttle.getTeamName1()));
+            teamResponse.setUsers(teamService.getUsersByTeamNameAndMatchId(buttle.getTeamName1(),  matchId));
         }
         else {
-            teamResponse.setTeam_id(teamService.getTeamIdByTeamName(buttle.getTeamName2()));
+            teamResponse.setTeam_id(teamService.getTeamIdByTeamNameAndMatchId(buttle.getTeamName2(), matchId));
             teamResponse.setName(buttle.getTeamName2());
-            teamResponse.setUsers(teamService.getUsersByTeamName(buttle.getTeamName2()));
+            teamResponse.setUsers(teamService.getUsersByTeamNameAndMatchId(buttle.getTeamName2(), matchId));
         }
 
 
@@ -88,7 +91,6 @@ public class ButtleServiceImpl implements ButtleService {
         List<ButtleResponse> buttleResponses = new ArrayList<>();
         for(Buttle b: buttles)
         {
-
             ButtleResponse buttleResponse = modelMapper.map(b, ButtleResponse.class);
             buttleResponses.add(buttleResponse);
         }

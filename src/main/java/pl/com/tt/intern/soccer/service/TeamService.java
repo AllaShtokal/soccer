@@ -7,8 +7,10 @@ import java.util.Set;
 
 public interface TeamService {
     Long getTeamIdByTeamName(String teamName);
+    Long getTeamIdByTeamNameAndMatchId (String name, Long matchId);
     void save (Team team);
 
     Set<BasicUserInfoResponse> getUsersByTeamName(String teamName);
+    Set<BasicUserInfoResponse> getUsersByTeamNameAndMatchId(String teamName, Long matchId);
 
 }
