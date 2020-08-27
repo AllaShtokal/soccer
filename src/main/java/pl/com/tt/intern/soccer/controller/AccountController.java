@@ -33,14 +33,14 @@ public class AccountController {
 
     @GetMapping(value = "/change/password", params = "email")
     public ResponseEntity<PasswordChangeKeyResponse> sendMailToChangePasswordIfEnabledAndAssignConfirmationKey(
-            @RequestParam(name = "email") String email) throws Exception {
+            @RequestParam(name = "email") String email) throws NotFoundException {
         return ok(accountService.setAndSendMailToChangePassword(email));
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/change/email", params = {"email", "newEmail"})
     public ResponseEntity<EmailChangeKeyResponse> sendMailToChangeEmailIfEnabledAndAssignConfirmationKey(
-            @RequestParam String email, @RequestParam String newEmail) throws Exception {
+            @RequestParam String email, @RequestParam String newEmail) throws NotFoundException {
         return ok(accountService.setAndSendMailToChangeEmail(email, newEmail));
     }
 
@@ -78,7 +78,7 @@ public class AccountController {
     @PatchMapping(value = "/change/email", params = "changeEmailKey")
     public ResponseEntity<String> changeEmail(@CurrentUser UserPrincipal user,
                                               @RequestParam(name = "changeEmailKey") String changeEmailKey,
-                                              @Valid @RequestBody EmailRequest request) throws Exception {
+                                              @Valid @RequestBody EmailRequest request) throws NotFoundException {
         accountService.changeEmail(user, changeEmailKey, request);
         return ok().build();
     }

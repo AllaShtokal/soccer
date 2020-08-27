@@ -27,4 +27,6 @@ public abstract class DateAudit {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+
 }

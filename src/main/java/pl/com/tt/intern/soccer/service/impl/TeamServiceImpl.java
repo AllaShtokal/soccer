@@ -7,6 +7,7 @@ import pl.com.tt.intern.soccer.model.Team;
 import pl.com.tt.intern.soccer.model.User;
 import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
 import pl.com.tt.intern.soccer.repository.TeamRepository;
+import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.TeamService;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -36,8 +38,10 @@ public class TeamServiceImpl implements TeamService {
         Set<User> users = teamRepository.findByName(teamName).getUsers();
         Set<BasicUserInfoResponse> usersResponse = new HashSet<>();
         for (User u : users) {
-
             BasicUserInfoResponse bu = modelMapper.map(u, BasicUserInfoResponse.class);
+            bu.setWon(u.getUserInfo().getWon().toString());
+            bu.setLost(u.getUserInfo().getLost().toString());
+            bu.setRanking(userRepository.getRankByUsername( u.getUsername() ).toString());
             usersResponse.add(bu);
         }
         return usersResponse;

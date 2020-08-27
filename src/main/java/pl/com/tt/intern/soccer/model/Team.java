@@ -24,7 +24,7 @@ public class Team implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
-    private  Long id;
+    private Long id;
 
     @Column(name = "team_name",
             nullable = false,
@@ -36,15 +36,16 @@ public class Team implements Serializable {
     private Boolean active;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="matchh_id", nullable=false)
+    @JoinColumn(name = "matchh_id", nullable = false)
     private Match matchm;
 
-    @OneToMany(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+    @ManyToMany(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     private Set<User> users = new HashSet<>();
+
     public void addUser(User user) {
         this.users.add(user);
-        user.setTeam(this);
+        user.getTeam().add(this);
 
     }
 

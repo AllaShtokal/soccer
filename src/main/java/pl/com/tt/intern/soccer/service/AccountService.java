@@ -31,7 +31,7 @@ public interface AccountService {
 
     ChangeDataAccountResponse changeUserInfo(UserPrincipal user, ChangeAccountDataRequest request) throws NotFoundException;
 
-    void changeEmail(UserPrincipal user, String changeEmailKey, EmailRequest request) throws Exception;
+    void changeEmail(UserPrincipal user, String changeEmailKey, EmailRequest request) throws NotFoundException;
 
     AccountInfoDataResponse getBasicInfoByUserInfoId(Long id) throws NotFoundException;
 }

@@ -13,6 +13,7 @@ public interface ButtleService {
 
     Set<String> getSetOfNamesOfTeamWinners(Set<Buttle> buttles);
     void setActiveTeamsByListOfButtles(Set<Team> teams,Set<Buttle> buttles);
+    void save (Buttle buttle);
     List<ButtleResponse> getAllButtlesByGameID(Long gameId) throws NotFoundException;
      TeamResponse getTeamWinner(ButtleResponse buttle);
 

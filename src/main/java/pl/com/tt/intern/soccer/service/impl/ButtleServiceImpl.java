@@ -9,6 +9,7 @@ import pl.com.tt.intern.soccer.model.Game;
 import pl.com.tt.intern.soccer.model.Team;
 import pl.com.tt.intern.soccer.payload.response.ButtleResponse;
 import pl.com.tt.intern.soccer.payload.response.TeamResponse;
+import pl.com.tt.intern.soccer.repository.ButtleRepository;
 import pl.com.tt.intern.soccer.repository.GameRepository;
 import pl.com.tt.intern.soccer.service.ButtleService;
 import pl.com.tt.intern.soccer.service.TeamService;
@@ -20,6 +21,7 @@ import java.util.*;
 public class ButtleServiceImpl implements ButtleService {
 
     private final GameRepository gameRepository;
+    private final ButtleRepository buttleRepository;
     private final ModelMapper modelMapper;
     private final TeamService teamService;
 
@@ -65,10 +67,17 @@ public class ButtleServiceImpl implements ButtleService {
             if (activeTeamsNames.contains(t.getName())) {
                 t.getUsers().forEach(user -> user.getUserInfo().addWon());
             }
+
             else {
                 t.setActive(false);
                 t.getUsers().forEach(user -> user.getUserInfo().addLost());}
         }
+
+    }
+
+    @Override
+    public void save(Buttle buttle) {
+        buttleRepository.save(buttle);
 
     }
 

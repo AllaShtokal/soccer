@@ -92,8 +92,16 @@ public class User extends DateAudit implements Serializable {
 
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_team",
+    joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "team_id") })
+    private Set<Team> team = new HashSet<>();
+
+    public void addTeam(Team team) {
+        this.team.add(team);
+        team.getUsers().add(this);
+
+    }
+
 
 }

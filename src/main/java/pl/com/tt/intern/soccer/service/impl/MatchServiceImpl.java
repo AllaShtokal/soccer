@@ -124,6 +124,7 @@ public class MatchServiceImpl implements MatchService {
         Match match = new Match();
         match.setDateFrom(LocalDateTime.now());
         match.setIsActive(true);
+        matchRepository.save(match);
         return match;
     }
 
@@ -232,15 +233,18 @@ public class MatchServiceImpl implements MatchService {
 
 
     private void setGamesToMatch(Set<Team> teams, Match match) throws Exception {
-        Game game = createGame(teams);
+        Game game = createGame(teams, match);
         match.addGame(game);
+
     }
 
 
-    private Game createGame(Set<Team> teams) throws Exception {
+    private Game createGame(Set<Team> teams, Match match) throws NotFoundException {
         Game game = new Game();
         game.setIsActive(true);
-        Set<Buttle> buttles = gameService.generateListOfButtlesFromListOfTeams(teams);
+        game.setMatchh(match);
+        gameService.save(game);
+        Set<Buttle> buttles = gameService.generateListOfButtlesFromListOfTeams(teams, game);
         for (Buttle b : buttles) {
             game.addButtle(b);
         }

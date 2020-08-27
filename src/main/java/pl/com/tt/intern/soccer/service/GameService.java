@@ -13,8 +13,10 @@ import java.util.Set;
 public interface GameService {
 
 
-    Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teamList) throws Exception;
+    Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teamList,Game game) throws RuntimeException;
     Game getActiveGameFromMatch(Match match);
     List<GameResponse> getAllGamesFromMatch(Long matchId) throws NotFoundException;
     GameResponse getlastGameInMatch(Long matchId) throws NotFoundException;
+    void save (Game game);
+
 }
