@@ -15,6 +15,6 @@ public interface ButtleService {
     void setActiveTeamsByListOfButtles(Set<Team> teams,Set<Buttle> buttles);
     void save (Buttle buttle);
     List<ButtleResponse> getAllButtlesByGameID(Long gameId) throws NotFoundException;
-     TeamResponse getTeamWinner(ButtleResponse buttle, Long matchID);
+    TeamResponse getTeamWinner(ButtleResponse buttle, Long matchID);
 
 }

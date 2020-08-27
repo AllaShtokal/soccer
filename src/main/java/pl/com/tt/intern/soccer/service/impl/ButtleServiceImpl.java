@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.SameResultsException;
 import pl.com.tt.intern.soccer.model.Buttle;
 import pl.com.tt.intern.soccer.model.Game;
 import pl.com.tt.intern.soccer.model.Team;
@@ -39,6 +40,9 @@ public class ButtleServiceImpl implements ButtleService {
     }
 
     private String getTeamNameWinner(Buttle buttle) {
+        if(buttle.getScoreTeam1() == buttle.getScoreTeam2()){
+            throw new SameResultsException();
+        }else
         if (buttle.getScoreTeam1() > buttle.getScoreTeam2())
             return buttle.getTeamName1();
         else return buttle.getTeamName2();

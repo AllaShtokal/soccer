@@ -5,6 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
 import pl.com.tt.intern.soccer.exception.NotFoundReservationException;
+import pl.com.tt.intern.soccer.exception.NotUniqueNamesException;
+import pl.com.tt.intern.soccer.exception.NumberOfTeamsException;
 import pl.com.tt.intern.soccer.exception.service.RandomString;
 import pl.com.tt.intern.soccer.model.*;
 import pl.com.tt.intern.soccer.payload.request.TeamRequest;
@@ -16,11 +18,17 @@ import pl.com.tt.intern.soccer.repository.MatchRepository;
 import pl.com.tt.intern.soccer.repository.ReservationRepository;
 import pl.com.tt.intern.soccer.repository.TeamRepository;
 import pl.com.tt.intern.soccer.repository.UserRepository;
-import pl.com.tt.intern.soccer.service.*;
+import pl.com.tt.intern.soccer.service.ButtleService;
+import pl.com.tt.intern.soccer.service.GameService;
+import pl.com.tt.intern.soccer.service.MatchService;
+import pl.com.tt.intern.soccer.service.ReservationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -41,7 +49,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws Exception {
+    public MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws NotFoundException {
 
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotFoundReservationException::new);
         if (getActiveMatch(reservationId) == null) {
@@ -49,6 +57,9 @@ public class MatchServiceImpl implements MatchService {
             if (teamRequests == null) {
                 setGamesToMatch(setTeamsToMatch(reservationId, m), m);
             } else {
+                int x = teamRequests.size();
+                if((x != 0) && ((x & (x - 1)) != 0)) throw  new NumberOfTeamsException();
+
 
                 setGamesToMatch(getTeamsFromTeamRequest(teamRequests, m), m);
             }
@@ -73,7 +84,7 @@ public class MatchServiceImpl implements MatchService {
 
 
 
-    private Set<Team> getTeamsFromTeamRequest(List<TeamRequest> teamRequests, Match match) throws Exception {
+    private Set<Team> getTeamsFromTeamRequest(List<TeamRequest> teamRequests, Match match)  {
         Set<Team> teams = new HashSet<>();
         int requestSize = teamRequests.size();
         Set<String> teamnames = new HashSet<>();
@@ -81,7 +92,8 @@ public class MatchServiceImpl implements MatchService {
             teamnames.add(t.getTeamName());
         }
         if(requestSize!=teamnames.size()){
-            throw new Exception("names are not unique!");}
+            throw new NotUniqueNamesException();
+        }
 
             for (TeamRequest t : teamRequests) {
             Team team = new Team();
@@ -235,14 +247,14 @@ public class MatchServiceImpl implements MatchService {
     }
 
 
-    private void setGamesToMatch(Set<Team> teams, Match match) throws Exception {
+    private void setGamesToMatch(Set<Team> teams, Match match)  {
         Game game = createGame(teams, match);
         match.addGame(game);
 
     }
 
 
-    private Game createGame(Set<Team> teams, Match match) throws NotFoundException {
+    private Game createGame(Set<Team> teams, Match match)  {
         Game game = new Game();
         game.setIsActive(true);
         game.setMatchh(match);

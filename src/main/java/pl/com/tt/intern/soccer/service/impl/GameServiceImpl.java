@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.com.tt.intern.soccer.exception.NotFoundException;
+import pl.com.tt.intern.soccer.exception.NotPairedException;
 import pl.com.tt.intern.soccer.model.Buttle;
 import pl.com.tt.intern.soccer.model.Game;
 import pl.com.tt.intern.soccer.model.Match;
@@ -27,7 +28,7 @@ public class GameServiceImpl implements GameService {
 
     //works only if set of teams is paired
     @Override
-    public Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teams, Game game) throws RuntimeException {
+    public Set<Buttle> generateListOfButtlesFromListOfTeams(Set<Team> teams, Game game)  {
 
 
         Set<Team> activeTeams = new HashSet<>();
@@ -37,8 +38,9 @@ public class GameServiceImpl implements GameService {
         }
         Set<Buttle> buttles = new HashSet<>();
         if (activeTeams.size() % 2 != 0) {
-            log.debug("number of teams is NOT paired ");
-            throw new RuntimeException("number of teams is NOT paired ");
+
+            throw new NotPairedException();
+
         }
 
         for (Iterator<Team> it = activeTeams.iterator(); it.hasNext(); ) {

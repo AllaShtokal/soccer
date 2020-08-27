@@ -14,7 +14,7 @@ import java.util.Set;
 
 public interface MatchService {
 
-    MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws Exception;
+    MatchResponseRequest play(Long reservationId, List<TeamRequest> teamRequests) throws NotFoundException;
     List<MatchFullResponse> findAllByReservationId(Long reservationId) throws NotFoundException;
     MatchResultsResponse getMatchResult(Long matchId) throws NotFoundException;
     Boolean saveResults(MatchResponseRequest matchResponseRequest) throws NotFoundException;

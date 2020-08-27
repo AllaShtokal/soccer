@@ -62,7 +62,7 @@ public interface ReservationService {
 
     boolean isDate15MinuteRounded(LocalDateTime time);
 
-    TeamResponse getWinnerTeamByMatch(Long match_id) throws NotFoundException;
+    TeamResponse getWinnerTeamByMatch(Long matchId) throws NotFoundException;
 
     boolean isAnyActiveMatch(Long reservationId);
 

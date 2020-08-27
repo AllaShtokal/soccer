@@ -20,12 +20,6 @@ public class TeamServiceImpl implements TeamService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
-
-    @Override
-    public Long getTeamIdByTeamName(String teamName) {
-        return teamRepository.findByName(teamName).getId();
-    }
-
     @Override
     public Long getTeamIdByTeamNameAndMatchId(String name, Long matchId) {
         return teamRepository.findByNameAndMatchm_Id(name, matchId).getId();
@@ -38,19 +32,6 @@ public class TeamServiceImpl implements TeamService {
 
     }
 
-    @Override
-    public Set<BasicUserInfoResponse> getUsersByTeamName(String teamName) {
-        Set<User> users = teamRepository.findByName(teamName).getUsers();
-        Set<BasicUserInfoResponse> usersResponse = new HashSet<>();
-        for (User u : users) {
-            BasicUserInfoResponse bu = modelMapper.map(u, BasicUserInfoResponse.class);
-            bu.setWon(u.getUserInfo().getWon().toString());
-            bu.setLost(u.getUserInfo().getLost().toString());
-            bu.setRanking(userRepository.getRankByUsername( u.getUsername() ).toString());
-            usersResponse.add(bu);
-        }
-        return usersResponse;
-    }
 
     @Override
     public Set<BasicUserInfoResponse> getUsersByTeamNameAndMatchId(String teamName, Long matchId) {
