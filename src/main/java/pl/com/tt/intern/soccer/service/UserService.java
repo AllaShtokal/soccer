@@ -36,6 +36,6 @@ public interface UserService {
 
     void changeEmail(User user, String email);
 
-    UserRankingResponse showRankingByUserId(Long userId, int page, int size,String s1, String s2, String s3, String s4) throws NotFoundException;
+    UserRankingResponse showRankingByUserId(Long userId, String page, int size,String s1, String s2, String s3, String s4) throws NotFoundException;
 
 }

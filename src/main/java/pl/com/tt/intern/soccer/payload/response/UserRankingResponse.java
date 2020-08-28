@@ -15,4 +15,7 @@ public class UserRankingResponse {
     private int totalSize;
 
 
+
+
+
 }

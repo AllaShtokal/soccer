@@ -114,25 +114,27 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserRankingResponse showRankingByUserId(Long userId, int page, int size,String s1, String s2, String s3, String s4) throws NotFoundException {
+    public UserRankingResponse showRankingByUserId(Long userId, String page, int size, String s1, String s2, String s3, String s4) throws NotFoundException {
         UserRankingResponse userRankingResponse = new UserRankingResponse();
         User byId = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         int index = userRepository.findAllAttachedToMeByUserId(userId);
-        page = (index / size);
+        int pageI = 0;
+        if (page == null) {
+            pageI = index / size;
+        }
         userRankingResponse.setUsername(byId.getUsername());
         userRankingResponse.setSize(size);
-        userRankingResponse.setPage(page);
+        userRankingResponse.setPage(pageI);
 
-        List<BasicUserInfoResponse> users = getUsers(page,size,s1,s2,s3,s4);
+        List<BasicUserInfoResponse> users = getUsers(pageI, size, s1, s2, s3, s4);
 
         userRankingResponse.setUsers(users);
         userRankingResponse.setTotalSize(userRepository.getTotalNumber());
         return userRankingResponse;
-
     }
 
 
-    public List<BasicUserInfoResponse> getUsers(int page, int size,String s1, String s2, String s3, String s4) {
+    public List<BasicUserInfoResponse> getUsers(int page, int size, String s1, String s2, String s3, String s4) {
         List<String[]> objects =
                 userRepository.mySelect(PageRequest.of(page, size), s1, s2, s3, s4);
         List<BasicUserInfoResponse> users = new ArrayList<>();
@@ -146,9 +148,7 @@ public class UserServiceImpl implements UserService {
             b.setWon(o[3]);
             b.setRanking(o[4]);
             users.add(b);
-
         }
-
         return users;
 
     }

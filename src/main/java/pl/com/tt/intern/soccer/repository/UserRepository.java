@@ -41,6 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "ORDER BY :firstField :order1, :SecondField :order2 , u.username ASC")
     List<String[]> mySelect(Pageable pageable, String firstField, String order1, String SecondField, String order2);
 
+
     @Query(value = "SELECT COUNT(u)  FROM User u ")
     int getTotalNumber();
 

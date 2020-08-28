@@ -27,8 +27,8 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<UserRankingResponse> showRanking(@CurrentUser UserPrincipal user,
-                                                           @RequestParam(value = "size", required = false, defaultValue = "3") Integer size,
-                                                           @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                                           @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                                                           @RequestParam(value = "page", required = false, defaultValue = "0") String page,
                                                            @RequestParam(value = "field1", required = false, defaultValue = "ui.won") String field1,
                                                            @RequestParam(value = "order1", required = false, defaultValue = "DESC") String order1,
                                                            @RequestParam(value = "field2", required = false, defaultValue = "ui.lost") String field2,
