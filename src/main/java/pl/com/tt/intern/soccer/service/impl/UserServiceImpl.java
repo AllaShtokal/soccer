@@ -12,7 +12,6 @@ import pl.com.tt.intern.soccer.payload.response.BasicUserInfoResponse;
 import pl.com.tt.intern.soccer.payload.response.UserRankingResponse;
 import pl.com.tt.intern.soccer.repository.UserRepository;
 import pl.com.tt.intern.soccer.service.UserService;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
